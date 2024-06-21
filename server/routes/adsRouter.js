@@ -12,7 +12,7 @@ adsRouter
 adsRouter
   .route('/:id')
   .get(adsController.getSingleAd)
-// .put(verifyToken, adsController.updatePost)
-// .delete(verifyToken, adsController.deletePost);
+  .put(verifyToken, adsController.updateAd)
+  .delete(verifyToken, adsController.deleteAd);
 
 export default adsRouter;

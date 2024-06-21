@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
-const verifyToken = asyncHandler(async (req, res, next) => {
+const verifyToken = asyncHandler(async (req, res, next) =>
+{
   /*
     Check if token is present in request [X]
         - If not, return an error [X]
@@ -25,3 +26,5 @@ const verifyToken = asyncHandler(async (req, res, next) => {
 });
 
 export default verifyToken;
+
+
