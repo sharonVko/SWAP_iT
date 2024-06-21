@@ -17,6 +17,9 @@
 - **multer**
 - **multer-storage-cloudinary**
 - **nodemon**
+- **bcrypt**
+- **jsonwebtoken**
+- **cookie-parser**
 
 
 
