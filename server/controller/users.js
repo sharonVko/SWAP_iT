@@ -65,3 +65,14 @@ export const getAllUsers = asyncHandler(async (req, res, next) =>
   const users = await User.find();
   res.json(users);
 });
+
+
+//get user by id
+export const getSingleUser = asyncHandler(async (req, res, next) =>
+{
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+  if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
+  res.send(user);
+});

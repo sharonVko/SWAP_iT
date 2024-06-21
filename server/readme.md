@@ -21,6 +21,12 @@
 - **jsonwebtoken**
 - **cookie-parser**
 
+.env file
+ mongodb url : connection string
+cloudinary : cloud_name , api key , api secret
+jsonwebtoken : jwt secret
+
+
 
 
 
