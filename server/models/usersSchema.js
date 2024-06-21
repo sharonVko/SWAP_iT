@@ -16,14 +16,14 @@ const userSchema = new mongoose.Schema({
 		unique: true,
 		required: [true, 'username is required'],
 	},
-	password: {
-		type: String,
-		required: [true, 'password is required'],
-		select: false,
-	},
 	email: {
 		type: String,
 		required: [true, 'email is required'],
+		select: false,
+	},
+	password: {
+		type: String,
+		required: [true, 'password is required'],
 		select: false,
 	},
 	phone: {
@@ -31,10 +31,6 @@ const userSchema = new mongoose.Schema({
 	},
 	profileimage: {
 		type: String,
-	},
-	creationdate: {
-		type: String,
-		default: Date.now,
 	},
 	address: {
 		street: {
@@ -67,7 +63,11 @@ const userSchema = new mongoose.Schema({
 	favorites: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
-	}
+	},
+	creationdate: {
+		type: String,
+		default: Date.now,
+	},
 });
 
 export default mongoose.model('User', userSchema);

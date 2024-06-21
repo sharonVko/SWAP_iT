@@ -1,6 +1,6 @@
 import express from 'express';
 import './db/dbConnect.js';
-//import booksRouter from './routes/booksRouter.js';
+import usersRouter from './routes/usersRouter.js';
 
 import { errorHandler } from './middleware/ErrorHandler.js';
 import cors from 'cors';
