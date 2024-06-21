@@ -3,49 +3,45 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
 	firstname: {
 		type: String,
-		required: [true, 'first name is required'],
-		trim: true
+		required: [true, 'first name is required']
 	},
 	lastname: {
 		type: String,
-		required: [true, 'last name is required'],
-		trim: true
+		required: [true, 'last name is required']
 	},
 	username: {
 		type: String,
 		unique: true,
-		required: [true, 'username is required'],
+		required: [true, 'username is required']
 	},
 	email: {
 		type: String,
-		required: [true, 'email is required'],
-		select: false,
+		required: [true, 'email is required']
 	},
 	password: {
 		type: String,
-		required: [true, 'password is required'],
-		select: false,
+		required: [true, 'password is required']
 	},
 	phone: {
-		type: String,
+		type: String
 	},
 	profileimage: {
-		type: String,
+		type: String
 	},
 	address: {
 		street: {
-			type: String,
+			type: String
 		},
 		housenumber: {
-			type: String,
+			type: String
 		},
 		zip: {
 			type: String,
-			required: [true, 'zip code is required'],
+			required: [true, 'zip code is required']
 		},
 		city: {
 			type: String,
-			required: [true, 'city is required'],
+			required: [true, 'city is required']
 		},
 		country: {
 			type: String
@@ -59,15 +55,15 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Taxonomies'
 	},
-	// check what to use as type in case of problems
+	//check what to use as type in case of problems
 	favorites: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	},
 	creationdate: {
-		type: String,
-		default: Date.now,
-	},
+		type: Date,
+		default: Date.now
+	}
 });
 
 export default mongoose.model('User', userSchema);

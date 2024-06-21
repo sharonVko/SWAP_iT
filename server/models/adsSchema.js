@@ -40,4 +40,4 @@ const adSchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.model('Book', adSchema);
+export default mongoose.model('Ads', adSchema);

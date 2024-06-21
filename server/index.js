@@ -13,12 +13,12 @@ app.use(cors());
 
 // ROUTES
 app.use('/users', usersRouter);
-app.use('/ads', adsRouter);
-app.use('/chats', chatsRouter);
-app.use('/swaps', swapsRouter);
-app.use('/notifications', notificationsRouter);
-app.use('/taxonomies', taxonomiesRouter);
-app.use('/media', mediaRouter);
+// app.use('/ads', adsRouter);
+// app.use('/chats', chatsRouter);
+// app.use('/swaps', swapsRouter);
+// app.use('/notifications', notificationsRouter);
+// app.use('/taxonomies', taxonomiesRouter);
+// app.use('/media', mediaRouter);
 
 app.use(errorHandler);
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
