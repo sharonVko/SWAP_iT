@@ -31,3 +31,22 @@ export const register = asyncHandler(async (req, res, next) =>
   const token = jwt.sign({ uid: newUser._id }, process.env.JWT_SECRET);
   res.status(201).send({ token });
 });
+
+// login
+export const login = asyncHandler(async (req, res, next) =>
+{
+  const { email, password } = req.body;
+
+  const existingUser = await User.findOne({ email }).select('+password');
+  if (!existingUser) throw new ErrorResponse('Email does not exist', 404);
+
+  const match = await bcrypt.compare(password, existingUser.password);
+  if (!match) throw new ErrorResponse('Password is incorrect', 401);
+
+  const token = jwt.sign({ uid: existingUser._id }, process.env.JWT_SECRET, {
+    expiresIn: '30m',
+  });
+  // res.json({ token });
+  res.cookie('token', token, { maxAge: 1800000 }); // 30mn
+  res.send({ status: 'success' });
+});
