@@ -20,3 +20,13 @@ export const getSingleAd = asyncHandler(async (req, res, next) =>
   res.send(ad);
 });
 
+// create a ad or post a  ad
+
+export const createAd = asyncHandler(async (req, res, next) =>
+{
+  const { body, uid } = req;
+
+  const newAd = await Ads.create({ ...body, user: uid });
+  const populatedAd = await Ads.findById(newAd._id).populate('user');
+  res.status(201).json(populatedAd);
+});

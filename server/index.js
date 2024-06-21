@@ -1,6 +1,7 @@
 import express from 'express';
 import './db/dbConnect.js';
 import usersRouter from './routes/usersRouter.js';
+import adsRouter from './routes/adsRouter.js';
 
 import { errorHandler } from './middleware/ErrorHandler.js';
 import cors from 'cors';
@@ -13,7 +14,7 @@ app.use(cors());
 
 // ROUTES
 app.use('/users', usersRouter);
-// app.use('/ads', adsRouter);
+app.use('/ads', adsRouter);
 // app.use('/chats', chatsRouter);
 // app.use('/swaps', swapsRouter);
 // app.use('/notifications', notificationsRouter);
