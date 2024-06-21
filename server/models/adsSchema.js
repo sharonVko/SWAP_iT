@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const adsSchema = new mongoose.Schema({
+const adSchema = new mongoose.Schema({
 	username: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'User',
@@ -40,4 +40,4 @@ const adsSchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.model('Book', adsSchema);
+export default mongoose.model('Book', adSchema);
