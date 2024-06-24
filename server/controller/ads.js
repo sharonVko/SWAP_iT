@@ -5,7 +5,7 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 //to get all Ads 
 export const getAllAds = asyncHandler(async (req, res, next) =>
 {
-  const ads = await Ads.find().populate('user');
+  const ads = await Ads.find().populate('user_id');
   res.json(ads);
 });
 
@@ -15,7 +15,7 @@ export const getSingleAd = asyncHandler(async (req, res, next) =>
 {
   const { id } = req.params;
 
-  const ad = await Ads.findById(id).populate('user');
+  const ad = await Ads.findById(id).populate('user_id');
   if (!ad) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
   res.send(ad);
 });
@@ -26,10 +26,15 @@ export const createAd = asyncHandler(async (req, res, next) =>
 {
   const { body, uid } = req;
 
+  // // Ensure user ID is a valid ObjectId
+  // if (!mongoose.Types.ObjectId.isValid(uid))
+  // {
+  //   throw new ErrorResponse('Invalid user ID', 400);
+  // }
   console.log('Request body:', body); // Log request body
   console.log('User ID:', uid); // Log user ID from token
   const newAd = await Ads.create({ ...body, user: uid });
-  const populatedAd = await Ads.findById(newAd._id).populate('user');
+  const populatedAd = await Ads.findById(newAd._id).populate('user_id');
   res.status(201).json(populatedAd);
 });
 
@@ -43,12 +48,12 @@ export const updateAd = asyncHandler(async (req, res, next) =>
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
-  if (uid !== found.user.toString())
+  if (uid !== found.user_id.toString())
     throw new ErrorResponse('You have no permission to update this Ad', 401);
 
   const updatedAd = await Ads.findByIdAndUpdate(id, body, {
     new: true,
-  }).populate('user');
+  }).populate('user_id');
   res.json(updatedAd);
 });
 
@@ -61,11 +66,29 @@ export const deleteAd = asyncHandler(async (req, res, next) =>
   } = req;
 
   const found = await Ads.findById(id);
-  if (!found) throw new ErrorResponse(`Post ${id} does not exist`, 404);
+  if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
-  if (uid !== found.user.toString())
+  if (uid !== found.user_id.toString())
     throw new ErrorResponse('You have no permission to delete this post', 401);
 
-  await Ads.findByIdAndDelete(id, body, { new: true }).populate('user');
+  await Ads.findByIdAndDelete(id, body, { new: true }).populate('user_id');
   res.json({ success: `Ad ${id} was deleted` });
 });
+
+// Get all ads posted by a specific user
+// get all ads by user id ( user has how many ads and it's details)
+
+export const AdsbyOneUser = asyncHandler(async (req, res, next) =>
+{
+  const { uid } = req.params;
+  console.log(uid);
+  // Validate userId is a valid ObjectId
+  if (!uid) throw new ErrorResponse('Invalid user ID', 400);
+
+
+  const ads = await Ads.find({ user: uid }).populate('user_id');
+  if (!ads || ads.length === 0) throw new ErrorResponse(`No ads found for user ${uid}`, 404);
+
+
+  res.json(ads);
+})

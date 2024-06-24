@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 
 const adSchema = new mongoose.Schema({
-	username: {
+	user_id: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'User',
+		// required: true,
 	},
 	title: {
 		type: String,
