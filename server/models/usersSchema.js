@@ -60,6 +60,11 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	},
+	// we have already over preffered cats and tags... fields
+	interestedCategories: {
+		type: Array,
+		required: [true, 'interested category is required'],
+	},
 	creationdate: {
 		type: Date,
 		default: Date.now

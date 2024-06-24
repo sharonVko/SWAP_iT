@@ -35,6 +35,10 @@ const adSchema = new mongoose.Schema({
 			type: String
 		}
 	},
+	categories: {
+		type: Array,
+		required: [true, 'categories are required'],
+	},
 	media: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Media'
