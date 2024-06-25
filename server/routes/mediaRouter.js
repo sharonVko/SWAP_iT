@@ -11,12 +11,7 @@ const mediaRouter = Router();
 mediaRouter
   .route('/')
   .get(mediaController.getAllMedia)
-  .post(upload.single('media_1'), mediaController.createMedia)
-  .post(upload.single('media_2'), mediaController.createMedia)
-  .post(upload.single('media_3'), mediaController.createMedia)
-  .post(upload.single('media_4'), mediaController.createMedia)
-  .post(upload.single('media_5'), mediaController.createMedia)
-  .post(upload.single('media_6'), mediaController.createMedia)
+  .post(upload.array('medias', 6), mediaController.createMedia) // store media in array max 6
 
 mediaRouter
   .route('/:id')
@@ -25,3 +20,15 @@ mediaRouter
   .delete(mediaController.deleteMedia)
 
 export default mediaRouter;
+
+// import express from 'express';
+// import { uploadMedia, createMedia, getMedia, updateMedia, deleteMedia } from '../controller/media.js'
+
+// const router = express.Router();
+
+// router.post('/upload', uploadMedia, createMedia);
+// router.get('/:userId', getMedia);
+// router.put('/:id', updateMedia);
+// router.delete('/:id', deleteMedia);
+
+// export default router;

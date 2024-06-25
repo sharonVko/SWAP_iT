@@ -2,9 +2,6 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 import Media from '../models/mediaSchema.js';
 
-
-
-
 export const getAllMedia = asyncHandler(async (req, res, next) =>
 {
   const media = await Media.find().populate('user_id');
@@ -27,7 +24,7 @@ export const createMedia = asyncHandler(async (req, res, next) =>
 
   const media_url = req.file.path;
   console.log(media_url)
-  const newMedia = await Media.create({ ...body, media_url });
+  const newMedia = await Media.insertMany({ ...body, media_url });
   const populateMedia = await Media.findById(newMedia._id).populate('user_id');
   res.status(201).json(populateMedia);
 
@@ -59,3 +56,4 @@ export const deleteMedia = asyncHandler(async (req, res, next) =>
   await Media.findByIdAndDelete(id, body, { new: true }).populate('user_id');
   res.json({ success: `Media ${id} was deleted` });
 })
+

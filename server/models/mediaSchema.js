@@ -18,25 +18,32 @@ const mediaSchema = new mongoose.Schema({
 	media_1: {
 		type: String,
 	},
-	media_2: {
-		type: String,
-	},
-	media_3: {
-		type: String,
-	},
-	media_4: {
-		type: String,
-	},
-	media_5: {
-		type: String,
-	},
-	media_6: {
-		type: String,
-	},
+	// media_2: {
+	// 	type: String,
+	// },
+	// media_3: {
+	// 	type: String,
+	// },
+	// media_4: {
+	// 	type: String,
+	// },
+	// media_5: {
+	// 	type: String,
+	// },
+	// media_6: {
+	// 	type: String,
+	// },
 	timestamp: {
 		type: Date,
 		default: Date.now,
 	},
 });
+
+// const mediaSchema = new mongoose.Schema({
+// 	userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+// 	mediaType: { type: String, enum: ['image', 'video'], required: true },
+// 	mediaPath: { type: String, required: true },
+// 	uploadedAt: { type: Date, default: Date.now }
+// });
 
 export default mongoose.model('Media', mediaSchema);

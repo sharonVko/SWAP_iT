@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'media-images/videos',
+    folder: 'SwapMedia',
     // allowedFormats: ['jpeg', 'jpg', 'png', 'svg', 'gif', 'mp4', 'mp3', 'mov', 'avi', 'zip'],
     resource_type: 'auto',
   },

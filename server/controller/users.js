@@ -91,23 +91,13 @@ export const updateUser = asyncHandler(async (req, res, next) =>
 
   const found = await User.findById(id);
   if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
-  if (uid !== found.uid.toString())
-    throw new ErrorResponse('You have no permission to update this Details', 401);
+  // if (uid !== found._id.toString())
+  //   throw new ErrorResponse('You have no permission to update this Details', 401);
 
   const updatedUser = await User.findByIdAndUpdate(id, body, {
     new: true,
   })
   res.json(updatedUser);
-
-  // const userId = req.uid;
-  // const { firstname, lastname, username, address, interestedCategories, phone, profileimage, favorites } = req.body;
-  // const updatedUser = await User.findByIdAndUpdate(
-  //   userId,
-  //   { firstname, lastname, username, address, interestedCategories, phone, profileimage, favorites },
-  //   { new: true }
-  // );
-  // if (!updatedUser) throw new ErrorResponse('User not found', 404);
-  // res.json(updatedUser);
 });
 
 //update password
