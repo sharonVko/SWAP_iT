@@ -7,12 +7,12 @@ export const ads = [
   {
     ad_id: 102,
     user_id: 1001,
-    ad_cat: 16,
+    ad_cat: 1,
   },
   {
     ad_id: 103,
     user_id: 1003,
-    ad_cat: 16,
+    ad_cat: 55,
   },
   {
     ad_id: 104,

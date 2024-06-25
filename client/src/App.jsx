@@ -13,7 +13,7 @@ function App() {
 
   // Funktion, um die passenden Anzeigen für einen Benutzer zu erhalten
   const getMatchingAds = (user) => {
-    return ads.filter((ad) => {
+    let matchedAds = ads.filter((ad) => {
       const adOwner = getUserById(ad.user_id);
       return (
         user.pref_cats === ad.ad_cat &&
@@ -21,6 +21,26 @@ function App() {
           ads.find((a) => a.user_id === user.user_id)?.ad_cat
       );
     });
+
+    // Eigene Anzeige des Benutzers finden
+    let ownAd = ads.find((ad) => ad.user_id === user.user_id);
+
+    // Wenn die eigene Anzeige den Kriterien entspricht, füge sie zu matchedAds hinzu
+    if (ownAd && user.pref_cats === ownAd.ad_cat) {
+      matchedAds.push({
+        ...ownAd,
+        my_ad: ownAd.ad_id, // ad_id der eigenen Anzeige
+      });
+    }
+
+    // Durchsuche die matchedAds und füge eine my_ad-Eigenschaft hinzu
+    matchedAds.forEach((ad) => {
+      if (ad.ad_id !== ownAd?.ad_id && user.pref_cats.includes(ad.ad_cat)) {
+        ad.my_ad = ownAd.ad_id; // ad_id der eigenen Anzeige
+      }
+    });
+
+    return matchedAds;
   };
 
   // Liste der Benutzer mit ihren passenden Anzeigen
@@ -32,7 +52,6 @@ function App() {
       user_id: user.user_id,
       name: user.name,
       pref_cats: user.pref_cats,
-      ownAd: ownAd, // Hier wird die eigene Anzeige gespeichert
       matchedAds: matchedAds, // Hier werden die passenden Anzeigen gespeichert
     };
   });
