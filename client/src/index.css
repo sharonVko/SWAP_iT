@@ -1,41 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base.css";
+@import "tailwindcss/components.css";
+@import "tailwindcss/utilities.css";
 
-@layer base {
-
-  /* merriweather-300 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Merriweather';
-    font-style: normal;
-    font-weight: 300;
-    src: url('../public/fonts/merriweather-v30-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* merriweather-regular - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Merriweather';
-    font-style: normal;
-    font-weight: 400;
-    src: url('../public/fonts/merriweather-v30-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-  /* merriweather-700 - latin */
-  @font-face {
-    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-    font-family: 'Merriweather';
-    font-style: normal;
-    font-weight: 700;
-    src: url('../public/fonts/merriweather-v30-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
-  }
-
-  body {
-    @apply bg-teal-100 sm:text-lg;
-  }
-
-  h1 { @apply font-display font-light text-xl sm:text-2xl my-4; }
-  h2 {}
-  h3 {}
-  p { @apply my-4; }
-
-}
+@import "css/base.css";
+@import "css/components.css";
+@import "css/utilities.css";

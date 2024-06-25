@@ -1,8 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 
 const Footer = () => {
-	return <div>Footer</div>;
+	return (
+		<div className="bnbn container mx-auto">
+			FOOTER
+		</div>
+	);
 };
 
 export default Footer;

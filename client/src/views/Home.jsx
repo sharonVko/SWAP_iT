@@ -3,7 +3,7 @@ import React from "react";
 const Home = () => {
 	return (
 		<div>
-			<h1 className="mt-0">Home</h1>
+			<h1 className="mt-0 text-center">Top Matches</h1>
 			<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
 				sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. </p>
 
