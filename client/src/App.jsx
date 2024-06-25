@@ -1,146 +1,52 @@
-// import { Route, Routes } from "react-router-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import HeaderMitSearchBar from "./components/HeaderMitSearchBar.jsx";
-import HeaderOhneSearchBar from "./components/HeaderOhneSearchBar.jsx";
+import { Route, Routes } from "react-router-dom";
 import Home from "./views/Home.jsx";
-import SingleViewAd from "./views/SingleViewAd.jsx";
-import UserSignUp from "./views/UserSignUp.jsx";
-import UserLogin from "./views/UserLogin.jsx";
-import UserLogout from "./views/UserLogout.jsx";
-
-import UserProfile from "./views/UserProfile.jsx";
-// Filter
-// import ChangePW from "./views/ChangePW";
-// import ChangePhoto from "./views/ChangePhoto";
-// import ChangeAdresse from "../views/ChangeAdresse";
-
-import FilteredAds from "./views/FilteredAds.jsx";
-// Filter
-// import NewAds from "./views/NewAds";
-// import AdsByCategory from "../views/AdsByCategory";
-// import AdsByTag from "../views/AdsByTag";
-// import AdsBySearchText from "../views/AdsBySearchText";
-// import AdsByUser from "../views/AdsByUser";
-// import ShowAllAds from "../views/ShowAllAds";
-
-import MyAds from "./views/MyAds.jsx";
-
-import CreateAd from "./views/CreateAd.jsx";
-// Filter
-// import EditAd from "../views/EditAd";
-// import DeleteAd from "../views/DeleteAd";
-// import DeactivateAd from "../views/DeactivateAd";
-// import ExtendAd from "../views/ExtendAd";
-
-import Chats from "./views/Chats.jsx";
-import SingleChat from "./views/SingleChat.jsx";
-
-import NotFound from "./views/NotFound.jsx";
-
-import PopUpMenue from "./components/PopUpMenue.jsx";
-
-// Original Routes mit ID und Auth */
-
-// function App() {
-// 	return (
-// 		<BrowserRouter>
-// 			<Routes>
-
-// 				<Route path="/" element={<Home />} />
-
-// 				<Route path="hps" element={<HeaderPlusSearchBar />} />
-// 				<Route path="hos" element={<HeaderOhneSearchBar />} />
-
-// 				<Route path="/ads/:adid" element={<SingleViewAd />} />
-
-// 				<Route path="/auth/signup" element={<UserSignUp />} />
-
-// 				<Route path="/auth/login" element={<UserLogin />} />
-
-// 				<Route path="/auth/logout" element={<UserLogout />} />
-
-// 				<Route path="/user/:userid/profile" element={<UserProfile />} />
-// 				<Route path="pw" element={<ChangePW />} />
-// 				<Route path="photo" element={<ChangePhoto />} />
-// 				<Route path="adress" element={<ChangeAdresse />} />
-
-// 				<Route path="/ads" element={<FilteredAds />} />
-// 				<Route path="/ads/new" element={<NewAds />} />
-// 				<Route path="/ads/category/:category" element={<AdsByCategory />} />
-// 				<Route path="/ads/tag/:tag" element={<AdsByTag />} />
-// 				<Route path="/ads/search/:query" element={<AdsBySearchText />} />
-// 				<Route path="/ads/user/:user" element={<AdsByUser />} />
-// 				<Route path="/ads/all" element={<ShowAllAds />} />
-
-// 				<Route path="/myads" element={<MyAds />} />
-
-// 				<Route path="/createad" element={<CreateAd />} />
-// 				<Route path="/editad/:adId" element={<EditAd />} />
-// 				<Route path="/deletead/:adId" element={<DeleteAd />} />
-// 				<Route path="/deactivatead/:adId" element={<DeactivateAd />} />
-// 				<Route path="/extendad/:adId" element={<ExtendAd />} />
-
-// 				<Route path="/chats" element={<Chats />} />
-// 				<Route path="/chats/:chatID" element={<SingleChat />} />
-
-// 				<Route path="*" element={<NotFound />} />
-// 			</Routes>
-
-// 		</BrowserRouter>
-// 	);
-// }
-
-{
-	/* Routes  für das Switchen zuwischen den Pages, während der Bearbeitung ohne ID und Auth */
-}
+import logo from "./assets/swapit-logo-transparent.png";
 
 function App() {
+
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<Home />} />
+		<div className="flex flex-col h-screen">
 
-				<Route path="hps" element={<HeaderMitSearchBar />} />
-				<Route path="hos" element={<HeaderOhneSearchBar />} />
+			<header className="px-4 py-3">
+				<div className="container mx-auto flex">
 
-				<Route path="/ads" element={<SingleViewAd />} />
 
-				<Route path="/signup" element={<UserSignUp />} />
 
-				<Route path="/login" element={<UserLogin />} />
 
-				<Route path="/logout" element={<UserLogout />} />
 
-				<Route path="/profile" element={<UserProfile />} />
-				{/* <Route path="pw" element={<ChangePW />} />
-				<Route path="photo" element={<ChangePhoto />} />
-				<Route path="adress" element={<ChangeAdresse />} /> */}
+					<button className="text-3xl w-16 text-green-700">
+						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M3 6h18M3 12h18M3 18h18"/></svg>
+					</button>
+					<div className="flex-1">
+						<img src={logo} alt="SwapIt Logo" className="mx-auto" />
+					</div>
+					<div className="w-16 flex gap-3">
+						<button className="text-2xl text-green-700">
+							<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21l-4.486-4.494M19 10.5a8.5 8.5 0 1 1-17 0a8.5 8.5 0 0 1 17 0Z"/></svg>
+						</button>
+						<button className="text-2xl text-green-700">
+							<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="7" r="5"/><path strokeLinecap="round" strokeLinejoin="round" d="M17 14h.352a3 3 0 0 1 2.976 2.628l.391 3.124A2 2 0 0 1 18.734 22H5.266a2 2 0 0 1-1.985-2.248l.39-3.124A3 3 0 0 1 6.649 14H7"/></g></svg>
+						</button>
+					</div>
 
-				<Route path="/ads" element={<FilteredAds />} />
-				{/* <Route path="/ads/new" element={<NewAds />} />
-				<Route path="/ads/category/:category" element={<AdsByCategory />} />
-				<Route path="/ads/tag/:tag" element={<AdsByTag />} />
-				<Route path="/ads/search/:query" element={<AdsBySearchText />} />
-				<Route path="/ads/user/:user" element={<AdsByUser />} />
-				<Route path="/ads/all" element={<ShowAllAds />} /> */}
+				</div>
+			</header>
 
-				<Route path="/myads" element={<MyAds />} />
+			<main className="px-2 flex-1">
+				<div className="container mx-auto">
+					<Routes>
+						<Route path="/" element={<Home />} />
+					</Routes>
+				</div>
+			</main>
 
-				<Route path="/createad" element={<CreateAd />} />
-				{/* <Route path="/editad/:adId" element={<EditAd />} />
-				<Route path="/deletead/:adId" element={<DeleteAd />} />
-				<Route path="/deactivatead/:adId" element={<DeactivateAd />} />
-				<Route path="/extendad/:adId" element={<ExtendAd />} /> */}
+			<footer className="px-2 bg-red-500">
+				<div className="bnbn container mx-auto">
+					FOOTER
+				</div>
+			</footer>
 
-				<Route path="/chats" element={<Chats />} />
-				<Route path="/singlechat" element={<SingleChat />} />
-
-				<Route path="*" element={<NotFound />} />
-
-				<Route path="/popupmenue" element={<PopUpMenue />} />
-			</Routes>
-		</BrowserRouter>
+		</div>
 	);
 }
 

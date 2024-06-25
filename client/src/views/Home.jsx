@@ -1,22 +1,16 @@
-// eslint-disable-next-line no-unused-vars
 import React from "react";
-
-import { Link } from "react-router-dom";
 
 const Home = () => {
 	return (
 		<div>
-			<div className="text-teal-700 text-4xl">Home</div>
-			<Link className="text-cyan-600" to="hps">
-				Header mit Searchbar...
-			</Link>
-			<Link className="text-cyan-600" to="/popupmenue">
-				PopUpMenue...
-			</Link>
-			<Link className="text-cyan-600" to="/ads">
-				Auf Produkt klicken..
-			</Link>
-			Carousel Footer
+			<h1 className="mt-0">Home</h1>
+			<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+				sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. </p>
+
+				<p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+				ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+				sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+
 		</div>
 	);
 };
