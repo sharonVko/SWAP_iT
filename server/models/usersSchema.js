@@ -62,8 +62,8 @@ const userSchema = new mongoose.Schema({
 	},
 	// we have already over preffered cats and tags... fields
 	interestedCategories: {
-		type: Array,
-		required: [true, 'interested category is required'],
+		type: String,
+		// required: [true, 'interested category is required'],
 	},
 	creationdate: {
 		type: Date,

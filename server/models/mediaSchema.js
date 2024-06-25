@@ -2,17 +2,36 @@ import mongoose from 'mongoose';
 
 const mediaSchema = new mongoose.Schema({
 	// do we need file type and name .. that will be in service/upload.js && how many (maximum) num of images or videos user can upload in advertisement.
-	filename: {
-		type: String,
-		required: [true, 'file name is required'],
+	// filename: {
+	// 	type: String,
+	// 	required: [true, 'file name is required'],
+	// },
+	// filetype: {
+	// 	type: String,
+	// 	required: [true, 'file type is required'],
+	// },
+	user_id: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'User',
+		// required: true,
 	},
-	filetype: {
+	media_1: {
 		type: String,
-		required: [true, 'file type is required'],
 	},
-	url: {
+	media_2: {
 		type: String,
-		required: [true, 'url is required'],
+	},
+	media_3: {
+		type: String,
+	},
+	media_4: {
+		type: String,
+	},
+	media_5: {
+		type: String,
+	},
+	media_6: {
+		type: String,
 	},
 	timestamp: {
 		type: Date,

@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 // Register
 export const register = asyncHandler(async (req, res, next) =>
 {
-  const { firstname, lastname, username, email, password, address } = req.body;
+  const { firstname, lastname, username, email, password, address, interestedCategories } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) throw new ErrorResponse('An account with this Email already exists', 409);
@@ -19,7 +19,8 @@ export const register = asyncHandler(async (req, res, next) =>
     username,
     email,
     password: hash,
-    address
+    address,
+    interestedCategories,
   });
   const token = jwt.sign({ uid: newUser._id }, process.env.JWT_SECRET);
   res.status(201).send({ token });
@@ -76,3 +77,9 @@ export const getSingleUser = asyncHandler(async (req, res, next) =>
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
   res.send(user);
 });
+
+// update user
+
+
+
+//update password
