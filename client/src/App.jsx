@@ -10,15 +10,11 @@ function App() {
 			<header className="px-4 py-3">
 				<div className="container mx-auto flex">
 
-
-
-
-
 					<button className="text-3xl w-16 text-green-700">
 						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M3 6h18M3 12h18M3 18h18"/></svg>
 					</button>
 					<div className="flex-1">
-						<img src={logo} alt="SwapIt Logo" className="mx-auto" />
+						<img src={logo} alt="SwapIt Logo" className="mx-auto w-20 h-20" />
 					</div>
 					<div className="w-16 flex gap-3">
 						<button className="text-2xl text-green-700">
