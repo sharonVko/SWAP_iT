@@ -2,17 +2,17 @@ export const users = [
   {
     user_id: 1001,
     name: "Thomas",
-    pref_cats: [1],
+    pref_cats: [1, 16],
   },
   {
     user_id: 1002,
     name: "Hanno",
-    pref_cats: [16, 55],
+    pref_cats: [16, 60],
   },
   {
     user_id: 1003,
     name: "Sharon",
-    pref_cats: [1],
+    pref_cats: [16, 48],
   },
   {
     user_id: 1004,

@@ -1,3 +1,4 @@
+import React from "react";
 import { categories } from "./utils/categories.js";
 import { users } from "./utils/users.js";
 import { ads } from "./utils/ads.js";
@@ -11,32 +12,37 @@ function App() {
     return users.find((user) => user.user_id === id);
   };
 
-  // Funktion, um die passenden Anzeigen für einen Benutzer zu erhalten
   const getMatchingAds = (user) => {
-    let matchedAds = ads.filter((ad) => {
+    // Find the user's own ad
+    const ownAd = ads.find((ad) => ad.user_id === user.user_id);
+
+    // Filter ads based on user and ad owner preferences
+    const matchedAds = ads.filter((ad) => {
       const adOwner = getUserById(ad.user_id);
+
+      // Check if ad.ad_cat is an array, if not, convert it to an array
+      const adCategories = Array.isArray(ad.ad_cat) ? ad.ad_cat : [ad.ad_cat];
+
       return (
-        user.pref_cats === ad.ad_cat &&
-        adOwner.pref_cats ===
-          ads.find((a) => a.user_id === user.user_id)?.ad_cat
+        // Check if user's pref_cats intersect with ad's ad_cat and vice versa
+        user.pref_cats.some((cat) => adCategories.includes(cat)) &&
+        adOwner.pref_cats.some((cat) => user.pref_cats.includes(cat)) &&
+        ad.user_id !== user.user_id // Exclude user's own ads
       );
     });
 
-    // Eigene Anzeige des Benutzers finden
-    let ownAd = ads.find((ad) => ad.user_id === user.user_id);
-
-    // Wenn die eigene Anzeige den Kriterien entspricht, füge sie zu matchedAds hinzu
-    if (ownAd && user.pref_cats === ownAd.ad_cat) {
+    // Add own ad to matchedAds if it matches user's preferences
+    if (ownAd && user.pref_cats.includes(ownAd.ad_cat)) {
       matchedAds.push({
         ...ownAd,
-        my_ad: ownAd.ad_id, // ad_id der eigenen Anzeige
+        my_ad: ownAd.ad_id, // ad_id of the user's own ad
       });
     }
 
-    // Durchsuche die matchedAds und füge eine my_ad-Eigenschaft hinzu
+    // Add `my_ad` property to each matched ad, except the user's own ad
     matchedAds.forEach((ad) => {
       if (ad.ad_id !== ownAd?.ad_id && user.pref_cats.includes(ad.ad_cat)) {
-        ad.my_ad = ownAd.ad_id; // ad_id der eigenen Anzeige
+        ad.my_ad = ownAd.ad_id; // ad_id of the user's own ad
       }
     });
 
@@ -61,18 +67,26 @@ function App() {
     let adId = ad.ad_id;
     let adUserId = ad.user_id;
     let adUserName = getUserById(ad.user_id).name;
-    let adCat = ad.ad_cat;
 
+    // Convert ad.ad_cat to an array if it's not already
+    const adCategories = Array.isArray(ad.ad_cat) ? ad.ad_cat : [ad.ad_cat];
+
+    // Filter users interested in this ad, excluding the ad owner
     let interestedUsers = users.filter((user) => {
+      // Check if ad.ad_cat is defined and is an array before using .some()
       return (
-        user.pref_cats === adCat &&
-        ads.find((a) => a.user_id === user.user_id)?.ad_cat === adCat
+        Array.isArray(ad.ad_cat) &&
+        ad.ad_cat.some((cat) => user.pref_cats.includes(cat)) &&
+        ads
+          .find((a) => a.user_id === user.user_id)
+          ?.ad_cat.some((cat) => adCategories.includes(cat)) &&
+        user.user_id !== adUserId // Exclude ad owner
       );
     });
 
     return {
       adId: adId,
-      adCat: adCat,
+      adCat: adCategories,
       adUserId: adUserId,
       adUserName: adUserName,
       interestedUsers: interestedUsers, // Hier werden die interessierten Benutzer gespeichert
