@@ -13,88 +13,64 @@ function App() {
   };
 
   const getMatchingAds = (user) => {
-    // Find the user's own ad
     const ownAd = ads.find((ad) => ad.user_id === user.user_id);
+    const matchedAds = [];
 
-    // Filter ads based on user and ad owner preferences
-    const matchedAds = ads.filter((ad) => {
+    ads.forEach((ad) => {
       const adOwner = getUserById(ad.user_id);
 
-      // Check if ad.ad_cat is an array, if not, convert it to an array
+      // Convert ad.ad_cat to an array if it's not already
       const adCategories = Array.isArray(ad.ad_cat) ? ad.ad_cat : [ad.ad_cat];
-
-      return (
-        // Check if user's pref_cats intersect with ad's ad_cat and vice versa
-        user.pref_cats.some((cat) => adCategories.includes(cat)) &&
-        adOwner.pref_cats.some((cat) => user.pref_cats.includes(cat)) &&
-        ad.user_id !== user.user_id // Exclude user's own ads
+      const commonCategories = user.pref_cats.filter((cat) =>
+        adCategories.includes(cat)
       );
+      const commonTags = ad.tags.filter((tag) => user.pre_tags.includes(tag));
+
+      let match_type = "";
+      if (
+        commonCategories.length > 0 &&
+        ad.ad_child_cat &&
+        user.pref_child_cats.includes(ad.ad_child_cat)
+      ) {
+        if (commonTags.length >= 2) {
+          match_type = "Diamond";
+        } else if (commonTags.length === 1) {
+          match_type = "Gold";
+        } else {
+          match_type = "Silver";
+        }
+      }
+
+      if (
+        (match_type === "Diamond" && commonTags.length >= 2) ||
+        (match_type === "Gold" && commonTags.length === 1) ||
+        (match_type === "Silver" && commonTags.length === 0)
+      ) {
+        matchedAds.push({
+          ...ad,
+          match_type,
+        });
+      }
     });
 
-    // Add own ad to matchedAds if it matches user's preferences
     if (ownAd && user.pref_cats.includes(ownAd.ad_cat)) {
       matchedAds.push({
         ...ownAd,
-        my_ad: ownAd.ad_id, // ad_id of the user's own ad
+        match_type: "",
       });
     }
-
-    // Add `my_ad` property to each matched ad, except the user's own ad
-    matchedAds.forEach((ad) => {
-      if (ad.ad_id !== ownAd?.ad_id && user.pref_cats.includes(ad.ad_cat)) {
-        ad.my_ad = ownAd.ad_id; // ad_id of the user's own ad
-      }
-    });
 
     return matchedAds;
   };
 
-  // Liste der Benutzer mit ihren passenden Anzeigen
-  const myUsers = users.map((user) => {
-    let matchedAds = getMatchingAds(user);
-    let ownAd = ads.find((ad) => ad.user_id === user.user_id);
+  const myUsers = users.map((user) => ({
+    user_id: user.user_id,
+    name: user.name,
+    pref_cats: user.pref_cats,
+    matchedAds: getMatchingAds(user),
+  }));
 
-    return {
-      user_id: user.user_id,
-      name: user.name,
-      pref_cats: user.pref_cats,
-      matchedAds: matchedAds, // Hier werden die passenden Anzeigen gespeichert
-    };
-  });
-
-  // Liste der Anzeigen mit den Benutzern, die daran interessiert sind
-  const myAds = ads.map((ad) => {
-    let adId = ad.ad_id;
-    let adUserId = ad.user_id;
-    let adUserName = getUserById(ad.user_id).name;
-
-    // Convert ad.ad_cat to an array if it's not already
-    const adCategories = Array.isArray(ad.ad_cat) ? ad.ad_cat : [ad.ad_cat];
-
-    // Filter users interested in this ad, excluding the ad owner
-    let interestedUsers = users.filter((user) => {
-      // Check if ad.ad_cat is defined and is an array before using .some()
-      return (
-        Array.isArray(ad.ad_cat) &&
-        ad.ad_cat.some((cat) => user.pref_cats.includes(cat)) &&
-        ads
-          .find((a) => a.user_id === user.user_id)
-          ?.ad_cat.some((cat) => adCategories.includes(cat)) &&
-        user.user_id !== adUserId // Exclude ad owner
-      );
-    });
-
-    return {
-      adId: adId,
-      adCat: adCategories,
-      adUserId: adUserId,
-      adUserName: adUserName,
-      interestedUsers: interestedUsers, // Hier werden die interessierten Benutzer gespeichert
-    };
-  });
-
-  console.log(myAds); // Anzeigen mit interessierten Benutzern
-  console.log(myUsers); // Benutzer mit passenden Anzeigen
+  console.log(myUsers); // Output to check matchedAds for each user
 
   return (
     <>
