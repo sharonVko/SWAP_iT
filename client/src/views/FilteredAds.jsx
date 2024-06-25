@@ -1,7 +1,7 @@
 import React from "react";
 
-const FilteredAds = () => {
+const Ads = () => {
 	return <div>FilteredAds</div>;
 };
 
-export default FilteredAds;
+export default Ads;
