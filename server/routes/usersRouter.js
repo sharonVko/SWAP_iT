@@ -3,13 +3,13 @@ import * as userController from '../controller/users.js';
 import verifyToken from '../middleware/verifyToken.js';
 
 const usersRouter = Router();
-usersRouter.post('/register', userController.register);
-usersRouter.post('/login', userController.login);
-usersRouter.get('/me', verifyToken, userController.getUser);
-usersRouter.post('/logout', verifyToken, userController.logout);
-
-
-usersRouter.get('/', userController.getAllUsers);
-usersRouter.get('/:id', userController.getSingleUser);
+usersRouter.post('/register', userController.register); // register
+usersRouter.post('/login', userController.login); // login
+usersRouter.get('/me', verifyToken, userController.getUser); // your profile
+usersRouter.put('/me', verifyToken, userController.updateUser); // update user settings
+usersRouter.post('/logout', verifyToken, userController.logout); // logout
+usersRouter.put('/change-password', verifyToken, userController.changePassword); // change pass
+usersRouter.get('/', userController.getAllUsers); // all users
+usersRouter.get('/:id', userController.getSingleUser); // user by id
 
 export default usersRouter;

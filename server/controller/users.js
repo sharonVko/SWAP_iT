@@ -80,6 +80,53 @@ export const getSingleUser = asyncHandler(async (req, res, next) =>
 
 // update user
 
+export const updateUser = asyncHandler(async (req, res, next) =>
+{
 
+  const {
+    body,
+    params: { id },
+    uid,
+  } = req;
+
+  const found = await User.findById(id);
+  if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
+  if (uid !== found.uid.toString())
+    throw new ErrorResponse('You have no permission to update this Details', 401);
+
+  const updatedUser = await User.findByIdAndUpdate(id, body, {
+    new: true,
+  })
+  res.json(updatedUser);
+
+  // const userId = req.uid;
+  // const { firstname, lastname, username, address, interestedCategories, phone, profileimage, favorites } = req.body;
+  // const updatedUser = await User.findByIdAndUpdate(
+  //   userId,
+  //   { firstname, lastname, username, address, interestedCategories, phone, profileimage, favorites },
+  //   { new: true }
+  // );
+  // if (!updatedUser) throw new ErrorResponse('User not found', 404);
+  // res.json(updatedUser);
+});
 
 //update password
+
+export const changePassword = asyncHandler(async (req, res, next) =>
+{
+  const userId = req.uid;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+
+  const user = await User.findById(userId).select('+password');
+  if (!user) throw new ErrorResponse('User not found', 404);
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) throw new ErrorResponse('Old password is incorrect', 401);
+
+  if (newPassword !== confirmPassword) throw new ErrorResponse('Passwords do not match', 400);
+
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+
+  res.send({ status: 'Password updated successfully' });
+});
