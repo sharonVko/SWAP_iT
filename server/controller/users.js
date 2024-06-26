@@ -136,3 +136,22 @@ export const changePassword = asyncHandler(async (req, res, next) =>
 
   res.send({ status: 'Password updated successfully' });
 });
+
+
+//get all ads by user
+
+export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
+{
+  const {
+    body,
+    params: { id },
+    uid,
+  } = req;
+  console.log('Request body:', body);
+  console.log('User ID:', uid);
+  const found = await User.findById(id);
+  if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
+
+  res.json(ads)
+})
+

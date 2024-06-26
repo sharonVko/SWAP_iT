@@ -1,7 +1,7 @@
 import Ads from '../models/adsSchema.js'
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
-
+import User from '../models/usersSchema.js'
 //to get all Ads 
 export const getAllAds = asyncHandler(async (req, res, next) =>
 {
@@ -84,17 +84,22 @@ export const AdsbyOneUser = asyncHandler(async (req, res, next) =>
   // Validate userId is a valid ObjectId
   if (!userId) throw new ErrorResponse('invalid userId', 400)
 
+
   // Query to find ads by the specific user
-  const ads = await Ads.find({ user: userId }).populate('user_id');
+  const ads = await User.find({ user: userId }).populate('Ads');
+  if (!ads.length) throw new ErrorResponse(`No ads found for user ${userId}`, 404);
 
-  // Check if ads exist for the user
-  if (!ads.length)
-  {
-    throw new ErrorResponse(`No ads found for user ${userId}`, 404);
-  }
+  const ad = ads.map(ad => ad._id);
+  res.json(ad)
 
-  // Return the ads
-  res.status(200).json(ads);
+  // // Check if ads exist for the user
+  // if (!ads.length)
+  // {
+  //   throw new ErrorResponse(`No ads found for user ${userId}`, 404);
+  // }
+
+  // // Return the ads
+  // res.status(200).json(ads);
 });
 
 

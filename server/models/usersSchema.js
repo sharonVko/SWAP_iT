@@ -71,15 +71,19 @@ const userSchema = new mongoose.Schema({
 		ref: 'Ads'
 	},
 	// ads:
-	// [
-	// 	{
-	// 		ad: {
-	// 			type: mongoose.Schema.ObjectId,
-	// 			ref: 'Ads'
+	// 	[
+	// 		{
+	// 			ad: {
+	// 				type: mongoose.Schema.ObjectId,
+	// 				ref: 'Ads'
+	// 			}
 	// 		}
-	// 	}
-	// ]
+	// 	]
 	// ,
+	ads: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Ads'
+	},
 	creationdate: {
 		type: Date,
 		default: Date.now
@@ -87,3 +91,4 @@ const userSchema = new mongoose.Schema({
 });
 
 export default mongoose.model('User', userSchema);
+

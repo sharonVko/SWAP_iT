@@ -13,6 +13,6 @@ usersRouter.put('/change-password/:id', verifyToken, userController.changePasswo
 usersRouter.get('/', userController.getAllUsers); // all users
 usersRouter.get('/:id', userController.getSingleUser); // user by id
 
-
+usersRouter.route('/ads/:id').get(userController.getAllAdsByUser);
 // usersRouter.route('/').post(verifyToken, upload.array('preferredcats', 20), userController.createUser);
 export default usersRouter;
