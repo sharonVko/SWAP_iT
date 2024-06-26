@@ -1,15 +1,14 @@
-import React from "react";
+import HomeSwiper from "../components/HomeSwiper.jsx";
 
 const Home = () => {
 	return (
 		<div>
+			<h1 className="mt-0 text-center">Swap Matches</h1>
+			<HomeSwiper slidesPerView={3}/>
 			<h1 className="mt-0 text-center">Top Matches</h1>
-			<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-				sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. </p>
-
-				<p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-				ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-				sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+			<HomeSwiper/>
+			<h1 className="mt-0 text-center">New Ads</h1>
+			<HomeSwiper/>
 
 		</div>
 	);

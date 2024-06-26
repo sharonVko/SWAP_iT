@@ -19,14 +19,13 @@ import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
-
 function App() {
 
 	return (
 		<div className="flex flex-col h-screen">
 			<header className="px-4 py-3">
 				<Navbar />
-				{/*<Searchbar />*/}
+				<Searchbar />
 			</header>
 			<main className="px-4 py-8 flex-1">
 				<div className="container mx-auto">
@@ -60,7 +59,7 @@ function App() {
 					</Routes>
 				</div>
 			</main>
-			<footer className="px-4 py-3">
+			<footer className="px-4 py-4 md:py-8">
 				<Footer/>
 			</footer>
 		</div>
