@@ -2,6 +2,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 import Media from '../models/mediaSchema.js';
 
+// get all images and videos
 export const getAllMedia = asyncHandler(async (req, res, next) =>
 {
   const media = await Media.find().populate('user_id');
@@ -9,6 +10,7 @@ export const getAllMedia = asyncHandler(async (req, res, next) =>
   res.json(media);
 });
 
+// get all images and videos pro Ad
 export const getSingleMedia = asyncHandler(async (req, res, next) =>
 {
   const { id } = req.params;
@@ -33,7 +35,7 @@ export const createMedia = asyncHandler(async (req, res, next) =>
 });
 
 
-
+// update media
 export const updateMedia = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, body, uid } = req;
@@ -51,6 +53,7 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
   res.json(updatedMedia);
 });
 
+// delete All images and videos pro Ad
 export const deleteMedia = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, uid } = req;

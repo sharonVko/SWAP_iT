@@ -3,6 +3,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Ads from '../models/adsSchema.js'
 
 // Register
 export const register = asyncHandler(async (req, res, next) =>
@@ -27,18 +28,6 @@ export const register = asyncHandler(async (req, res, next) =>
   const token = jwt.sign({ uid: newUser._id }, process.env.JWT_SECRET);
   res.status(201).send({ token });
 });
-
-// // createUser
-
-// export const createUser = asyncHandler(async (req, res, next) =>
-// {
-//   const { body } = req;
-//   console.log('Request body:', body); // Log request body
-
-//   const preferredcats = req.map(file => file.path);
-//   const newUser = await User.insertMany({ ...body, preferredcats });
-//   res.status(201).json(newUser)
-// })
 
 // LOGIN
 export const login = asyncHandler(async (req, res, next) =>
@@ -73,7 +62,6 @@ export const logout = asyncHandler(async (req, res, next) =>
   res.send({ status: 'success' });
 });
 
-
 //getAllUsers
 export const getAllUsers = asyncHandler(async (req, res, next) =>
 {
@@ -81,23 +69,18 @@ export const getAllUsers = asyncHandler(async (req, res, next) =>
   res.json(users);
 });
 
-
-
 //get user by id
 export const getSingleUser = asyncHandler(async (req, res, next) =>
 {
   const { id } = req.params;
-
   const user = await User.findById(id);
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
   res.send(user);
 });
 
 // update user
-
 export const updateUser = asyncHandler(async (req, res, next) =>
 {
-
   const {
     body,
     params: { id },
@@ -117,7 +100,6 @@ export const updateUser = asyncHandler(async (req, res, next) =>
 });
 
 //update password
-
 export const changePassword = asyncHandler(async (req, res, next) =>
 {
   const userId = req.uid;
@@ -137,21 +119,13 @@ export const changePassword = asyncHandler(async (req, res, next) =>
   res.send({ status: 'Password updated successfully' });
 });
 
-
 //get all ads by user
-
 export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
 {
-  const {
-    body,
-    params: { id },
-    uid,
-  } = req;
-  console.log('Request body:', body);
-  console.log('User ID:', uid);
-  const found = await User.findById(id);
-  if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
-
-  res.json(ads)
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
+  const ads = await Ads.find({ user_id: id });
+  res.json(ads);
 })
 

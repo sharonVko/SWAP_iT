@@ -55,12 +55,11 @@ const userSchema = new mongoose.Schema({
 	// we have already over preffered cats and tags... fields
 	// interestedCategories: {
 	// 	type: String,
-	// 	// required: [true, 'interested category is required'],
+	// required: [true, 'interested category is required'],
 	// },
 	preferredcats: {
 		type: String, // if we want to keep it as a category_id as string or reference to taxonomies
 		//ex: "1,2,3"  cat_ids
-
 	},
 	preferredtags: {
 		type: String,
@@ -70,16 +69,6 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	},
-	// ads:
-	// 	[
-	// 		{
-	// 			ad: {
-	// 				type: mongoose.Schema.ObjectId,
-	// 				ref: 'Ads'
-	// 			}
-	// 		}
-	// 	]
-	// ,
 	ads: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
