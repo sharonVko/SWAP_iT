@@ -11,7 +11,7 @@ export const getAllMedia = asyncHandler(async (req, res, next) =>
 
 export const getSingleMedia = asyncHandler(async (req, res, next) =>
 {
-  const id = req.params.id;
+  const { id } = req.params;
   const media = await Media.findById(id).populate('user_id');
   if (!media) throw new ErrorResponse(`Media ${id} does not exist`, 404);
   res.send(media);
@@ -20,22 +20,48 @@ export const getSingleMedia = asyncHandler(async (req, res, next) =>
 // To upload images or videos
 export const createMedia = asyncHandler(async (req, res, next) =>
 {
-  const { uid } = req.body;
+  const { body, uid } = req;
+  console.log('Request body:', body); // Log request body
+  console.log('User ID:', uid);
+
   const media_files = req.files.map(file => file.path);
 
-  const newMedia = await Media.insertMany({ media_files });
-  const populatedMedia = await Media.findById(newMedia._id).populate('user_id');
-  res.status(201).json(populatedMedia);
+  const newMedia = await Media.insertMany({ ...body, user: uid, media_files });
+  // const populatedMedia = await Media.findById(newMedia._id).populate('user_id');
+  // res.status(201).json(populatedMedia); // Onur's solution
+  res.status(201).json(newMedia);
 });
+
+// export const updateMedia = asyncHandler(async (req, res, next) =>
+// {
+//   const { params: { id }, uid, body } = req;
+
+// console.log('Request body:', body);
+// console.log('User ID:', uid); 
+
+
+//   const found = await Media.findById(id);
+//   if (!found) throw new ErrorResponse(`Media ${id} does not exist`, 404);
+//   if (uid !== found.user_id.toString())
+//     throw new ErrorResponse('You have no permission to update this Media', 401);
+//   const updatedMedia = await Media.findByIdAndUpdate(id, body, { new: true }).populate('user_id');
+//   res.json(updatedMedia);
+// });
 
 export const updateMedia = asyncHandler(async (req, res, next) =>
 {
-  const { params: { id }, uid, body } = req;
+  const { params: { id }, body, uid } = req;
+  console.log('Request body:', body);
+  console.log('User ID:', uid);
+
   const found = await Media.findById(id).populate('user_id');
-  if (!found) throw new ErrorResponse(`Media ${id} does not exist`, 404);
+  if (!found) throw new ErrorResponse(`media ${id} does not exist`, 404);
   if (uid !== found.user_id.toString())
-    throw new ErrorResponse('You have no permission to update this Media', 401);
-  const updatedMedia = await Media.findByIdAndUpdate(id, body, { new: true }).populate('user_id');
+    throw new ErrorResponse(`You have no permission to update this Media`, 401);
+
+  const media_files = req.files.map(file => file.path);
+
+  const updatedMedia = await Media.findByIdAndUpdate(id, { ...body, user: uid, media_files }, { new: true }).populate('user_id');
   res.json(updatedMedia);
 });
 
