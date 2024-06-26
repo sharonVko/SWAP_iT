@@ -5,7 +5,7 @@ import ArticleList from "./components/ArticleList";
 function App() {
   return (
     <>
-      <h1>Alle Ads</h1>
+      <h1 className="mb-14">Navbar</h1>
       <SwapSchema />
       <ArticleList />
     </>

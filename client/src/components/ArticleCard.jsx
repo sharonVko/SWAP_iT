@@ -6,10 +6,15 @@ import "../components/css/ArticleCards.css";
 
 const ArticleCard = ({ article }) => {
   const [hovered, setHovered] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const [liked, setLiked] = useState(false);
 
   const toggleLike = () => {
     setLiked(!liked);
+  };
+
+  const toggleClick = () => {
+    setClicked(!clicked);
   };
 
   const ownerName =
@@ -18,26 +23,25 @@ const ArticleCard = ({ article }) => {
 
   return (
     <div
-      className="custom-card"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className={`custom-card ${clicked ? "active" : ""}`}
+      onClick={toggleClick}
     >
-      <div className="img-box relative">
+      <div className="img-box">
         <img src={`/Images/${article.image}`} alt={article.title} />
-        <div className="user-info absolute bottom-0 left-0 bg-black bg-opacity-50 text-white p-2">
-          <p className="user-name text-xs">{ownerName}</p>
-        </div>
       </div>
       <div
         className="custom-content"
         style={{
-          top: hovered ? "130px" : "252px",
-          height: hovered ? "250px" : "35px",
+          top: clicked ? "130px" : hovered ? "130px" : "252px",
+          height: clicked
+            ? "auto"
+            : hovered
+            ? "auto"
+            : "35px" /* Dynamische Höhe */,
         }}
       >
-        <h2 className="card-title">{article.title}</h2>
-
-        {!hovered ? (
+        <h2>{article.title}</h2>
+        {!hovered && !clicked ? (
           <p>{truncatedDescription}</p>
         ) : (
           <>
@@ -73,7 +77,7 @@ const ArticleCard = ({ article }) => {
         <svg
           className={`h-8 w-8 ${
             liked ? "text-red-500 fill-red-500" : "text-black"
-          } bg-transparent bg-opacity-25 rounded-lg`}
+          } bg-white bg-opacity-25 rounded-lg`}
           viewBox="0 0 24 24"
           fill={liked ? "currentColor" : "none"}
           stroke="currentColor"
