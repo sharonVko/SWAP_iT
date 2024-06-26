@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as userController from '../controller/users.js';
 import verifyToken from '../middleware/verifyToken.js';
+import upload from '../services/Upload.js';
 
 const usersRouter = Router();
 usersRouter.post('/register', userController.register); // register
@@ -12,4 +13,6 @@ usersRouter.put('/change-password/:id', verifyToken, userController.changePasswo
 usersRouter.get('/', userController.getAllUsers); // all users
 usersRouter.get('/:id', userController.getSingleUser); // user by id
 
+
+// usersRouter.route('/').post(verifyToken, upload.array('preferredcats', 20), userController.createUser);
 export default usersRouter;

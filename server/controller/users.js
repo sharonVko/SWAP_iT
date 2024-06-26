@@ -28,6 +28,18 @@ export const register = asyncHandler(async (req, res, next) =>
   res.status(201).send({ token });
 });
 
+// // createUser
+
+// export const createUser = asyncHandler(async (req, res, next) =>
+// {
+//   const { body } = req;
+//   console.log('Request body:', body); // Log request body
+
+//   const preferredcats = req.map(file => file.path);
+//   const newUser = await User.insertMany({ ...body, preferredcats });
+//   res.status(201).json(newUser)
+// })
+
 // LOGIN
 export const login = asyncHandler(async (req, res, next) =>
 {
@@ -68,6 +80,7 @@ export const getAllUsers = asyncHandler(async (req, res, next) =>
   const users = await User.find();
   res.json(users);
 });
+
 
 
 //get user by id

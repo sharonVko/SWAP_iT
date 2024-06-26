@@ -32,21 +32,7 @@ export const createMedia = asyncHandler(async (req, res, next) =>
   res.status(201).json(newMedia);
 });
 
-// export const updateMedia = asyncHandler(async (req, res, next) =>
-// {
-//   const { params: { id }, uid, body } = req;
 
-// console.log('Request body:', body);
-// console.log('User ID:', uid); 
-
-
-//   const found = await Media.findById(id);
-//   if (!found) throw new ErrorResponse(`Media ${id} does not exist`, 404);
-//   if (uid !== found.user_id.toString())
-//     throw new ErrorResponse('You have no permission to update this Media', 401);
-//   const updatedMedia = await Media.findByIdAndUpdate(id, body, { new: true }).populate('user_id');
-//   res.json(updatedMedia);
-// });
 
 export const updateMedia = asyncHandler(async (req, res, next) =>
 {

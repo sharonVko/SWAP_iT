@@ -58,8 +58,9 @@ const userSchema = new mongoose.Schema({
 	// 	// required: [true, 'interested category is required'],
 	// },
 	preferredcats: {
-		type: String, // if we want to keep it as a category_id as string or reference to taxonomies 
+		type: String, // if we want to keep it as a category_id as string or reference to taxonomies
 		//ex: "1,2,3"  cat_ids
+
 	},
 	preferredtags: {
 		type: String,
@@ -69,7 +70,16 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	},
-
+	// ads:
+	// [
+	// 	{
+	// 		ad: {
+	// 			type: mongoose.Schema.ObjectId,
+	// 			ref: 'Ads'
+	// 		}
+	// 	}
+	// ]
+	// ,
 	creationdate: {
 		type: Date,
 		default: Date.now

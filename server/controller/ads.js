@@ -79,16 +79,23 @@ export const deleteAd = asyncHandler(async (req, res, next) =>
 
 export const AdsbyOneUser = asyncHandler(async (req, res, next) =>
 {
-  const { uid } = req.params;
-  console.log(uid);
+  const { userId } = req.params;
+
   // Validate userId is a valid ObjectId
-  if (!uid) throw new ErrorResponse('Invalid user ID', 400);
+  if (!userId) throw new ErrorResponse('invalid userId', 400)
+
+  // Query to find ads by the specific user
+  const ads = await Ads.find({ user: userId }).populate('user_id');
+
+  // Check if ads exist for the user
+  if (!ads.length)
+  {
+    throw new ErrorResponse(`No ads found for user ${userId}`, 404);
+  }
+
+  // Return the ads
+  res.status(200).json(ads);
+});
 
 
-  const ads = await Ads.find({ user: uid }).populate('user_id');
-  if (!ads || ads.length === 0) throw new ErrorResponse(`No ads found for user ${uid}`, 404);
-
-
-  res.json(ads);
-})
 

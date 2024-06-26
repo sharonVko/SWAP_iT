@@ -4,7 +4,7 @@ const adSchema = new mongoose.Schema({
 	user_id: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'User',
-		// required: true,
+		required: true,
 	},
 	title: {
 		type: String,

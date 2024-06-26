@@ -1,7 +1,4 @@
-user 
- 
-password change
- 
+
 ads 
 
  Get all ads posted by a specific user
