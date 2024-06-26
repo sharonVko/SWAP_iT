@@ -8,4 +8,3 @@ ads
  get all ads by user id ( user has how many ads and it's details)
 
 
-

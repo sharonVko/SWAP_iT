@@ -8,7 +8,7 @@ usersRouter.post('/login', userController.login); // login
 usersRouter.get('/me', verifyToken, userController.getUser); // your profile
 usersRouter.put('/:id', verifyToken, userController.updateUser); // update user settings
 usersRouter.post('/logout', verifyToken, userController.logout); // logout
-usersRouter.put('/change-password', verifyToken, userController.changePassword); // change pass
+usersRouter.put('/change-password/:id', verifyToken, userController.changePassword); // change pass
 usersRouter.get('/', userController.getAllUsers); // all users
 usersRouter.get('/:id', userController.getSingleUser); // user by id
 
