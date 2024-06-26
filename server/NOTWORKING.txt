@@ -1,0 +1,14 @@
+user 
+
+update user settings 
+password change
+
+ads 
+
+ Get all ads posted by a specific user
+ get all ads by user id ( user has how many ads and it's details)
+
+media 
+
+update media
+

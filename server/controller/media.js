@@ -54,7 +54,7 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
   console.log('Request body:', body);
   console.log('User ID:', uid);
 
-  const found = await Media.findById(id).populate('user_id');
+  const found = await Media.findById(id);
   if (!found) throw new ErrorResponse(`media ${id} does not exist`, 404);
   if (uid !== found.user_id.toString())
     throw new ErrorResponse(`You have no permission to update this Media`, 401);

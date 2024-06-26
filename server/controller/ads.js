@@ -27,11 +27,6 @@ export const createAd = asyncHandler(async (req, res, next) =>
 {
   const { body, uid } = req;
 
-  // // Ensure user ID is a valid ObjectId
-  // if (!mongoose.Types.ObjectId.isValid(uid))
-  // {
-  //   throw new ErrorResponse('Invalid user ID', 400);
-  // }
   console.log('Request body:', body); // Log request body
   console.log('User ID:', uid); // Log user ID from token
   const newAd = await Ads.create({ ...body, user: uid });
@@ -46,6 +41,9 @@ export const updateAd = asyncHandler(async (req, res, next) =>
     params: { id },
     uid,
   } = req;
+
+  console.log('Request body:', body);
+  console.log('User ID:', uid);
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 

@@ -14,8 +14,8 @@ mediaRouter
 
 mediaRouter
   .route('/:id')
-  .get(mediaController.getSingleMedia)
-  .put(verifyToken, mediaController.updateMedia)
+  .get(verifyToken, mediaController.getSingleMedia)
+  .put(verifyToken, upload.array('media_files', 6), mediaController.updateMedia)
   .delete(verifyToken, mediaController.deleteMedia);
 
 export default mediaRouter;
