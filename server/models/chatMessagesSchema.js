@@ -5,9 +5,9 @@ const chatMessageSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'User'
 	},
-	content: {
+	message: {
 		type: String,
-		required: [true, 'content is required'],
+		required: [true, 'message is required'],
 	},
 	timestamp: {
 		type: Date,

@@ -15,7 +15,7 @@ adsRouter
   .put(verifyToken, adsController.updateAd)
   .delete(verifyToken, adsController.deleteAd);
 
-adsRouter.route('/:userId').get(adsController.AdsbyOneUser);
+adsRouter.route('/:userId').get(adsController.AdsbyOneUser); // this is not working
 adsRouter.route('/:userId/:id').get(adsController.getSingleAd)
 
 export default adsRouter;

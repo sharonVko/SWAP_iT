@@ -9,7 +9,7 @@ const chatsSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'User',
 	},
-	ad: {
+	ad_id: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads',
 	},
