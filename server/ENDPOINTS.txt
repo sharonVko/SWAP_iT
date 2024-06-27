@@ -36,3 +36,24 @@ GET REQ ::                /media            ==> get all images or videos
 PUT REQ ::               /media/:media_id        ==> to update images or videos
 
 DELETE REQ ::             /media/:media_id           ==> to delete videos or images
+
+
+CHAT::::::::::::::::::::::::::
+
+GET REQ  ::                    /chat/:id   ==> get chat by id
+
+POST REQ ::                   /chat/        ==> to create a new chat 
+
+DELETE REQ ::                  /chat/:id          ==> to delete a chat 
+
+
+MESSAGE::::::::::::::::::::::::::
+
+
+GET REQ ::                     /message/:id          ==> get message by id
+
+POST REQ ::                    /message/         ==> to create a new message
+
+PUT REQ ::                     /message/:id          ==>    to update a message and to update a chat also
+
+DELETE REQ ::                 /message/:id            ==> to delete a message by  id 
