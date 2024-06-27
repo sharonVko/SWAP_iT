@@ -8,7 +8,7 @@ const UserDataComponent = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("users/me"); // Endpoint to fetch current user data
+        const response = await axios.get("users/667c2648c43fe23dcf6c6cb4"); // Endpoint to fetch current user data
         setUser(response.data);
       } catch (error) {
         setError(error.message);
