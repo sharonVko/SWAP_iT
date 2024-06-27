@@ -73,10 +73,10 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	},
-	ads: {
+	ads: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
-	},
+	}],
 	creationdate: {
 		type: Date,
 		default: Date.now

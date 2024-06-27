@@ -1,7 +1,7 @@
 import Ads from '../models/adsSchema.js'
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
-
+import User from '../models/usersSchema.js'
 //to get all Ads by all users
 
 export const getAllAds = asyncHandler(async (req, res, next) =>
@@ -37,13 +37,30 @@ export const getSingleAd = asyncHandler(async (req, res, next) =>
 export const createAd = asyncHandler(async (req, res, next) =>
 {
   const { body, uid } = req;
-  console.log('Request body:', body); // Log request body
-  console.log('User ID:', uid); // Log user ID from token
-  const newAd = await Ads.create({ ...body, user: uid });
+
+  // Validate that the user ID (uid) matches the user associated with the ad being created
+  if (body.user_id !== uid) throw new ErrorResponse('Unauthorized - User ID does not match', 401)
+
+  // Create the ad associated with the logged-in user
+  const newAd = await Ads.create({ ...body, user_id: uid });
+
+  // Find the logged-in user and update their ads field with the new ad ID
+  const user = await User.findById(uid);
+  if (!user) throw new ErrorResponse('User not found', 404);
+
+  // Update user's ads field with the new ad ID
+  user.ads.push(newAd._id);
+  await user.save();
+
+  // Populate the user_id field in the ad before sending the response
   const populatedAd = await Ads.findById(newAd._id).populate('user_id');
+
+  // Return the populated ad in the response
   res.status(201).json(populatedAd);
 });
 
+
+// update ad
 export const updateAd = asyncHandler(async (req, res, next) =>
 {
   const {
