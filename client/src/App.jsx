@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
-import Searchbar from "./components/Searchbar.jsx";
 import Footer from "./components/Footer.jsx";
 
 import Home from "./views/Home.jsx";
@@ -12,22 +11,21 @@ import UserSignUp from "./views/UserSignUp.jsx";
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
 import ChangePassword from "./views/ChangePassword.jsx";
-
 import FilteredAds from "./views/FilteredAds.jsx";
 import MyAds from "./views/MyAds.jsx";
 import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
-
 function App() {
 
 	return (
 		<div className="flex flex-col h-screen">
-			<header className="py-2 sm:py-4">
+
+			<header>
 				<Navbar />
-				{/*<Searchbar />*/}
 			</header>
+
 			<main className="px-4 py-8 flex-1">
 				<div className="container mx-auto">
 					<Routes>
@@ -64,7 +62,6 @@ function App() {
 			<footer className="footer px-4 py-8 bg-teal-300">
 				<Footer/>
 			</footer>
-
 		</div>
 	);
 }

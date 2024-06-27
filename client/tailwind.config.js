@@ -113,6 +113,9 @@ export default {
 			fontFamily: {
 				'display': ['Merriweather'],
 			},
+			dropShadow: {
+				'logo': '3px 3px 3px rgba(0, 0, 0, 0.75)',
+			}
 		},
 	},
   plugins: [],
