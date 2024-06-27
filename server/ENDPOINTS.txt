@@ -1,0 +1,38 @@
+USER:::::::::::::
+
+POST REQ ::    /users/register  ==> to register
+               /users/login  ==> to login
+               /users/logout  ==> to logout
+
+GET REQ ::      /users/me  ==> to get the user details which is loggedin , user's profile         
+                /users/   ==> to get all users details
+                /users/:user_id ==> to get the detail of single user
+                /users/ads/:user_id ==> get all ads posted by specific user
+
+PUT REQ ::      /users/:user_id  ==> to update user details in user settings
+                /users/change-password/:user_id ==> to change password 
+
+
+ADS::::::::::::::::::::::
+
+POST REQ ::       /ads/createAd   ==> to create a post/ADS
+
+GET REQ ::        /ads/         ==> to get all the ads
+                  /ads/:ad_id          ==> to get single Ad using AdId 
+                  
+PUT REQ ::      /ads/:ad_id  ==> to update Ads  
+  
+DELETE REQ ::   /ads/:ad_id  ==> to delete Ads
+
+
+
+MEDIA(IMAGES/VIDEOS IN ADS)::::::::::::::::::::
+
+POST REQ ::                /media/         ==> to upload images or videos in ADS while creating AD
+
+GET REQ ::                /media            ==> get all images or videos
+                          /media/:media_id   ==>  to get images and videos per Ads ( it will show all the 6 media)
+
+PUT REQ ::               /media/:media_id        ==> to update images or videos
+
+DELETE REQ ::             /media/:media_id           ==> to delete videos or images
