@@ -7,9 +7,9 @@ function App() {
   return (
     <>
       <h1 className="mb-14">Navbar</h1>
-      <SwapSchema />
+      {/*<SwapSchema />*/}
       <ArticleList />
-      <UserDataComponent />
+      {/*<UserDataComponent />*/}
     </>
   );
 }

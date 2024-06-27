@@ -6,7 +6,7 @@
   padding: 40px;
   width: 350px;
   max-width: 100%;
-  height: 300px; /* Ursprüngliche Höhe für zugeklappten Modus */
+  height: 300px; /* Height for collapsed mode */
   background: #fff;
   border-radius: 20px;
   transition: 0.5s;
@@ -16,7 +16,7 @@
 }
 
 .custom-card.active {
-  height: 400px; /* Höhe für aufgeklappten Modus */
+  height: 400px; /* Height for expanded mode */
   z-index: 10;
 }
 
@@ -51,7 +51,7 @@
   position: absolute;
   top: 252px;
   width: 100%;
-  height: auto; /* Automatische Höhe für zugeklappten Modus */
+  height: auto; /* Auto height for collapsed mode */
   padding: 0 30px;
   text-align: center;
   overflow: hidden;
@@ -60,7 +60,7 @@
 
 .custom-card.active .custom-content {
   top: 130px;
-  height: 400px; /* Höhe für aufgeklappten Modus */
+  height: auto; /* Auto height for expanded mode */
   overflow: visible;
 }
 
@@ -73,9 +73,11 @@
 .custom-card .custom-content p {
   color: #333;
   opacity: 0;
+  transition: opacity 0.5s; /* Add transition for smooth appearance */
 }
+
 .custom-card.active .custom-content p {
-  opacity: 1; /* Volle Opazität im aufgeklappten Modus */
+  opacity: 1; /* Full opacity in expanded mode */
 }
 
 .custom-card .custom-content a {
@@ -87,10 +89,7 @@
   background: #181818;
   color: #fff;
   font-weight: 500;
-}
-
-.custom-card .custom-content a:hover {
-  opacity: 0.8;
+  transition: opacity 0.3s; /* Add transition for hover effect */
 }
 
 .img-box {
@@ -102,18 +101,13 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: rgba(
-    0,
-    0,
-    0,
-    0.5
-  ); /* Hintergrundfarbe und Deckkraft anpassen */
-  color: #fff; /* Textfarbe */
-  padding: 8px; /* Abstand um den Benutzernamen */
+  background-color: rgba(0, 0, 0, 0.5); /* Background color and opacity */
+  color: #fff; /* Text color */
+  padding: 8px; /* Padding around the username */
 }
 
 .user-name {
-  font-size: 0.75rem; /* Schriftgröße anpassen */
+  font-size: 0.75rem; /* Font size */
 }
 
 @media (max-width: 480px) {
