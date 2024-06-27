@@ -24,7 +24,7 @@ function App() {
 
 	return (
 		<div className="flex flex-col h-screen">
-			<header className="px-4 py-3">
+			<header className="py-2 sm:py-4">
 				<Navbar />
 				{/*<Searchbar />*/}
 			</header>
@@ -60,9 +60,11 @@ function App() {
 					</Routes>
 				</div>
 			</main>
-			<footer className="px-4 py-3">
+
+			<footer className="footer px-4 py-8 bg-teal-300">
 				<Footer/>
 			</footer>
+
 		</div>
 	);
 }

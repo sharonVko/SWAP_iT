@@ -1,1 +1,10 @@
-@layer components {}
+@layer components {
+
+  .btn-sm { @apply uppercase tracking-wider rounded drop-shadow text-sm px-2; }
+  .btn-red { @apply text-peach-300 bg-red-400; }
+
+  .footer a {
+    @apply text-peach-300 font-medium tracking-wider hover:text-red-400;
+  }
+
+}
