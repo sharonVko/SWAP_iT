@@ -99,11 +99,19 @@ export default {
 				900: "#6B3A08",
 				950: "#502C06",
 			},
+			peach: {
+				DEFAULT: "#FFBE98",
+				300: "#FFF1EA",
+				400: "#FFD8C1",
+				500: "#FFBE98",
+				600: "#FF9B60",
+				700: "#FF7728",
+				800: "#EF5800",
+			},
 		},
 		extend: {
 			fontFamily: {
 				'display': ['Merriweather'],
-				'body':  ['Poppins'],
 			},
 		},
 	},
