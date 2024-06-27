@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema({
 	firstname: {
 		type: String,
-		required: [true, 'first name is required']
+		// required: [true, 'first name is required']
 	},
 	lastname: {
 		type: String,
-		required: [true, 'last name is required']
+		// required: [true, 'last name is required']
 	},
 	username: {
 		type: String,
@@ -46,20 +46,18 @@ const userSchema = new mongoose.Schema({
 		},
 		city: {
 			type: String,
-			required: [true, 'city is required']
+			// required: [true, 'city is required']
 		},
 		country: {
 			type: String
 		}
 	},
-	// we have already over preffered cats and tags... fields
-	// interestedCategories: {
-	// 	type: String,
-	// required: [true, 'interested category is required'],
-	// },
 	preferredcats: {
 		type: String, // if we want to keep it as a category_id as string or reference to taxonomies
 		//ex: "1,2,3"  cat_ids
+	},
+	preferredSubcats: {
+		type: String,
 	},
 	preferredtags: {
 		type: String,

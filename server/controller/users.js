@@ -8,22 +8,18 @@ import Ads from '../models/adsSchema.js'
 // Register
 export const register = asyncHandler(async (req, res, next) =>
 {
-  const { firstname, lastname, username, email, password, address, preferredtags,
-    preferredcats, } = req.body;
+  const { username, email, password, address,
+  } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) throw new ErrorResponse('An account with this Email already exists', 409);
 
   const hash = await bcrypt.hash(password, 10);
   const newUser = await User.create({
-    firstname,
-    lastname,
     username,
     email,
     password: hash,
     address,
-    preferredtags,
-    preferredcats,
   });
   const token = jwt.sign({ uid: newUser._id }, process.env.JWT_SECRET);
   res.status(201).send({ token });

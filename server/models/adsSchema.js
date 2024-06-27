@@ -25,19 +25,28 @@ const adSchema = new mongoose.Schema({
 		},
 		zip: {
 			type: String,
-			required: [true, 'zip code is required'],
+			// required: [true, 'zip code is required'],
 		},
 		city: {
 			type: String,
-			required: [true, 'city is required'],
+			// required: [true, 'city is required'],
 		},
 		country: {
 			type: String
 		}
 	},
 	categories: {
-		type: Array,
+		type: String,
 		required: [true, 'categories are required'],
+	},
+	subCategory: {
+		type: String,
+		required: [true, 'subCategory are required'],
+	},
+	tags: {
+		type: String,
+		required: [true, '3 tags are required'],
+		// minimnum 3 tags required
 	},
 	media: {
 		type: mongoose.Schema.ObjectId,
