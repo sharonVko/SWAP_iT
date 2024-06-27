@@ -26,7 +26,6 @@ export const createMedia = asyncHandler(async (req, res, next) =>
 {
   const { body, uid } = req;
   const { ad_id } = body;
-
   console.log('Request body:', body); // Log request body
   console.log('User ID:', uid);
   console.log('Ad ID:', ad_id);

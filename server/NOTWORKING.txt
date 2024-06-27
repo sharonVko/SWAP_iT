@@ -1,1 +1,0 @@
-so save all media into ad schema and then into userschema
