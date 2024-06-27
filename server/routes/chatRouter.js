@@ -7,12 +7,13 @@ import verifyToken from '../middleware/verifyToken.js';
 
 const chatRouter = Router();
 
-chatRouter.route('/:id').get(verifyToken, chatController.getChat);
+chatRouter.route('/:id').get(verifyToken, chatController.getChatbyId);
 
-chatRouter.route('/').post(chatController.createChat);
+chatRouter.route('/').post(verifyToken, chatController.createChat);
 
 chatRouter.route('/:id').delete(verifyToken, chatController.deleteChat)
 
 
 
 export default chatRouter;
+

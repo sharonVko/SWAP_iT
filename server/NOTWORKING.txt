@@ -1,7 +1,3 @@
 
-ads 
-
- Get all ads posted by a specific user
- get all ads by user id ( user has how many ads and it's details)
-
-
+update message
+delete message

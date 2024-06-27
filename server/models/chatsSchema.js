@@ -1,14 +1,6 @@
 import mongoose from 'mongoose';
 
 const chatsSchema = new mongoose.Schema({
-	// sender: {
-	// 	type: mongoose.Schema.ObjectId,
-	// 	ref: 'User',
-	// },
-	// receiver: {
-	// 	type: mongoose.Schema.ObjectId,
-	// 	ref: 'User',
-	// },
 	participants: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User',

@@ -2,37 +2,65 @@ import Message from '../models/MessagesSchema.js';
 import Chat from '../models/chatsSchema.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
+import User from '../models/usersSchema.js'
 
 // send a message
 
 export const sendMessage = asyncHandler(async (req, res, next) =>
 {
-  const { body, uid } = req;
-  console.log('Request body:', body); // Log request body
+  const { chatId, message, receiverId } = req.body; // Include receiverId to create new chat if needed
+  const { uid } = req;
+
+  console.log('Request body:', req.body); // Log request body
   console.log('User ID:', uid); // Log user ID from token
 
-  const newMessage = await Message.create({ ...body, sender: uid });
+  // Check if sender (user) is registered
+  const user = await User.findById(uid);
+  if (!user) throw new ErrorResponse('Sender not found', 404);
 
+  // Check if receiver is registered
+  const receiver = await User.findById(receiverId);
+  if (!receiver) throw new ErrorResponse('Receiver not found', 404);
+
+  // Check if chat exists
+  let chat = await Chat.findById(chatId);
+
+  // If chat does not exist, create a new chat with both participants
+  if (!chat)
+  {
+    chat = await Chat.create({ participants: [uid, receiverId] });
+  }
+
+  // Create a new message and link it to the chat
+  const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message });
+
+  // Add the new message to the chat's messages array
+  chat.messages.push(newMessage._id);
+  await chat.save();
+
+  // Populate the sender_id
   const populatedMessage = await Message.findById(newMessage._id).populate('sender_id');
 
   res.status(201).json(populatedMessage);
-})
-
-// export const sendMessage = asyncHandler(async (req, res, next) =>
-// {
-//   const { chatId, content } = req.body;
-//   const sender = req.user.id;
-//   const newMessage = new Message({ chat: chatId, sender, content });
-//   const savedMessage = await newMessage.save();
-//   await Chat.findByIdAndUpdate(chatId, { $push: { messages: savedMessage._id } });
-//   res.status(201).json(savedMessage);
-// })
+});
 
 //get all messages
 export const getMessages = asyncHandler(async (req, res, next) =>
 {
   const { chatId } = req.params;
+  const { uid } = req;
+  console.log('Fetching messages for chatId:', chatId);
+  console.log('User ID:', uid);
+  // Check if the user is a participant of the chat
+  const chat = await Chat.findById(chatId);
+  if (!chat) throw new ErrorResponse('Chat not found', 404);
+
+  const isParticipant = chat.participants.some(participant => participant.equals(uid));
+  if (!isParticipant) throw new ErrorResponse('Unauthorized - You are not a participant of this chat', 403);
+
+  // Retrieve messages
   const messages = await Message.find({ chat: chatId }).sort({ createdAt: 1 });
+
   if (!messages.length) throw new ErrorResponse('Messages not found', 404);
   res.json(messages);
 });
