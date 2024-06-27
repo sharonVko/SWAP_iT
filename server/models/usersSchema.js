@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
 	},
 	email: {
 		type: String,
+		select: false,
 		required: [true, 'Email is required'],
 		unique: true, // Ensure the email is unique
 		match: [
@@ -25,20 +26,24 @@ const userSchema = new mongoose.Schema({
 	},
 	password: {
 		type: String,
-		required: [true, 'password is required']
+		required: [true, 'password is required'],
+		select: false,
 	},
 	phone: {
-		type: String
+		type: String,
+		select: false,
 	},
 	profileimage: {
 		type: String
 	},
 	address: {
 		street: {
-			type: String
+			type: String,
+			select: false,
 		},
 		housenumber: {
-			type: String
+			type: String,
+			select: false,
 		},
 		zip: {
 			type: String,
@@ -46,6 +51,7 @@ const userSchema = new mongoose.Schema({
 		},
 		city: {
 			type: String,
+			select: false,
 			// required: [true, 'city is required']
 		},
 		country: {

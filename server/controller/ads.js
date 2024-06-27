@@ -6,7 +6,8 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const getAllAds = asyncHandler(async (req, res, next) =>
 {
-  const ads = await Ads.find().populate('user_id');
+  const { uid } = req;
+  const ads = await Ads.find({ user: uid }).populate('user_id');
   if (!ads.length) throw new ErrorResponse('Ads not found', 404);
   res.json(ads);
 });
