@@ -3,10 +3,10 @@ import logo from "../assets/swapit-logo-transparent.png";
 function Navbar() {
   return (
     <div className="navbar py-3 sm:py-4 relative h-28 sm:h-32 flex flex-col justify-center">
-      <div className="bg-teal-500 relative z-0 px-4">
+      <div className="bg-teal-500 shadow-xl relative z-0 px-4">
         <div className="container mx-auto h-16 sm:h-20 flex flex-col justify-center">
           <div className="navbar-inner flex justify-between">
-            <button className="text-3xl w-16 text-peach-300">
+            <button className="text-3xl w-16 text-lemon-500">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="1em"
@@ -24,7 +24,7 @@ function Navbar() {
             </button>
 
             <div className="flex gap-4 md:gap-8">
-              <button className="text-2xl text-peach-300">
+              <button className="text-2xl text-lemon-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="1em"
@@ -48,7 +48,7 @@ function Navbar() {
               {/*	</svg>*/}
               {/*</button>*/}
 
-              <button className="btn-sm btn-red">Login</button>
+              <button className="btn-sm btn-red text-lemon-500">Login</button>
             </div>
           </div>
         </div>
