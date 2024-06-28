@@ -4,7 +4,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 import User from '../models/usersSchema.js'
 
-// send a message - if senderand receiver is registered - if sender is loggedin - if chat is not exist then it should create also chat id. - message should save in msgschema and chatschema also - right now user is able to chat with himself also. but we can implement that later
+// send a message - if senderand receiver is registered - if sender is loggedin - if chat is not exist then it should create also chat id. - message should save in msgschema and chatschema also - right now user is able to chat with himself also. but we can implement that later. - if chat is already exist then it should save those messages to that chat.
 
 export const sendMessage = asyncHandler(async (req, res, next) =>
 {
@@ -15,15 +15,26 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   console.log('User ID:', uid); // Log user ID from token
 
   // Check if sender (user) is registered
-  const user = await User.findById(uid);
-  if (!user) throw new ErrorResponse('Sender not found', 404);
+  const sender = await User.findById(uid);
+  if (!sender) throw new ErrorResponse('Sender not found', 404);
 
   // Check if receiver is registered
   const receiver = await User.findById(receiverId);
   if (!receiver) throw new ErrorResponse('Receiver not found', 404);
 
-  // Check if chat exists
-  let chat = await Chat.findById(chatId);
+  let chat;
+
+  // If chatId is provided, check if chat exists with that chatId
+  if (chatId)
+  {
+    chat = await Chat.findById(chatId);
+  } else
+  {
+    // Check if a chat already exists between the two users
+    chat = await Chat.findOne({
+      participants: { $all: [uid, receiverId] }
+    });
+  }
 
   // If chat does not exist, create a new chat with both participants
   if (!chat)
@@ -44,41 +55,6 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   res.status(201).json(populatedMessage);
 });
 
-
-// export const sendMessage = asyncHandler(async (req, res, next) =>
-// {
-//   const { chatId, message } = req.body;
-
-//   if (!message || message.trim() === '')
-//   {
-//     throw new ErrorResponse('Message content cannot be empty', 400);
-//   }
-
-//   const chat = await Chat.findById(chatId);
-//   if (!chat)
-//   {
-//     throw new ErrorResponse('Chat not found', 404);
-//   }
-
-//   // Ensure the sender is a participant of the chat
-//   if (!chat.participants.includes(req.user._id))
-//   {
-//     throw new ErrorResponse('You are not a participant in this chat', 403);
-//   }
-
-//   const newMessage = await Message.create({
-//     chat: chatId,
-//     sender_id: req.uid,
-//     message
-//   });
-
-//   if (!newMessage)
-//   {
-//     throw new ErrorResponse('Failed to send message', 500);
-//   }
-
-//   res.status(201).json(newMessage);
-// });
 
 //get all messages
 export const getMessages = asyncHandler(async (req, res, next) =>
