@@ -1,4 +1,4 @@
-import Message from '../models/MessagesSchema.js';
+import Message from '../models/messagesSchema.js';
 import Chat from '../models/chatsSchema.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
@@ -6,42 +6,78 @@ import User from '../models/usersSchema.js'
 
 // send a message
 
+// export const sendMessage = asyncHandler(async (req, res, next) =>
+// {
+//   const { chatId, message, receiverId } = req.body; // Include receiverId to create new chat if needed
+//   const { uid } = req;
+
+//   console.log('Request body:', req.body); // Log request body
+//   console.log('User ID:', uid); // Log user ID from token
+
+//   // Check if sender (user) is registered
+//   const user = await User.findById(uid);
+//   if (!user) throw new ErrorResponse('Sender not found', 404);
+
+//   // Check if receiver is registered
+//   const receiver = await User.findById(receiverId);
+//   if (!receiver) throw new ErrorResponse('Receiver not found', 404);
+
+//   // Check if chat exists
+//   let chat = await Chat.findById(chatId);
+
+//   // If chat does not exist, create a new chat with both participants
+//   if (!chat)
+//   {
+//     chat = await Chat.create({ participants: [uid, receiverId] });
+//   }
+
+//   // Create a new message and link it to the chat
+//   const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message });
+
+//   // Add the new message to the chat's messages array
+//   chat.messages.push(newMessage._id);
+//   await chat.save();
+
+//   // Populate the sender_id
+//   const populatedMessage = await Message.findById(newMessage._id).populate('sender_id');
+
+//   res.status(201).json(populatedMessage);
+// });
+
+
 export const sendMessage = asyncHandler(async (req, res, next) =>
 {
-  const { chatId, message, receiverId } = req.body; // Include receiverId to create new chat if needed
-  const { uid } = req;
+  const { chatId, message } = req.body;
 
-  console.log('Request body:', req.body); // Log request body
-  console.log('User ID:', uid); // Log user ID from token
-
-  // Check if sender (user) is registered
-  const user = await User.findById(uid);
-  if (!user) throw new ErrorResponse('Sender not found', 404);
-
-  // Check if receiver is registered
-  const receiver = await User.findById(receiverId);
-  if (!receiver) throw new ErrorResponse('Receiver not found', 404);
-
-  // Check if chat exists
-  let chat = await Chat.findById(chatId);
-
-  // If chat does not exist, create a new chat with both participants
-  if (!chat)
+  if (!message || message.trim() === '')
   {
-    chat = await Chat.create({ participants: [uid, receiverId] });
+    throw new ErrorResponse('Message content cannot be empty', 400);
   }
 
-  // Create a new message and link it to the chat
-  const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message });
+  const chat = await Chat.findById(chatId);
+  if (!chat)
+  {
+    throw new ErrorResponse('Chat not found', 404);
+  }
 
-  // Add the new message to the chat's messages array
-  chat.messages.push(newMessage._id);
-  await chat.save();
+  // Ensure the sender is a participant of the chat
+  if (!chat.participants.includes(req.user._id))
+  {
+    throw new ErrorResponse('You are not a participant in this chat', 403);
+  }
 
-  // Populate the sender_id
-  const populatedMessage = await Message.findById(newMessage._id).populate('sender_id');
+  const newMessage = await Message.create({
+    chat: chatId,
+    sender_id: req.uid,
+    message
+  });
 
-  res.status(201).json(populatedMessage);
+  if (!newMessage)
+  {
+    throw new ErrorResponse('Failed to send message', 500);
+  }
+
+  res.status(201).json(newMessage);
 });
 
 //get all messages
