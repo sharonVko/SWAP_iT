@@ -31,7 +31,7 @@ export const login = asyncHandler(async (req, res, next) =>
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email }).select('+password');
-  if (!existingUser) throw new ErrorResponse('Email does not exist', 404);
+  if (!existingUser) throw new ErrorResponse('Email does not exist , please register', 404);
 
   const match = await bcrypt.compare(password, existingUser.password);
   if (!match) throw new ErrorResponse('Password is incorrect', 401);

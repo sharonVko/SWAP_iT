@@ -6,6 +6,11 @@ const mediaSchema = new mongoose.Schema({
 		ref: 'User',
 		required: true,
 	},
+	ad_id: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Ad',
+		required: true,
+	},
 	media_files: [
 		{
 			type: String,

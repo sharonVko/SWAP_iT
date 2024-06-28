@@ -1,5 +1,5 @@
 USER:::::::::::::
-
+// :user_id refer to backend in routers /:id........ :user_id is for only understanding.
 POST REQ ::    /users/register  ==> to register
                /users/login  ==> to login
                /users/logout  ==> to logout
