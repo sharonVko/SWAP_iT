@@ -5,6 +5,7 @@ import "../components/css/ArticleCards.css";
 
 const ArticleList = () => {
   const [ads, setAds] = useState([]);
+  const [media, setMedia] = useState([]); // New state for media data
   const [currentPage, setCurrentPage] = useState(1);
   const [articlesPerPage, setArticlesPerPage] = useState(6); // Default to 6 articles per page
 
@@ -19,6 +20,19 @@ const ArticleList = () => {
       }
     };
     fetchArticleData();
+  }, []);
+
+  useEffect(() => {
+    const fetchMediaData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/media/`);
+        setMedia(response.data);
+        console.log("Fetched media:", response.data); // Log the fetched media
+      } catch (error) {
+        console.error("Error fetching media data:", error);
+      }
+    };
+    fetchMediaData();
   }, []);
 
   // Calculate pagination
@@ -39,8 +53,13 @@ const ArticleList = () => {
 
   return (
     <div className="flex flex-col items-center p-4">
-      {/* Pagination controls at the top */}
-      <div className="pagination-container mb-4">
+      {/* Article grid */}
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center">
+        {currentArticles.map((ad, index) => (
+          <ArticleCard key={index} article={ad} media={media} />
+        ))}
+      </div>
+      <div className="pagination-container mb-2 mt-4">
         <div className="pagination">
           {Array.from(
             { length: Math.ceil(ads.length / articlesPerPage) },
@@ -57,7 +76,7 @@ const ArticleList = () => {
             )
           )}
         </div>
-        <div className="articles-per-page">
+        <div className="articles-per-page mt-2">
           <label>Articles per page:</label>
           <select onChange={handlePerPageChange} value={articlesPerPage}>
             <option value="3">3</option>
@@ -66,13 +85,6 @@ const ArticleList = () => {
             {/* Add more options as needed */}
           </select>
         </div>
-      </div>
-
-      {/* Article grid */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center">
-        {currentArticles.map((ad, index) => (
-          <ArticleCard key={index} article={ad} />
-        ))}
       </div>
     </div>
   );

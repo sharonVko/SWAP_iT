@@ -1,7 +1,7 @@
 import React from "react";
 import SwapSchema from "./components/SwapSchema";
 import ArticleList from "./components/ArticleList";
-import UserDataComponent from "./components/UserDataComponent";
+import ProfileView from "./components/ProfileView";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <h1 className="mb-14">Navbar</h1>
       {/*<SwapSchema />*/}
       <ArticleList />
-      {/*<UserDataComponent />*/}
+      {/* <ProfileView /> */}
     </>
   );
 }

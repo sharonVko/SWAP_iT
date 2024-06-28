@@ -1,0 +1,68 @@
+x .content {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.content div {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content img {
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+
+.top-matches {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.top-matches p {
+  justify-content: center;
+  display: flex;
+}
+
+.top-matches div {
+  justify-content: center;
+  display: flex;
+  gap: 10px;
+}
+
+.top-matches div img {
+  justify-content: center;
+
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+}
+
+.create-ad {
+  justify-content: center;
+  display: flex;
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.create-ad img {
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
