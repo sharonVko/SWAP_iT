@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
+  content: [
+		"./index.html",
+		"./src/**/*.{js,jsx,ts,tsx}",
+		"./node_modules/flowbite/**/*.js"
+	],
   theme: {
 		container: {
 			center: true,
@@ -99,6 +103,14 @@ export default {
 				900: "#6B3A08",
 				950: "#502C06",
 			},
+			lemon: {
+				DEFAULT: "#FFFED3",
+				400: "#FFFFFC",
+				500: "#FFFED3",
+				600: "#FFFD9B",
+				700: "#FFFB63",
+				800: "#FFFA2B",
+			},
 			peach: {
 				DEFAULT: "#FFBE98",
 				300: "#FFF1EA",
@@ -115,6 +127,13 @@ export default {
 			},
 			dropShadow: {
 				'logo': '3px 3px 3px rgba(0, 0, 0, 0.75)',
+			},
+			zIndex: {
+				'60': '60',
+				'70': '70',
+				'80': '80',
+				'90': '90',
+				'100': '100'
 			}
 		}
 	},
