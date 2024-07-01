@@ -17,7 +17,7 @@
       @apply h-20;
     }
     .drawer-overlay-bottom {
-      @apply flex-1 bg-black/30 ;
+      @apply flex-1 bg-black/30;
     }
     &.show {
       @apply visible opacity-100;
@@ -26,7 +26,7 @@
   }
 
   .drawer {
-    @apply absolute top-0 left-0 w-screen sm:w-80 min-h-screen bg-white;
+    @apply absolute top-0 left-0 w-screen sm:w-80 min-h-screen bg-white p-8 pt-28;
     @apply -translate-x-full;
     @apply bg-gradient-to-b from-peach-500 to-lemon-500;
     transition: transform 150ms ease-in-out;
