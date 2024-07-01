@@ -66,3 +66,8 @@ x .content {
   height: 20px;
   margin-right: 10px;
 }
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

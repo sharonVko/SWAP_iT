@@ -9,7 +9,7 @@ function App() {
       <h1 className="mb-14">Navbar</h1>
       {/*<SwapSchema />*/}
       <ArticleList />
-      {/* <ProfileView /> */}
+      {/*<ProfileView /> */}
     </>
   );
 }

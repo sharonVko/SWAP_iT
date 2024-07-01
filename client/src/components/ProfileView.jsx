@@ -3,7 +3,7 @@ import ArticleCard from "./ArticleCard";
 
 const ProfileView = () => {
   return (
-    <div>
+    <div className="container items-center">
       <div className="content">
         <div>
           <p>DAS GEBE ICH AB</p>
@@ -17,24 +17,18 @@ const ProfileView = () => {
       </div>
       <div className="top-matches">
         <p>TOP 5 SWAP MATCHES:</p>
-
         <div>
-          <ArticleCard
-            article={{
-              image: "image1.jpg",
-              user_id: { username: "User 1" },
-              tradeOption: true,
-            }}
-          />
           <img src="/image7.jpg" alt="Image 7" />
           <img src="/image8.jpg" alt="Image 8" />
           <img src="/image9.jpg" alt="Image 9" />
         </div>
       </div>
-      <button className="create-ad">
-        <img src="/camera.svg" alt="Camera" />
-        <p>+ Anzeige erstellen</p>
-      </button>
+      <div className="button-container">
+        <button className="create-ad">
+          <img src="/camera.svg" alt="Camera" />
+          <p>+ Anzeige erstellen</p>
+        </button>
+      </div>
     </div>
   );
 };

@@ -79,10 +79,10 @@ const ArticleCard = ({ article, media }) => {
       <div className="img-box relative">
         <img src={imageUrl} alt={article.title} />
 
-        <div className="username-label absolute bottom-0 left-0 bg-black text-white p-2 text-xs opacity-50 rounded-lg">
+        <div className="username-label absolute bottom-0 left-0 bg-white text-black p-1 text-xs opacity-50 rounded-lg">
           {article.user_id.username}
         </div>
-        <div className="trade-label absolute bottom-0 right-0 bg-gray-800 text-white p-2 text-xs opacity-50 rounded-lg">
+        <div className="trade-label absolute bottom-0 right-0  text-black p-2 text-xs opacity-50 rounded-lg">
           {article.tradeOption ? (
             <div
               className="tooltip"
