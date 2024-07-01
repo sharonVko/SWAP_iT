@@ -100,20 +100,42 @@ export const updateAd = asyncHandler(async (req, res, next) =>
 });
 
 //delete ad by id
+// export const deleteAd = asyncHandler(async (req, res, next) =>
+// {
+//   const {
+//     body,
+//     params: { id },
+//     uid,
+//   } = req;
+
+//   const found = await Ads.findById(id);
+//   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
+
+//   if (uid !== found.user_id.toString())
+//     throw new ErrorResponse('You have no permission to delete this post', 401);
+
+//   await Ads.findByIdAndDelete(id, body, { new: true }).populate('user_id');
+//   res.json({ success: `Ad ${id} was deleted` });
+// });
+
 export const deleteAd = asyncHandler(async (req, res, next) =>
 {
-  const {
-    body,
-    params: { id },
-    uid,
-  } = req;
+  const { params: { id }, uid } = req;
 
+  // Find the ad by ID
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
-  if (uid !== found.user_id.toString())
-    throw new ErrorResponse('You have no permission to delete this post', 401);
+  // Check if the logged-in user is the owner of the ad
+  if (uid !== found.user_id.toString()) throw new ErrorResponse('You have no permission to delete this post', 401);
 
-  await Ads.findByIdAndDelete(id, body, { new: true }).populate('user_id');
+  // Delete the ad
+  await Ads.findByIdAndDelete(id);
+
+  // Remove the reference to this ad from the user's ads array
+  await User.findByIdAndUpdate(uid, {
+    $pull: { ads: id }
+  });
+
   res.json({ success: `Ad ${id} was deleted` });
 });
