@@ -146,7 +146,7 @@ const ArticleCard = ({ article, media }) => {
           )}
         </div>
 
-        {/* Heart animations */}
+        {/* Heart animations 
         {hearts.map((heart) => (
           <div
             key={heart.id}
@@ -162,7 +162,7 @@ const ArticleCard = ({ article, media }) => {
               <path d={mdiHeart} />
             </svg>
           </div>
-        ))}
+        ))} */}
       </div>
       <div
         className="custom-content"
