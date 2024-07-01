@@ -1,0 +1,2 @@
+getallads  ---- user_id null
+update emdia not working
