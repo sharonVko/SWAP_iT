@@ -10,8 +10,15 @@
 
   /*** Nav Drawer ***/
   .drawer-overlay {
-    @apply absolute top-0 left-0 w-screen min-h-screen bg-black/30 invisible opacity-0;
+    @apply absolute top-0 left-0 w-screen min-h-screen invisible opacity-0 flex flex-col;
     transition: opacity 150ms ease-in, visibility 0ms ease-in 150ms;
+
+    .drawer-overlay-top {
+      @apply h-20;
+    }
+    .drawer-overlay-bottom {
+      @apply flex-1 bg-black/30 ;
+    }
     &.show {
       @apply visible opacity-100;
       transition: opacity 150ms ease-in, visibility 0ms ease-in 0ms;
