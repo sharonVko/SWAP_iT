@@ -1,4 +1,2 @@
-
-when the one user is deleting his message it should also update chat.
-
-when we are deleting something from any of the schema it should update also into reference schema.
+getallads  ---- user_id null
+update emdia not working

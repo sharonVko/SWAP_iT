@@ -62,6 +62,10 @@ const adSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Media'
 	}],
+	timestamp: {
+		type: Date,
+		default: Date.now,
+	},
 });
 
 export default mongoose.model('Ads', adSchema);

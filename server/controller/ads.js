@@ -57,7 +57,7 @@ export const createAd = asyncHandler(async (req, res, next) =>
   res.status(201).json(populatedAd);
 });
 
-// update a ad
+// Update the ad
 export const updateAd = asyncHandler(async (req, res, next) =>
 {
   const {
@@ -73,7 +73,6 @@ export const updateAd = asyncHandler(async (req, res, next) =>
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
-
   // Ensure that only the ad owner can update the ad
   if (uid !== found.user_id.toString()) throw new ErrorResponse('Unauthorized - You have no permission to update this Ad', 401);
 
@@ -82,41 +81,14 @@ export const updateAd = asyncHandler(async (req, res, next) =>
     new: true,
   }).populate('user_id');
 
-  // Find the logged-in user and update their ads field if necessary
-  const user = await User.findById(uid);
-  if (!user) throw new ErrorResponse('User not found', 404);
+  // Ensure the ad update was successful
+  if (!updatedAd) throw new ErrorResponse('Error updating ad', 500);
 
-  // Check if the ad ID is already in the user's ads array
-  const adIndex = user.ads.findIndex(ad => ad.equals(updatedAd._id));
-  if (adIndex === -1)
-  {
-    // If the ad ID is not in the user's ads array, add it
-    user.ads.push(updatedAd._id);
-    await user.save();
-  }
   // Return the updated ad
   res.json(updatedAd);
-
 });
 
 //delete ad by id
-// export const deleteAd = asyncHandler(async (req, res, next) =>
-// {
-//   const {
-//     body,
-//     params: { id },
-//     uid,
-//   } = req;
-
-//   const found = await Ads.findById(id);
-//   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
-
-//   if (uid !== found.user_id.toString())
-//     throw new ErrorResponse('You have no permission to delete this post', 401);
-
-//   await Ads.findByIdAndDelete(id, body, { new: true }).populate('user_id');
-//   res.json({ success: `Ad ${id} was deleted` });
-// });
 
 export const deleteAd = asyncHandler(async (req, res, next) =>
 {

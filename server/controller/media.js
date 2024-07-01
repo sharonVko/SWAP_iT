@@ -26,6 +26,7 @@ export const createMedia = asyncHandler(async (req, res, next) =>
 {
   const { body, uid } = req;
   const { ad_id } = body;
+
   console.log('Request body:', body); // Log request body
   console.log('User ID:', uid);
   console.log('Ad ID:', ad_id);
@@ -37,8 +38,7 @@ export const createMedia = asyncHandler(async (req, res, next) =>
   // Check if the ad exists and belongs to the logged-in user
   const ad = await Ads.findById(ad_id);
   if (!ad) throw new ErrorResponse('Ad not found', 404);
-  if (!ad.user_id === uid) throw new ErrorResponse('Unauthorized - This ad does not belong to you', 403);
-
+  if (!ad.user_id.equals(uid)) throw new ErrorResponse('Unauthorized - This ad does not belong to you', 403);
 
   // Upload media files
   const media_files = req.files.map(file => file.path);
@@ -53,11 +53,11 @@ export const createMedia = asyncHandler(async (req, res, next) =>
   res.status(201).json(newMedia);
 });
 
-
-// update media
+// to update media
 export const updateMedia = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, body, uid } = req;
+
   console.log('Request body:', body);
   console.log('User ID:', uid);
 
@@ -72,15 +72,16 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
   // Check if the user owns the media
   if (!foundMedia.user_id.equals(uid)) throw new ErrorResponse('You do not have permission to update this media', 401);
 
-
   // Check if the ad associated with the media belongs to the logged-in user
   const ad = await Ads.findById(foundMedia.ad_id);
   if (!ad) throw new ErrorResponse('Ad not found', 404);
   if (!ad.user_id.equals(uid)) throw new ErrorResponse('You do not have permission to update media for this ad', 403);
 
+  // Process uploaded files
+  const media_files = req.files ? req.files.map(file => file.path) : foundMedia.media_files;
 
-  // Upload new media files if provided
-  const media_files = req.files.map(file => file.path);
+  // Log the media files
+  console.log('Media files:', media_files);
 
   // Update the media entry
   const updatedMedia = await Media.findByIdAndUpdate(
@@ -89,15 +90,18 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
     { new: true }
   ).populate('user_id');
 
+  // Log the updated media
+  console.log('Updated media:', updatedMedia);
+
   // Update the ad's media field if it's not already included
   if (!ad.media.includes(updatedMedia._id))
   {
     ad.media.push(updatedMedia._id);
     await ad.save();
   }
+
   res.json(updatedMedia);
 });
-
 
 // delete All images and videos pro Ad
 
