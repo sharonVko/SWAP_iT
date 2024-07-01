@@ -102,33 +102,50 @@ export const deleteMessages = asyncHandler(async (req, res, next) =>
   const { ids } = req.body; // Array of message IDs
   const { uid } = req;
 
-  if (!Array.isArray(ids) || ids.length === 0)
-  {
-    throw new ErrorResponse('No message IDs provided', 400);
-  }
+  // Log the input data
+  console.log('Message IDs to delete:', ids);
+  console.log('User ID:', uid);
+
+  if (!Array.isArray(ids) || ids.length === 0) throw new ErrorResponse('No message IDs provided', 400);
+
 
   // Find all messages by IDs
   const messages = await Message.find({ _id: { $in: ids } });
 
+  // Log the found messages
+  console.log('Found messages:', messages);
+
   // Check if all messages exist
-  if (messages.length !== ids.length)
-  {
-    throw new ErrorResponse('Some messages not found', 404);
-  }
+  if (messages.length !== ids.length) throw new ErrorResponse('Some messages not found', 404);
+
 
   // Check if the logged-in user is the sender of each message
   const unauthorizedMessages = messages.filter(msg => msg.sender_id.toString() !== uid);
-  if (unauthorizedMessages.length > 0)
-  {
-    throw new ErrorResponse('You do not have permission to delete some of these messages', 401);
-  }
+  if (unauthorizedMessages.length > 0) throw new ErrorResponse('You do not have permission to delete some of these messages', 401);
+
+  // Extract chat IDs
+  const chatIds = [...new Set(messages.map(msg => msg.chat.toString()))];
+
+  // Log the chat IDs to be updated
+  console.log('Chat IDs to be updated:', chatIds);
 
   // Delete all authorized messages
   await Message.deleteMany({ _id: { $in: ids } });
 
+  // Log the deletion success
+  console.log('Messages deleted successfully');
+
+  // Remove messages from corresponding chats
+  await Chat.updateMany(
+    { _id: { $in: chatIds } },
+    { $pull: { messages: { $in: ids } } }
+  );
+
+  // Log the chat update success
+  console.log('Chats updated successfully');
+
   res.json({ success: `Messages with IDs ${ids.join(', ')} were deleted` });
 });
-
 
 //update message optional and not working in right way but i can implement it later..
 // export const updateMessage = asyncHandler(async (req, res, next) =>
