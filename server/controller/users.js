@@ -101,31 +101,26 @@ export const changePassword = asyncHandler(async (req, res, next) =>
   const userId = req.uid;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
-  // Log the inputs for debugging
-  console.log('User ID:', userId);
-  console.log('Old Password:', oldPassword);
-  console.log('New Password:', newPassword);
-  console.log('Confirm Password:', confirmPassword);
-
-  // Find the user by ID and select the password field
   const user = await User.findById(userId).select('+password');
   if (!user) throw new ErrorResponse('User not found', 404);
 
-  // Check if the old password is correct
-  const isMatch = await bcrypt.compare(oldPassword, uid.password);
-  console.log('Password Match:', isMatch);
+  // Check if the old password provided matches the user's current password
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) throw new ErrorResponse('Old password is incorrect', 401);
-  res.json(isMatch)
-  // // Check if the new password matches the confirm password
-  // if (newPassword !== confirmPassword) throw new ErrorResponse('Passwords do not match', 400);
 
-  // // Hash the new password and save it
-  // user.password = await bcrypt.hash(newPassword, 10);
-  // await user.save();
+  // Check if the new password and confirm password match
+  if (newPassword !== confirmPassword) throw new ErrorResponse('Passwords do not match', 400);
 
-  // // Send a success response
-  // res.send({ status: 'Password updated successfully' });
+  // Update the user's password with the new hashed password
+  user.password = await bcrypt.hash(newPassword, 10);
+  await user.save();
+
+  // Send a success response
+  res.send({ status: 'Password updated successfully' });
 });
+
+
+
 
 //get all ads by user
 export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
