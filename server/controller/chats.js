@@ -12,23 +12,14 @@ export const createChat = asyncHandler(async (req, res, next) =>
   const { participants, messages, ad_id, uid } = req.body;
 
   // Validate that participants is an array and has exactly two members
-  if (!Array.isArray(participants) || participants.length !== 2)
-  {
-    throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
-  }
+  if (!Array.isArray(participants) || participants.length !== 2) throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
 
   // Ensure the logged-in user is the first participant (sender)
-  if (!participants.includes(req.uid.toString()))
-  {
-    throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
-  }
+  if (!participants.includes(req.uid.toString())) throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
 
   // Check if all participants are registered users
   const users = await User.find({ _id: { $in: participants } });
-  if (users.length !== participants.length)
-  {
-    throw new ErrorResponse('All participants must be registered users', 400);
-  }
+  if (users.length !== participants.length) throw new ErrorResponse('All participants must be registered users', 400);
 
   // Check if a chat already exists between these participants for the specified ad
   let chat = await Chat.findOne({ participants: { $all: participants }, ad_id });
@@ -92,8 +83,9 @@ export const getChatbyId = asyncHandler(async (req, res, next) =>
 })
 
 
-
-// Delete a conversation - if user is aprticipants - if he is loggedin - chat should only deleted from his account , other participant can have that chat. - user should be able to delete multiple chats at the same time 
+// Delete a conversation - if user is aprticipants - if he is loggedin - chat should only deleted from his account , other participant can have that chat. - user should be able to delete multiple chats at the same time.
+// we don't really need delete single chat because we can do that using delete multiple chats also.
+// before deleting chat we can ask for confirmation - nice to have or later
 export const deleteChat = asyncHandler(async (req, res, next) =>
 {
   const {
@@ -101,8 +93,8 @@ export const deleteChat = asyncHandler(async (req, res, next) =>
     uid,
   } = req;
 
-  const found = await Chat.findById(id);
   if (!found) throw new ErrorResponse(`Chat ${id} does not exist`, 404);
+  const found = await Chat.findById(id);
 
   const isParticipant = found.participants.some(participant => participant.toString() === uid.toString());
   if (!isParticipant) throw new ErrorResponse('You have no permission to delete this chat', 401);
@@ -123,10 +115,7 @@ export const deleteChats = asyncHandler(async (req, res, next) =>
   const { ids } = req.body;
   const uid = req.uid; // Retrieve uid from the request object
 
-  if (!Array.isArray(ids) || ids.length === 0)
-  {
-    throw new ErrorResponse('No chat IDs provided', 400);
-  }
+  if (!Array.isArray(ids) || ids.length === 0) throw new ErrorResponse('No chat IDs provided', 400);
 
   const chats = await Chat.find({ _id: { $in: ids } });
 
@@ -134,10 +123,7 @@ export const deleteChats = asyncHandler(async (req, res, next) =>
     !chat.participants.some(participant => participant.toString() === uid.toString())
   );
 
-  if (invalidChats.length > 0)
-  {
-    throw new ErrorResponse('You have no permission to delete some of these chats', 401);
-  }
+  if (invalidChats.length > 0) throw new ErrorResponse('You have no permission to delete some of these chats', 401);
 
   await Chat.updateMany(
     { _id: { $in: ids } },

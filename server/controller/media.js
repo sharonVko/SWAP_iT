@@ -100,13 +100,36 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
 
 
 // delete All images and videos pro Ad
+// export const deleteMedia = asyncHandler(async (req, res, next) =>
+// {
+//   const { params: { id }, uid } = req;
+//   const found = await Media.findById(id);
+//   if (!found) throw new ErrorResponse(`Media ${id} does not exist`, 404);
+//   if (uid !== found.user_id.toString())
+//     throw new ErrorResponse('You have no permission to delete this Media', 401);
+//   await Media.findByIdAndDelete(id);
+//   res.json({ success: `Media ${id} was deleted` });
+// });
+
+
 export const deleteMedia = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, uid } = req;
+
+  // Find the media by ID
   const found = await Media.findById(id);
   if (!found) throw new ErrorResponse(`Media ${id} does not exist`, 404);
-  if (uid !== found.user_id.toString())
-    throw new ErrorResponse('You have no permission to delete this Media', 401);
+
+  // Check if the logged-in user is the owner of the media
+  if (uid !== found.user_id.toString()) throw new ErrorResponse('You have no permission to delete this media', 401);
+
+  // Delete the media
   await Media.findByIdAndDelete(id);
+
+  // Remove the reference to this media from the corresponding ad
+  await Ads.findByIdAndUpdate(found.ad_id, {
+    $pull: { media: id }
+  });
+
   res.json({ success: `Media ${id} was deleted` });
 });

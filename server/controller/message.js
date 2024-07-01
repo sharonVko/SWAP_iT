@@ -77,44 +77,83 @@ export const getMessages = asyncHandler(async (req, res, next) =>
   res.json(messages);
 });
 
-//update message
-export const updateMessage = asyncHandler(async (req, res, next) =>
-{
-  const { chatId } = req.body;
-  const { body, uid, params: { id }, } = req;
-  console.log('Request body:', body); // Log request body
-  console.log('User ID:', uid); // Log user ID from token
-  console.log('chat id: ', chatId);
-
-  const found = await Message.findById(id);
-  if (!found) throw new ErrorResponse(`message ${id} does not exist`, 404);
-
-  if (uid !== found.sender_id.toString())
-    throw new ErrorResponse('You have no permission to update this message', 401);
-
-  const updatedMessage = await Message.findByIdAndUpdate(id, body, {
-    new: true,
-  }).populate('sender_id');
-
-  await Chat.findByIdAndUpdate(chatId, body, {
-    new: true,
-  }).populate('messages');
-
-  res.json(updatedMessage);
-});
-
-
-
 // delete message
 
 export const deleteMessage = asyncHandler(async (req, res, next) =>
 {
-  const { body, params: { id }, uid, } = req;
+  const { params: { id }, uid } = req;
+
+  // Find the message by ID
   const found = await Message.findById(id);
-  if (!found) throw new ErrorResponse(`message with ${id} not exist`, 404);
-  if (uid !== found.sender_id.toString())
-    throw new ErrorResponse('You have no permission to delete this message', 401);
-  await Message.findByIdAndDelete(id, body, { new: true });
-  res.json({ success: `Message ${id} was deleted` });
-})
+  if (!found) throw new ErrorResponse(`Message with ID ${id} does not exist`, 404);
+
+  // Check if the logged-in user is the sender of the message
+  if (uid !== found.sender_id.toString()) throw new ErrorResponse('You do not have permission to delete this message', 401);
+
+  // Delete the message
+  await Message.findByIdAndDelete(id);
+
+  res.json({ success: `Message with ID ${id} was deleted` });
+});
+
+
+export const deleteMessages = asyncHandler(async (req, res, next) =>
+{
+  const { ids } = req.body; // Array of message IDs
+  const { uid } = req;
+
+  if (!Array.isArray(ids) || ids.length === 0)
+  {
+    throw new ErrorResponse('No message IDs provided', 400);
+  }
+
+  // Find all messages by IDs
+  const messages = await Message.find({ _id: { $in: ids } });
+
+  // Check if all messages exist
+  if (messages.length !== ids.length)
+  {
+    throw new ErrorResponse('Some messages not found', 404);
+  }
+
+  // Check if the logged-in user is the sender of each message
+  const unauthorizedMessages = messages.filter(msg => msg.sender_id.toString() !== uid);
+  if (unauthorizedMessages.length > 0)
+  {
+    throw new ErrorResponse('You do not have permission to delete some of these messages', 401);
+  }
+
+  // Delete all authorized messages
+  await Message.deleteMany({ _id: { $in: ids } });
+
+  res.json({ success: `Messages with IDs ${ids.join(', ')} were deleted` });
+});
+
+
+//update message optional and not working in right way but i can implement it later..
+// export const updateMessage = asyncHandler(async (req, res, next) =>
+// {
+//   const { chatId } = req.body;
+//   const { body, uid, params: { id }, } = req;
+//   console.log('Request body:', body); // Log request body
+//   console.log('User ID:', uid); // Log user ID from token
+//   console.log('chat id: ', chatId);
+
+//   const found = await Message.findById(id);
+//   if (!found) throw new ErrorResponse(`message ${id} does not exist`, 404);
+
+//   if (uid !== found.sender_id.toString())
+//     throw new ErrorResponse('You have no permission to update this message', 401);
+
+//   const updatedMessage = await Message.findByIdAndUpdate(id, body, {
+//     new: true,
+//   }).populate('sender_id');
+
+//   await Chat.findByIdAndUpdate(chatId, body, {
+//     new: true,
+//   }).populate('messages');
+
+//   res.json(updatedMessage);
+// });
+
 
