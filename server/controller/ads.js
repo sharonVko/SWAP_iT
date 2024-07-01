@@ -88,8 +88,8 @@ export const updateAd = asyncHandler(async (req, res, next) =>
   res.json(updatedAd);
 });
 
-//delete ad by id
 
+//delete ad by id
 export const deleteAd = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, uid } = req;

@@ -11,8 +11,6 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   const { chatId, message, receiverId } = req.body; // Include receiverId to create new chat if needed
   const { uid } = req;
 
-  console.log('Request body:', req.body); // Log request body
-  console.log('User ID:', uid); // Log user ID from token
 
   // Check if sender (user) is registered
   const sender = await User.findById(uid);
@@ -61,8 +59,7 @@ export const getMessages = asyncHandler(async (req, res, next) =>
 {
   const { chatId } = req.params;
   const { uid } = req;
-  console.log('Fetching messages for chatId:', chatId);
-  console.log('User ID:', uid);
+
   // Check if the user is a participant of the chat
   const chat = await Chat.findById(chatId);
   if (!chat) throw new ErrorResponse('Chat not found', 404);

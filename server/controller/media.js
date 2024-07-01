@@ -58,9 +58,6 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
 {
   const { params: { id }, body, uid } = req;
 
-  console.log('Request body:', body);
-  console.log('User ID:', uid);
-
   // Check if the user is logged in
   const user = await User.findById(uid);
   if (!user) throw new ErrorResponse('User not found', 404);
@@ -79,19 +76,12 @@ export const updateMedia = asyncHandler(async (req, res, next) =>
 
   // Process uploaded files
   const media_files = req.files ? req.files.map(file => file.path) : foundMedia.media_files;
-
-  // Log the media files
-  console.log('Media files:', media_files);
-
   // Update the media entry
   const updatedMedia = await Media.findByIdAndUpdate(
     id,
     { ...body, user_id: uid, media_files },
     { new: true }
   ).populate('user_id');
-
-  // Log the updated media
-  console.log('Updated media:', updatedMedia);
 
   // Update the ad's media field if it's not already included
   if (!ad.media.includes(updatedMedia._id))
