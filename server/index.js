@@ -11,43 +11,41 @@ import messageRouter from './routes/messageRouter.js';
 import chatRouter from './routes/chatRouter.js'
 
 
-// import http from 'http';
-// import { Server } from 'socket.io';
-// import authMiddleware from './middleware/authSocket.js';
-
-
+import http from 'http';
+import { Server } from 'socket.io';
+import authMiddleware from './middleware/authSocket.js';
 
 
 const app = express();
 const PORT = 8000;
 
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST']
-//   }
-// });
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST']
+  }
+});
 
-// io.use(authMiddleware);
-// io.on('connection', (socket) =>
-// {
-//   console.log('a user connected');
-//   socket.on('joinConversation', (conversationId) =>
-//   {
-//     socket.join(conversationId);
-//   });
+io.use(authMiddleware);
+io.on('connection', (socket) =>
+{
+  console.log('a user connected');
+  socket.on('joinConversation', (conversationId) =>
+  {
+    socket.join(conversationId);
+  });
 
-//   socket.on('sendMessage', (message) =>
-//   {
-//     io.to(message.conversationId).emit('newMessage', message);
-//   });
+  socket.on('sendMessage', (message) =>
+  {
+    io.to(message.conversationId).emit('newMessage', message);
+  });
 
-//   socket.on('disconnect', () =>
-//   {
-//     console.log('user disconnected');
-//   });
-// });
+  socket.on('disconnect', () =>
+  {
+    console.log('user disconnected');
+  });
+});
 
 
 app.use(express.json());
