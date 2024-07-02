@@ -2,14 +2,13 @@ import React from "react";
 import { Carousel } from "flowbite-react";
 import { Avatar } from "flowbite-react";
 import userlogo from "../assets/userlogo.png";
-
+import { Link } from "react-router-dom";
 const SingleViewAd = () => {
 	return (
 		<div className="mx-auto sm:flex-col max-w-2xl">
 			<div className="mb-8 bg-lemon-600 text-teal-700 text-center">
 				<h2>Wildlederboots</h2>
 			</div>
-
 			{/* <div className="mx-auto w-64 h-64 xl:h-80 xl:w-80  2xl:h-96 2xl:w-96"> */}
 			<div className="mx-auto max-w-2xl h-96">
 				<Carousel slide={false}>
@@ -37,7 +36,6 @@ const SingleViewAd = () => {
 					/>
 				</Carousel>
 			</div>
-
 			{/* <div className="h-48 sm:h-56  xl:h-64 2xl:h-80">
         <Carousel leftControl="left" rightControl="right">
           <img
@@ -66,7 +64,6 @@ const SingleViewAd = () => {
 			<div className="flex flex-wrap gap-2">
 				<Avatar img={userlogo} bordered />
 			</div>
-
 			<div className="w-96 bg-teal-500">
 				<p>
 					Wunderschöne, gut erhaltene Winterstiefel aus echtem Leder in
@@ -77,5 +74,4 @@ const SingleViewAd = () => {
 		</div>
 	);
 };
-
 export default SingleViewAd;
