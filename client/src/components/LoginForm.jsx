@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../context/AuthProvider';
 import { toast } from 'react-toastify';
+import { useAuth } from '../context/AuthProvider.jsx';
 
 function LoginForm()
 {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const { setIsLoggedIn, checkUser } = useAuth();
 
+  const { checkUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) =>
@@ -20,63 +19,59 @@ function LoginForm()
     {
       const response = await axios.post(
         'http://localhost:8000/users/login',
-        {
-          email,
-          password,
-        },
+        { email, password },
         { withCredentials: true }
       );
 
-      if (response.status === 200)
+      if (response.data.status === 'success')
       {
-        setIsLoggedIn(true);
-        checkUser();
-        // toast.info('Logged in');
-        navigate('/');
+        toast.success('Successfully logged in!');
+        await checkUser(); // Update auth context
+        navigate('/dashboard'); // Navigate to the dashboard or desired page after login
       }
     } catch (error)
     {
-      setError(error.response.data.error || 'Something went wrong');
+      toast.error(error.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div >
-      <div >
-        <h2 >Login</h2>
-        {error && <p>{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div >
-            <label>Email:</label>
-            <input
-              type='text'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-
-            />
-          </div>
-          <div >
-            <label >Password:</label>
-            <input
-              type='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-
-            />
-          </div>
-          <button type='submit'>
-            Login
-          </button>
-        </form>
-        <p>
-          Not registered yet?{' '}
-          <Link to='/register'>
-            Register here
-          </Link>
-        </p>
-      </div>
+    <div className="max-w-md mx-auto mt-10">
+      <h2 className="text-2xl font-bold mb-6">Login</h2>
+      <form onSubmit={handleLogin}>
+        <div className="mb-4">
+          <label className="block mb-2">Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border rounded w-full p-2"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-2">Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border rounded w-full p-2"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded"
+        >
+          Login
+        </button>
+      </form>
+      <p className="mt-4">
+        Don't have an account?{' '}
+        <a href="/register" className="text-blue-500">
+          Register here
+        </a>
+      </p>
     </div>
   );
 }

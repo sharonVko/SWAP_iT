@@ -27,7 +27,9 @@ function RegisterForm()
           username,
           email,
           password,
-          zipcode,
+          address: {
+            zip: zipcode
+          }
         },
         { withCredentials: true }
       );
