@@ -19,28 +19,34 @@ import authMiddleware from './middleware/authSocket.js';
 const app = express();
 const PORT = 8000;
 
-const server = http.createServer(app);
+const server = http.createServer(app); // Creating an HTTP server using the Express application.
+
+// Creating a Socket.IO server attached to the HTTP server with CORS configuration.
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST']
   }
 });
 
-io.use(authMiddleware);
+io.use(authMiddleware); // Middleware to authenticate Socket.IO connections.
+
+//Event listener for new socket connections
 io.on('connection', (socket) =>
 {
   console.log('a user connected');
-  socket.on('joinConversation', (conversationId) =>
+  //'joinConversation': Joins the user to a specific conversation room.
+  socket.on('joinConversation', (conversationId) => 
   {
     socket.join(conversationId);
   });
-
+  // 'sendMessage': Broadcasts a new message to all users in the conversation room.
   socket.on('sendMessage', (message) =>
   {
     io.to(message.conversationId).emit('newMessage', message);
   });
 
+  // 'disconnect': Logs when a user disconnects.
   socket.on('disconnect', () =>
   {
     console.log('user disconnected');
