@@ -301,7 +301,8 @@ const UserProfile = () => {
 	});
 
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	// const [isModalOpen, setIsModalOpen] = useState(false);
 
 	useEffect(() => {}, []);
 
