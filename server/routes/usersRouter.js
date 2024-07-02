@@ -7,16 +7,17 @@ const usersRouter = Router();
 usersRouter.post('/register', userController.register); // register
 usersRouter.post('/login', userController.login); // login
 usersRouter.post('/logout', verifyToken, userController.logout); // logout
+usersRouter.post('/change-password', verifyToken, userController.changePassword); // change pass
 
 
 usersRouter.get('/me', verifyToken, userController.getUser); // your profile
 usersRouter.get('/', userController.getAllUsers); // all users
 usersRouter.get('/:id', userController.getSingleUser); // user by id
-usersRouter.route('/ads/:id').get(userController.getAllAdsByUser);//get all ads posted by specific user
+usersRouter.route('/ads/:id').get(verifyToken, userController.getAllAdsByUser);//get all ads posted by specific user
 
 
 usersRouter.put('/:id', verifyToken, userController.updateUser); // update user settings
-usersRouter.put('/change-password/:id', verifyToken, userController.changePassword); // change pass
+// usersRouter.put('/change-password', verifyToken, userController.changePassword); // change pass
 
 
 

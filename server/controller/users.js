@@ -31,7 +31,7 @@ export const login = asyncHandler(async (req, res, next) =>
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email }).select('+password');
-  if (!existingUser) throw new ErrorResponse('Email does not exist', 404);
+  if (!existingUser) throw new ErrorResponse('Email does not exist , please register', 404);
 
   const match = await bcrypt.compare(password, existingUser.password);
   if (!match) throw new ErrorResponse('Password is incorrect', 401);
@@ -58,6 +58,8 @@ export const logout = asyncHandler(async (req, res, next) =>
   res.send({ status: 'success' });
 });
 
+
+
 //getAllUsers
 export const getAllUsers = asyncHandler(async (req, res, next) =>
 {
@@ -82,8 +84,6 @@ export const updateUser = asyncHandler(async (req, res, next) =>
     params: { id },
     uid,
   } = req;
-  console.log('Request body:', body);
-  console.log('User ID:', uid);
   const found = await User.findById(id);
   if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
   if (uid !== found.id.toString())
@@ -95,7 +95,7 @@ export const updateUser = asyncHandler(async (req, res, next) =>
   res.json(updatedUser);
 });
 
-//update password
+//update password not for forgate pass
 export const changePassword = asyncHandler(async (req, res, next) =>
 {
   const userId = req.uid;
@@ -104,16 +104,23 @@ export const changePassword = asyncHandler(async (req, res, next) =>
   const user = await User.findById(userId).select('+password');
   if (!user) throw new ErrorResponse('User not found', 404);
 
+  // Check if the old password provided matches the user's current password
   const isMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isMatch) throw new ErrorResponse('Old password is incorrect', 401);
 
+  // Check if the new password and confirm password match
   if (newPassword !== confirmPassword) throw new ErrorResponse('Passwords do not match', 400);
 
+  // Update the user's password with the new hashed password
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
 
+  // Send a success response
   res.send({ status: 'Password updated successfully' });
 });
+
+
+
 
 //get all ads by user
 export const getAllAdsByUser = asyncHandler(async (req, res, next) =>

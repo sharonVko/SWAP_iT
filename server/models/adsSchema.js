@@ -48,9 +48,23 @@ const adSchema = new mongoose.Schema({
 		required: [true, '3 tags are required'],
 		// minimnum 3 tags required
 	},
-	media: {
+	preferredcats: {
+		type: String, // if we want to keep it as a category_id as string or reference to taxonomies
+		//ex: "1,2,3"  cat_ids
+	},
+	preferredSubcats: {
+		type: String,
+	},
+	preferredtags: {
+		type: String,
+	},
+	media: [{
 		type: mongoose.Schema.ObjectId,
 		ref: 'Media'
+	}],
+	timestamp: {
+		type: Date,
+		default: Date.now,
 	},
 });
 
