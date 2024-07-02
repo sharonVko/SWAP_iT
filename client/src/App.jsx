@@ -70,7 +70,7 @@ function App() {
 				</div>
 			</main>
 
-			<footer className="footer px-4 py-8 bg-teal-500 relative z-60">
+			<footer className="footer px-4 py-8 bg-teal-500 relative z-300">
 				<Footer/>
 			</footer>
 

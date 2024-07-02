@@ -10,7 +10,7 @@
 
   /*** Nav Drawer ***/
   .drawer-overlay {
-    @apply absolute top-0 left-0 w-screen min-h-screen invisible opacity-0 flex flex-col;
+    @apply absolute top-0 left-0 w-screen h-full invisible opacity-0 flex flex-col z-100;
     transition: opacity 150ms ease-in, visibility 0ms ease-in 150ms;
 
     .drawer-overlay-top {
@@ -26,7 +26,7 @@
   }
 
   .drawer {
-    @apply absolute top-0 left-0 w-screen sm:w-80 min-h-screen bg-white p-8 pt-28;
+    @apply absolute top-0 left-0 w-screen sm:w-80 h-full bg-white p-6 pt-28 sm:pt-36 lg:pt-40 z-200;
     @apply -translate-x-full;
     @apply bg-gradient-to-b from-peach-500 to-lemon-500;
     transition: transform 150ms ease-in-out;
@@ -35,6 +35,5 @@
       transition: transform 150ms ease-in-out;
     }
   }
-
 
 }
