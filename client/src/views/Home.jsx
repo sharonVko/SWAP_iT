@@ -4,7 +4,10 @@ const Home = () => {
 	return (
 		<div>
 			<h1 className="mt-0 text-center">Top Matches</h1>
-			<ArticleList />
+
+			<ArticleList/>
+
+
 		</div>
 	);
 };

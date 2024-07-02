@@ -3,10 +3,11 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 40px;
-  width: 350px;
-  max-width: 100%;
-  height: 300px; /* Height for collapsed mode */
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 20rem; /* Adjusted to a relative unit */
+  min-width: 19rem; /* Adjusted to a relative unit */
+  min-height: 20rem; /* Height for collapsed mode */
   background: #fff;
   border-radius: 20px;
   transition: 0.5s;
@@ -16,26 +17,32 @@
 }
 
 .custom-card.active {
-  height: 400px; /* Height for expanded mode */
+  min-height: 28rem; /* Height for expanded mode */
   z-index: 10;
 }
 
 .custom-card .img-box {
   position: absolute;
   top: 20px;
-  width: 300px;
+  left: 5px; /* Ensure the image box stays within the card boundaries */
+  right: 5px; /* Ensure the image box stays within the card boundaries */
+  width: calc(
+    100% - 10px
+  ); /* Ensure the image box stays within the card boundaries */
   height: 220px;
   background: #333;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: hidden; /* Ensure the image does not overflow the box */
   transition: 0.5s;
 }
 
 .custom-card.active .img-box {
   top: -100px;
-  transform: scale(0.75);
+  left: 25%;
+  width: 50%;
+  transform: scale(1);
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  overflow: hidden; /* Ensure the image does not overflow the box */
 }
 
 .custom-card .img-box img {
@@ -44,7 +51,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensure the image covers the container without distortion */
+  object-fit: cover; /* Ensure the image fits within the box */
 }
 
 .custom-card .custom-content {
@@ -95,6 +102,7 @@
 .img-box {
   position: relative;
   width: 100%;
+  overflow: hidden; /* Ensure the image does not overflow the box */
 }
 
 .user-info {
@@ -117,8 +125,10 @@
   }
 
   .custom-card .img-box {
-    width: 185px;
+    width: calc(100% - 30px); /* Adjust width for smaller screens */
     border-radius: 10px;
+    left: 15px; /* Ensure the image box stays within the card boundaries */
+    right: 15px; /* Ensure the image box stays within the card boundaries */
   }
 
   .custom-card .custom-content p {
@@ -128,4 +138,31 @@
   .custom-card .custom-content a {
     font-size: 0.9rem;
   }
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 10px; /* Adjust the bottom margin */
+  right: 10px; /* Adjust the right margin */
+  z-index: 1000; /* Add high z-index to bring to front */
+}
+
+.tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  bottom: 100%; /* Move the tooltip above the SVG */
+  right: 0; /* Align with the right edge of the SVG */
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  z-index: 1001; /* Add high z-index to bring to front */
+}
+
+.tooltip:hover .tooltip-text,
+.tooltip.active .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
