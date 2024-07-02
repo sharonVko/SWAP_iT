@@ -295,9 +295,9 @@ const UserProfile = () => {
 	const [profile, setProfile] = useState({
 		name: "Beispielname",
 		imageUrl: beispielfotoprofil,
-		categories: ["Kategorie 1", "Kategorie 2"],
-		subcategories: ["Subkategorie 1", "Subkategorie 2"],
-		tags: ["Tag 1", "Tag 2"],
+		categories: ["cat 1", "cat 2"],
+		subcategories: ["subcat 1", "subcat 2"],
+		tags: ["tag 1", "tag 2"],
 	});
 
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -379,7 +379,8 @@ const UserProfile = () => {
 				{/* ------------------change pw end-------------------  */}
 
 				<form className="max-w-sm mx-auto">
-					{/* ------------------Choose categories and tags start-------------------  */}
+					{/* ------------------Choose categories and tags start------------------*/}
+					{/* -----change cat start----- */}
 					<div className="mb-2 block  ">
 						<Label
 							className="text-2xl text-peach-300"
@@ -405,6 +406,9 @@ const UserProfile = () => {
 						<option className="bg-peach-300 text-black">Sport</option>
 					</select>
 				</form>
+				{/* -----change cat end----- */}
+
+				{/* -----change subcat start----- */}
 
 				<form className="max-w-sm mx-auto">
 					<div className="mb-2 block ">
@@ -433,6 +437,9 @@ const UserProfile = () => {
 					</select>
 				</form>
 
+				{/* -----change subcat end----- */}
+				{/* -----change tags start----- */}
+
 				<form className="max-w-sm mx-auto">
 					<div className="mb-2 block ">
 						<Label
@@ -442,7 +449,43 @@ const UserProfile = () => {
 						/>
 					</div>
 					<select
-						id="tags"
+						id="tag"
+						className="bg-red-400 border-peach-300 text-peach-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 first-letter:block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+						 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-8"
+					>
+						<option className="bg-peach-300 text-black  hover:red-100">
+							Shopping
+						</option>
+						<option className=" bg-peach-300 focus:ring-orange-500 text-black">
+							Household
+						</option>
+
+						<option id className="bg-peach-300 text-black ">
+							Garden
+						</option>
+						<option className="bg-peach-300 text-black">Sport</option>
+					</select>
+
+					<select
+						id="tag"
+						className="bg-red-400 border-peach-300 text-peach-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 first-letter:block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
+						 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-8"
+					>
+						<option className="bg-peach-300 text-black  hover:red-100">
+							Shopping
+						</option>
+						<option className=" bg-peach-300 focus:ring-orange-500 text-black">
+							Household
+						</option>
+
+						<option id className="bg-peach-300 text-black ">
+							Garden
+						</option>
+						<option className="bg-peach-300 text-black">Sport</option>
+					</select>
+
+					<select
+						id="tag"
 						className="bg-red-400 border-peach-300 text-peach-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 first-letter:block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
 						 dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-8"
 					>
@@ -460,6 +503,8 @@ const UserProfile = () => {
 					</select>
 				</form>
 			</div>
+
+			{/* -----change tags  end----- */}
 			{/* ------------------Choose categories and tags end------------------  */}
 
 			<div className="md:col-span-1 p-12 flex flex-col ">
@@ -602,6 +647,24 @@ const UserProfile = () => {
 							)}
 						</div>
 
+						{isEditing ? (
+							// Speichern-Button, wenn im Bearbeitungsmodus
+							<button
+								className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
+								onClick={saveLastname}
+							>
+								Speichern
+							</button>
+						) : (
+							// Edit-Button, wenn nicht im Bearbeitungsmodus
+							<button
+								className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
+								onClick={() => setIsEditing(true)}
+							>
+								Edit
+							</button>
+						)}
+
 						{/* Telephonnumber end */}
 
 						{/* -------change street start----------- */}
@@ -670,7 +733,26 @@ const UserProfile = () => {
 
 						{/* -------change number end----------- */}
 
-						{/* ----------Buttons--------- */}
+						{/* ----change zip start---- */}
+
+						<div className="text-2xl text-green-200 pt-6"> Zip</div>
+						<div>
+							{isEditing ? (
+								// inputfield when edit mode
+								<input
+									type="text"
+									value={firstname}
+									className="bg-peach-300 text-black text-lg rounded-lg p-4"
+									onChange={(e) => setFirstname(e.target.value)}
+								/>
+							) : (
+								// Text display when not in edit mode
+								<div className="field text-peach-300 border-green-200 p-4 border rounded-lg  whitespace-pre-wrap">
+									{firstname}
+								</div>
+							)}
+						</div>
+
 						{isEditing ? (
 							// Speichern-Button, wenn im Bearbeitungsmodus
 							<button
@@ -689,7 +771,47 @@ const UserProfile = () => {
 							</button>
 						)}
 
-						{/* lastname end */}
+						{/* ----change zip end---- */}
+
+						{/* ----change Country start---- */}
+
+						<div className="text-2xl text-green-200 pt-6"> Country</div>
+						<div>
+							{isEditing ? (
+								// inputfield when edit mode
+								<input
+									type="text"
+									value={firstname}
+									className="bg-peach-300 text-black text-lg rounded-lg p-4"
+									onChange={(e) => setFirstname(e.target.value)}
+								/>
+							) : (
+								// Text display when not in edit mode
+								<div className="field text-peach-300 border-green-200 p-4 border rounded-lg  whitespace-pre-wrap">
+									{firstname}
+								</div>
+							)}
+						</div>
+
+						{isEditing ? (
+							// Speichern-Button, wenn im Bearbeitungsmodus
+							<button
+								className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
+								onClick={saveLastname}
+							>
+								Speichern
+							</button>
+						) : (
+							// Edit-Button, wenn nicht im Bearbeitungsmodus
+							<button
+								className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
+								onClick={() => setIsEditing(true)}
+							>
+								Edit
+							</button>
+						)}
+
+						{/* ----change country end---- */}
 					</div>
 				</div>
 

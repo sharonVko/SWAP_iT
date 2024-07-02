@@ -2,12 +2,9 @@ import React, { useState } from "react";
 
 const UserSignUp = () => {
 	const [formData, setFormData] = useState({
-		firstname: "",
-		lastname: "",
 		username: "",
 		email: "",
-		passwort: "",
-		passwordrepeat: "",
+		password: "",
 		zip: "",
 	});
 
@@ -17,8 +14,27 @@ const UserSignUp = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		//Logik?
-		console.log(formData);
+		try {
+			const response = await axios.post(
+			  'http://localhost:8000/auth/register',
+			  {
+				username,
+				email,
+				password,
+				zip,
+			  },
+			  { withCredentials: true }
+			);
+	  
+			if (response.status === 201) {
+			  toast.success('Successfully registered! Welcome');
+			  navigate('/login');
+			}
+		  } catch (error) {
+			// console.error(error);
+			toast.error(error.response.data.error || 'Registration failed');
+    }
+		
 	};
 
 	return (
@@ -113,7 +129,7 @@ const UserSignUp = () => {
 							onChange={handleChange}
 						/>
 					</div>
-					<div>
+					{/* <div>
 						<label
 							htmlFor="passwordrepeat"
 							className="block text-sm font-medium text-gray-700"
@@ -129,19 +145,19 @@ const UserSignUp = () => {
 							placeholder="Repeat your Password"
 							onChange={handleChange}
 						/>
-					</div>
+					</div> */}
 
 					<div>
 						<label
-							htmlFor="zipcode"
+							htmlFor="zip"
 							className="block text-sm font-medium text-gray-700"
 						>
 							<div className="m-2">Zip Code</div>
 						</label>
 						<input
 							type="text"
-							name="zipcode"
-							id="zipcode"
+							name="zip"
+							id="zip"
 							className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
 							placeholder="Enter your zip code"
 							onChange={handleChange}
