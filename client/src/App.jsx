@@ -18,10 +18,8 @@ import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
 function App() {
-
 	return (
 		<div className="flex flex-col h-screen">
-
 			<header>
 				<Navbar />
 			</header>
@@ -54,13 +52,12 @@ function App() {
 						<Route path="/chats" element={<Chats />} />
 						<Route path="/singlechat" element={<SingleChat />} />
 						<Route path="*" element={<NotFound />} />
-
 					</Routes>
 				</div>
 			</main>
 
 			<footer className="footer px-4 py-8 bg-teal-300">
-				<Footer/>
+				<Footer />
 			</footer>
 		</div>
 	);

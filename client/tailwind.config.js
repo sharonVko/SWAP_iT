@@ -1,33 +1,40 @@
+const flowbite = require("flowbite-react/tailwind");
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
-  theme: {
+	content: [
+		"./index.html",
+		"./src/**/*.{js,jsx,ts,tsx}",
+		"./node_modules/flowbite/**/*.js",
+		flowbite.content(),
+	],
+	theme: {
 		container: {
 			center: true,
 			screens: {
-				sm: '640px',
-				lg: '960px',
-				xl: '1200px'
-			}
+				sm: "640px",
+				lg: "960px",
+				xl: "1200px",
+			},
 		},
 		colors: {
 			transparent: "transparent",
 			current: "currentColor",
-			black: '#000000',
-			white: '#FFFFFF',
+			black: "#000000",
+			white: "#FFFFFF",
 			gray: {
-				DEFAULT: '#585E6A',
-				50: '#CDD0D5',
-				100: '#C2C5CC',
-				200: '#ACB0B9',
-				300: '#959BA7',
-				400: '#7F8694',
-				500: '#6B7280',
-				600: '#585E6A',
-				700: '#3F434B',
-				800: '#25282C',
-				900: '#0C0C0E',
-				950: '#000000'
+				DEFAULT: "#585E6A",
+				50: "#CDD0D5",
+				100: "#C2C5CC",
+				200: "#ACB0B9",
+				300: "#959BA7",
+				400: "#7F8694",
+				500: "#6B7280",
+				600: "#585E6A",
+				700: "#3F434B",
+				800: "#25282C",
+				900: "#0C0C0E",
+				950: "#000000",
 			},
 			navy: {
 				DEFAULT: "#1D5B79",
@@ -111,14 +118,12 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'display': ['Merriweather'],
+				display: ["Merriweather"],
 			},
 			dropShadow: {
-				'logo': '3px 3px 3px rgba(0, 0, 0, 0.75)',
-			}
-		}
+				logo: "3px 3px 3px rgba(0, 0, 0, 0.75)",
+			},
+		},
 	},
-  plugins: [
-		require('flowbite/plugin')
-	],
+	plugins: [require("flowbite/plugin")],
 };
