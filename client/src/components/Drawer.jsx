@@ -1,5 +1,4 @@
 import React from "react";
-
 export const Drawer = (props) => {
 	const { open, pos, onClose } = props;
 	return (
