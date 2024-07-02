@@ -186,7 +186,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-function RegisterForm() {
+function UserSignUp() {
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -196,7 +196,7 @@ function RegisterForm() {
 		e.preventDefault();
 		try {
 			const response = await axios.post(
-				"http://localhost:8000/auth/register",
+				"http://localhost:8000/users/register",
 				{
 					username,
 					email,
@@ -278,4 +278,4 @@ function RegisterForm() {
 		</div>
 	);
 }
-export default RegisterForm;
+export default UserSignUp;
