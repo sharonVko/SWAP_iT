@@ -1,0 +1,35 @@
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 20px; /* Increase the gap between pagination buttons */
+}
+
+.pagination-button {
+  padding: 8px 12px;
+  background-color: #fcaa72; /* Default background color */
+  border: 1px solid #ccc;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-button.active {
+  background-color: #333; /* Background color when active */
+  color: #fcaa72; /* Text color when active */
+  border-color: #333; /* Border color when active */
+}
+
+.articles-per-page {
+  margin-left: auto; /* Align articles per page dropdown to the right */
+  display: flex;
+  align-items: center;
+}
+
+.articles-per-page label {
+  margin-right: 8px;
+}

@@ -1,0 +1,39 @@
+@layer components {
+  /*** Buttons ***/
+  .btn-sm { @apply uppercase tracking-wider rounded drop-shadow text-sm px-2; }
+  .btn-red { @apply text-peach-300 bg-red-400; }
+
+  /*** Footer Links ***/
+  .footer a {
+    @apply text-peach-300 font-medium tracking-wider hover:text-red-400;
+  }
+
+  /*** Nav Drawer ***/
+  .drawer-overlay {
+    @apply absolute top-0 left-0 w-screen h-full invisible opacity-0 flex flex-col z-100;
+    transition: opacity 150ms ease-in, visibility 0ms ease-in 150ms;
+
+    .drawer-overlay-top {
+      @apply h-20;
+    }
+    .drawer-overlay-bottom {
+      @apply flex-1 bg-black/30;
+    }
+    &.show {
+      @apply visible opacity-100;
+      transition: opacity 150ms ease-in, visibility 0ms ease-in 0ms;
+    }
+  }
+
+  .drawer {
+    @apply absolute top-0 left-0 w-screen sm:w-80 h-full bg-white p-6 pt-28 sm:pt-36 lg:pt-40 z-200;
+    @apply -translate-x-full;
+    @apply bg-gradient-to-b from-peach-500 to-lemon-500;
+    transition: transform 150ms ease-in-out;
+    &.show {
+      @apply translate-x-0;
+      transition: transform 150ms ease-in-out;
+    }
+  }
+
+}
