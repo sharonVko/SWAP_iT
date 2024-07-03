@@ -3,7 +3,7 @@ import axios from 'axios';
 import { UseContextStore } from '../context/ChatContext';
 import { io } from 'socket.io-client';
 
-const socket = io('http://localhost:8000');
+const socket = io();
 
 const SingleChat = ({ chatId }) =>
 {
@@ -17,7 +17,7 @@ const SingleChat = ({ chatId }) =>
 		{
 			try
 			{
-				const response = await axios.get(`/messages/${chatId}`);
+				const response = await axios.get(`http://localhost:8000/message/${chatId}`);
 				setMessages(response.data);
 			} catch (error)
 			{
@@ -51,7 +51,7 @@ const SingleChat = ({ chatId }) =>
 	{
 		try
 		{
-			const response = await axios.post('/messages', {
+			const response = await axios.post('http://localhost:8000/message/', {
 				chatId,
 				message: newMessage,
 				senderId: user._id,  // Make sure the senderId is set correctly

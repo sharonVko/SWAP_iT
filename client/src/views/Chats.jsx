@@ -13,8 +13,9 @@ const Chats = () =>
     {
       try
       {
-        const response = await axios.get('/chats');
+        const response = await axios.get('http://localhost:8000/chats/');
         setChatData(response.data);
+
       } catch (error)
       {
         console.error('Error fetching chats:', error);
@@ -23,27 +24,28 @@ const Chats = () =>
 
     fetchChats();
   }, [setChatData]);
+  console.log(chatData);
 
-  // const handleNewChat = async () =>
-  // {
-  //   if (!user || !user._id)
-  //   {
-  //     console.error('User is not defined');
-  //     return;
-  //   }
+  const handleNewChat = async () =>
+  {
+    if (!user || !user._id)
+    {
+      console.error('User is not defined');
+      return;
+    }
 
-  //   try
-  //   {
-  //     const response = await axios.post('/chats', {
-  //       participants: [user._id, newChatUser],
-  //     });
-  //     setChatData([...chatData, response.data]);
-  //     setNewChatUser('');
-  //   } catch (error)
-  //   {
-  //     console.error('Error starting new chat:', error);
-  //   }
-  // };
+    try
+    {
+      const response = await axios.post('/chats', {
+        participants: [user._id, newChatUser],
+      });
+      setChatData([...chatData, response.data]);
+      setNewChatUser('');
+    } catch (error)
+    {
+      console.error('Error starting new chat:', error);
+    }
+  };
 
   return (
     <div>

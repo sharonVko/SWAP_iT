@@ -21,7 +21,6 @@ import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
-import { ChatContext } from "./context/ChatContext.jsx";
 
 function App()
 {
