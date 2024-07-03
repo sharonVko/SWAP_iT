@@ -4,7 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthProvider.jsx';
 
-function LoginForm()
+function LoginForm({ target })
 {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,25 +12,21 @@ function LoginForm()
   const { checkUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) =>
-  {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    try
-    {
+    try {
       const response = await axios.post(
         'http://localhost:8000/users/login',
         { email, password },
         { withCredentials: true }
       );
-
-      if (response.data.status === 'success')
-      {
+      if (response.data.status === 'success') {
         toast.success('Successfully logged in!');
         await checkUser(); // Update auth context
-        navigate('/dashboard'); // Navigate to the dashboard or desired page after login
+        navigate(target); // Navigate to the dashboard or desired page after login
       }
-    } catch (error)
-    {
+    }
+		catch (error) {
       toast.error(error.response?.data?.message || 'Login failed');
     }
   };
