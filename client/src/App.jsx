@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Drawer } from "./components/Drawer.jsx";
 import { Route, Routes } from "react-router-dom";
+import { useAuth } from "./context/AuthProvider.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -11,7 +12,13 @@ import SingleViewAd from "./views/SingleViewAd.jsx";
 
 import RegisterForm from './components/RegisterForm.jsx';
 import LoginForm from "./components/LoginForm.jsx";
+
 import Chats from './views/Chats.jsx';
+
+// import UserLogin from "./views/UserLogin.jsx";
+// import UserSignUp from "./views/UserSignUp.jsx";
+
+
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
 import ChangePassword from "./views/ChangePassword.jsx";
@@ -22,13 +29,20 @@ import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
 
+
 function App()
 {
-	const [selectedChatId, setSelectedChatId] = useState(null);
+
 	const [open, setOpen] = useState(false);
 
 	const handleClose = () => setOpen(false);
-	const handleToggle = () => setOpen(!open);
+	const handleToggle = () =>
+	{
+		let isOpen = open;
+		isOpen = !isOpen;
+		setOpen(isOpen);
+	};
+
 
 	return (
 		<div className="flex flex-col min-h-screen relative overflow-x-hidden">
@@ -40,7 +54,7 @@ function App()
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/signup" element={<RegisterForm />} />
-						<Route path="/login" element={<LoginForm />} />
+						<Route path="/login" element={<LoginForm target="/dashboard" />} />
 						<Route path="/logout" element={<UserLogout />} />
 						<Route path="/profile" element={<UserProfile />} />
 						<Route path="/profile/edit" element={<UserProfile />} />
