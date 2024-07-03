@@ -8,13 +8,11 @@ import usersRouter from './routes/usersRouter.js';
 import adsRouter from './routes/adsRouter.js';
 import mediaRouter from './routes/mediaRouter.js';
 import messageRouter from './routes/messageRouter.js';
-import chatRouter from './routes/chatRouter.js'
-
+import chatRouter from './routes/chatRouter.js';
 
 import http from 'http';
 import { Server } from 'socket.io';
 import authMiddleware from './middleware/authSocket.js';
-
 
 const app = express();
 const PORT = 8000;
@@ -25,34 +23,29 @@ const server = http.createServer(app); // Creating an HTTP server using the Expr
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
+    methods: ['GET', 'POST'],
+  },
 });
 
 io.use(authMiddleware); // Middleware to authenticate Socket.IO connections.
 
 //Event listener for new socket connections
-io.on('connection', (socket) =>
-{
+io.on('connection', (socket) => {
   console.log('a user connected');
   //'joinConversation': Joins the user to a specific conversation room.
-  socket.on('joinConversation', (conversationId) => 
-  {
+  socket.on('joinConversation', (conversationId) => {
     socket.join(conversationId);
   });
   // 'sendMessage': Broadcasts a new message to all users in the conversation room.
-  socket.on('sendMessage', (message) =>
-  {
+  socket.on('sendMessage', (message) => {
     io.to(message.conversationId).emit('newMessage', message);
   });
 
   // 'disconnect': Logs when a user disconnects.
-  socket.on('disconnect', () =>
-  {
+  socket.on('disconnect', () => {
     console.log('user disconnected');
   });
 });
-
 
 app.use(express.json());
 // app.use(cors());
@@ -63,7 +56,7 @@ app.use(cookieParser()); // Add cookie-parser middleware
 app.use('/users', usersRouter);
 app.use('/ads', adsRouter);
 app.use('/chats', chatRouter);
-app.use('/message', messageRouter)
+app.use('/message', messageRouter);
 // app.use('/swaps', swapsRouter);
 // app.use('/notifications', notificationsRouter);
 // app.use('/taxonomies', taxonomiesRouter);
@@ -71,6 +64,3 @@ app.use('/media', mediaRouter);
 
 app.use(errorHandler);
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
-
-
-
