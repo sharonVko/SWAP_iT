@@ -9,7 +9,8 @@ import Message from '../models/messagesSchema.js';
 
 export const createChat = asyncHandler(async (req, res, next) =>
 {
-  const { participants, messages, ad_id, uid } = req.body;
+  const { participants, messages, ad_id } = req.body;
+  const { uid } = req;
 
   // Validate that participants is an array and has exactly two members
   if (!Array.isArray(participants) || participants.length !== 2) throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
@@ -81,6 +82,19 @@ export const getChatbyId = asyncHandler(async (req, res, next) =>
 
   res.status(200).json(chat);
 })
+
+// Get all chats for a user
+export const getAllChatsForUser = asyncHandler(async (req, res, next) =>
+{
+  const { uid } = req; // Retrieve uid from the request object
+  console.log(uid);
+  const chats = await Chat.find({
+    participants: uid,
+    deletedFor: { $ne: uid } // Exclude chats that the user has marked as deleted
+  }).populate('participants').populate('messages');
+
+  res.status(200).json(chats);
+});
 
 
 // Delete a conversation - if user is aprticipants - if he is loggedin - chat should only deleted from his account , other participant can have that chat. - user should be able to delete multiple chats at the same time.
