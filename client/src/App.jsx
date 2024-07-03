@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Drawer } from "./components/Drawer.jsx";
 import { Route, Routes } from "react-router-dom";
+import { useAuth } from "./context/AuthProvider.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -9,8 +10,12 @@ import NotFound from "./views/NotFound.jsx";
 import Chats from "./views/Chats.jsx";
 import SingleChat from "./views/SingleChat.jsx";
 import SingleViewAd from "./views/SingleViewAd.jsx";
-import UserLogin from "./views/UserLogin.jsx";
-import UserSignUp from "./views/UserSignUp.jsx";
+
+import RegisterForm from './components/RegisterForm.jsx';
+import LoginForm from "./components/LoginForm.jsx";
+// import UserLogin from "./views/UserLogin.jsx";
+// import UserSignUp from "./views/UserSignUp.jsx";
+
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
 import ChangePassword from "./views/ChangePassword.jsx";
@@ -20,9 +25,11 @@ import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
 
+
 function App() {
 
 	const [open, setOpen] = useState(false);
+
 	const handleClose = () => setOpen(false);
 	const handleToggle = () => {
 		let isOpen = open;
@@ -33,14 +40,14 @@ function App() {
 	return (
 		<div className="flex flex-col min-h-screen relative overflow-x-hidden">
 			<header>
-				<Navbar onToggleNav={handleToggle} onClose={handleClose}/>
+				<Navbar onToggleNav={handleToggle} onClose={handleClose} />
 			</header>
 			<main className="px-4 py-8 flex-1">
 				<div className="container mx-auto">
 					<Routes>
 						<Route path="/" element={<Home />} />
-						<Route path="/signup" element={<UserSignUp />} />
-						<Route path="/login" element={<UserLogin />} />
+						<Route path="/signup" element={<RegisterForm />} />
+						<Route path="/login" element={<LoginForm target="/dashboard"/>} />
 						<Route path="/logout" element={<UserLogout />} />
 
 						<Route path="/profile" element={<UserProfile />} />
@@ -71,7 +78,7 @@ function App() {
 			</main>
 
 			<footer className="footer px-4 py-8 bg-teal-500 relative z-300">
-				<Footer/>
+				<Footer />
 			</footer>
 
 			<Drawer open={open} onClose={handleClose} />

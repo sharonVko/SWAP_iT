@@ -5,11 +5,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Ads from '../models/adsSchema.js'
 
-// Register
+// Register according to frontend address zip field
 export const register = asyncHandler(async (req, res, next) =>
 {
-  const { username, email, password, address,
-  } = req.body;
+  const { username, email, password, address } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) throw new ErrorResponse('An account with this Email already exists', 409);
@@ -19,8 +18,11 @@ export const register = asyncHandler(async (req, res, next) =>
     username,
     email,
     password: hash,
-    address,
+    address: {
+      zip: address.zip
+    }
   });
+
   const token = jwt.sign({ uid: newUser._id }, process.env.JWT_SECRET);
   res.status(201).send({ token });
 });

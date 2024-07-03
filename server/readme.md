@@ -27,6 +27,9 @@ cloudinary : cloud_name , api key , api secret
 jsonwebtoken : jwt secret
 
 
+install socket io 
+
+
 
 
 

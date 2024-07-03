@@ -1,12 +1,31 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider.jsx";
+import axios from 'axios';
 import logo from "../assets/swapit-logo-transparent-02.png";
 
 function Navbar({ onToggleNav, onClose }) {
+
+	const { isLoggedIn, setIsLoggedIn, userData } = useAuth();
 	const navigate = useNavigate();
 	const goTo = (route) => {
 		onClose();
 		navigate(route);
 	}
+
+	const handleLogout = async () => {
+		try {
+			await axios.post(
+				'http://localhost:8000/users/logout',
+				{},
+				{ withCredentials: true }
+			);
+			setIsLoggedIn(false);
+			goTo("/logout")
+		} catch (error) {
+			console.log(error);
+			// toast.error('Error logging out');
+		}
+	};
 
   return (
     <div className="h-24 sm:h-36 lg:h-40 relative flex flex-col justify-center">
@@ -62,7 +81,11 @@ function Navbar({ onToggleNav, onClose }) {
 							{/*	</svg>*/}
 							{/*</button>*/}
 
-							<button className="btn-sm btn-red" onClick={() => goTo("/login")}>Login</button>
+							{isLoggedIn ? (
+								<button className="btn-sm btn-red" onClick={handleLogout}>Logout</button>
+							) : (
+								<button className="btn-sm btn-red" onClick={() => goTo("/login")}>Login</button>
+							)}
 						</div>
 					</div>
 				</div>
