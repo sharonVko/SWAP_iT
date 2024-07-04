@@ -4,6 +4,7 @@ import { UseContextStore } from '../context/ChatContext';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
+
 const socket = io();
 
 const SingleChat = () =>

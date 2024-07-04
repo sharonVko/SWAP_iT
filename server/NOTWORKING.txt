@@ -1,0 +1,5 @@
+we need ad id in chat also 
+
+in swap it should be receiver's ad id
+
+do we need compulsory ad id in to chat.

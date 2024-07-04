@@ -3,6 +3,7 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 import Chat from '../models/chatsSchema.js';
 import User from '../models/usersSchema.js';
 import Message from '../models/messagesSchema.js';
+import Ads from '../models/adsSchema.js'
 
 // create a new conversation
 //- x there should be exact 2 participants -  x if both user is registered - x  one of the participants who is loggedin , he has to be sender , - it should save to chat and if there is message then it should save to message controller also , - message should not be empty string
@@ -15,11 +16,15 @@ export const createChat = asyncHandler(async (req, res, next) =>
   if (!Array.isArray(participants) || participants.length !== 2) throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
 
   // Ensure the logged-in user is the first participant (sender)
-  if (!participants.includes(req.uid.toString())) throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
+  if (!participants.includes(uid.toString())) throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
 
   // Check if all participants are registered users
   const users = await User.find({ _id: { $in: participants } });
   if (users.length !== participants.length) throw new ErrorResponse('All participants must be registered users', 400);
+
+  // Check if the provided ad_id exists and belongs to one of the participants
+  const adExists = await Ads.exists({ _id: ad_id, user_id: { $in: participants } });
+  if (!adExists) throw new ErrorResponse('Ad does not exist or does not belong to any of the participants', 400);
 
   // Check if a chat already exists between these participants for the specified ad
   let chat = await Chat.findOne({ participants: { $all: participants }, ad_id });
@@ -29,7 +34,7 @@ export const createChat = asyncHandler(async (req, res, next) =>
   {
     const newMessages = messages.map(msg => ({
       chat: chat._id,
-      sender_id: req.uid,
+      sender_id: uid,
       message: msg
     }));
     const createdMessages = await Message.insertMany(newMessages);
@@ -44,24 +49,25 @@ export const createChat = asyncHandler(async (req, res, next) =>
     const newChat = await Chat.create({ participants, ad_id });
     const newMessages = messages.map(msg => ({
       chat: newChat._id,
-      sender_id: req.user._id,
+      sender_id: uid,
       message: msg
     }));
     const createdMessages = await Message.insertMany(newMessages);
     newChat.messages.push(...createdMessages.map(msg => msg._id));
     await newChat.save();
 
-    //     // Update the users' chats arrays
-    //     for (let participant of participants)
-    //     {
-    //       const user = await User.findById(participant);
-    //       user.chats.push(newChat._id);
-    //       await user.save();
-    //     }
+    // Update the users' chats arrays
+    // for (let participant of participants)
+    // {
+    //   const user = await User.findById(participant);
+    //   user.chats.push(newChat._id);
+    //   await user.save();
+    // }
 
     res.status(201).json(newChat);
   }
 });
+
 
 
 // get a chat
