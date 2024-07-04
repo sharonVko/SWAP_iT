@@ -1,11 +1,10 @@
-import Ads from '../models/adsSchema.js'
+import Ads from '../models/adsSchema.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
-import User from '../models/usersSchema.js'
+import User from '../models/usersSchema.js';
 
 //to get all Ads by all users
-export const getAllAds = asyncHandler(async (req, res, next) =>
-{
+export const getAllAds = asyncHandler(async (req, res, next) => {
   const { uid } = req;
   const ads = await Ads.find({ user: uid }).populate('user_id');
   if (!ads.length) throw new ErrorResponse('Ads not found', 404);
@@ -13,8 +12,7 @@ export const getAllAds = asyncHandler(async (req, res, next) =>
 });
 
 //get ad by id
-export const getSingleAd = asyncHandler(async (req, res, next) =>
-{
+export const getSingleAd = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { uid } = req;
 
@@ -25,22 +23,28 @@ export const getSingleAd = asyncHandler(async (req, res, next) =>
   if (!ad) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
   // Check if the logged-in user is the one who posted the ad
-  if (!ad.user_id.equals(uid)) throw new ErrorResponse('You are not authorized to view this ad', 403);
+  if (!ad.user_id.equals(uid))
+    throw new ErrorResponse('You are not authorized to view this ad', 403);
   // Send the ad data
   res.send(ad);
 });
 
-
-// create a ad or post a ad
-export const createAd = asyncHandler(async (req, res, next) =>
-{
-  const { body, uid } = req;
+// Create Ad with multiple images upload
+export const createAd = asyncHandler(async (req, res, next) => {
+  const { body, uid, files } = req;
 
   // Validate that the user ID (uid) matches the user associated with the ad being created
-  if (body.user_id !== uid) throw new ErrorResponse('Unauthorized - User ID does not match', 401)
+  if (body.user_id !== uid)
+    throw new ErrorResponse('Unauthorized - User ID does not match', 401);
 
-  // Create the ad associated with the logged-in user
-  const newAd = await Ads.create({ ...body, user_id: uid });
+  // Ensure files array is defined
+  if (!files) throw new ErrorResponse('No files uploaded', 400);
+
+  // Process the uploaded files and extract URLs
+  const mediaUrls = files.map((file) => file.path);
+
+  // Create the ad associated with the logged-in user and include media URLs
+  const newAd = await Ads.create({ ...body, user_id: uid, media: mediaUrls });
 
   // Find the logged-in user and update their ads field with the new ad ID
   const user = await User.findById(uid);
@@ -58,8 +62,7 @@ export const createAd = asyncHandler(async (req, res, next) =>
 });
 
 // Update the ad
-export const updateAd = asyncHandler(async (req, res, next) =>
-{
+export const updateAd = asyncHandler(async (req, res, next) => {
   const {
     body,
     params: { id },
@@ -74,7 +77,11 @@ export const updateAd = asyncHandler(async (req, res, next) =>
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
   // Ensure that only the ad owner can update the ad
-  if (uid !== found.user_id.toString()) throw new ErrorResponse('Unauthorized - You have no permission to update this Ad', 401);
+  if (uid !== found.user_id.toString())
+    throw new ErrorResponse(
+      'Unauthorized - You have no permission to update this Ad',
+      401
+    );
 
   // Update the ad
   const updatedAd = await Ads.findByIdAndUpdate(id, body, {
@@ -88,25 +95,27 @@ export const updateAd = asyncHandler(async (req, res, next) =>
   res.json(updatedAd);
 });
 
-
 //delete ad by id
-export const deleteAd = asyncHandler(async (req, res, next) =>
-{
-  const { params: { id }, uid } = req;
+export const deleteAd = asyncHandler(async (req, res, next) => {
+  const {
+    params: { id },
+    uid,
+  } = req;
 
   // Find the ad by ID
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
   // Check if the logged-in user is the owner of the ad
-  if (uid !== found.user_id.toString()) throw new ErrorResponse('You have no permission to delete this post', 401);
+  if (uid !== found.user_id.toString())
+    throw new ErrorResponse('You have no permission to delete this post', 401);
 
   // Delete the ad
   await Ads.findByIdAndDelete(id);
 
   // Remove the reference to this ad from the user's ads array
   await User.findByIdAndUpdate(uid, {
-    $pull: { ads: id }
+    $pull: { ads: id },
   });
 
   res.json({ success: `Ad ${id} was deleted` });

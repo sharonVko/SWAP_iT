@@ -22,9 +22,8 @@ const server = http.createServer(app); // Creating an HTTP server using the Expr
 // Creating a Socket.IO server attached to the HTTP server with CORS configuration.
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"], // Allow both localhost and 127.0.0.1
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
-    credentials: true,
   },
 });
 
@@ -69,6 +68,4 @@ app.use("/message", messageRouter);
 app.use("/media", mediaRouter);
 
 app.use(errorHandler);
-
-// Use server.listen instead of app.listen
-server.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
+app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
