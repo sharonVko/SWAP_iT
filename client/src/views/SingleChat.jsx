@@ -10,7 +10,7 @@ const SingleChat = ({ chatId }) =>
 	const { user } = UseContextStore();
 	const [messages, setMessages] = useState([]);
 	const [newMessage, setNewMessage] = useState('');
-
+	// const { isLoggedIn, userData } = useAuth();
 	useEffect(() =>
 	{
 		const fetchMessages = async () =>
@@ -18,9 +18,10 @@ const SingleChat = ({ chatId }) =>
 			try
 			{
 				const response = await axios.get(`http://localhost:8000/message/${chatId}`, {
-					withCredentials: true, // Include credentials with the request
+					withCredentials: true,
 				});
 				setMessages(response.data);
+				console.log(console.data)
 			} catch (error)
 			{
 				console.error('Error fetching messages:', error);
@@ -58,11 +59,10 @@ const SingleChat = ({ chatId }) =>
 				{
 					chatId,
 					message: newMessage,
-					senderId: user._id, // Make sure the senderId is set correctly
-					receiverId: '', // Set this appropriately
+					senderId: userData._id,
 				},
 				{
-					withCredentials: true, // Include credentials with the request
+					withCredentials: true,
 				}
 			);
 			socket.emit('sendMessage', response.data);
@@ -73,6 +73,20 @@ const SingleChat = ({ chatId }) =>
 		}
 	};
 
+	const handleDeleteMessage = async (messageId) =>
+	{
+		try
+		{
+			await axios.delete(`http://localhost:8000/message/${messageId}`, {
+				withCredentials: true,
+			});
+			setMessages(prevMessages => prevMessages.filter(msg => msg._id !== messageId));
+		} catch (error)
+		{
+			console.error('Error deleting message:', error);
+		}
+	};
+
 	return (
 		<div>
 			<h2>Messages</h2>
@@ -80,6 +94,7 @@ const SingleChat = ({ chatId }) =>
 				{messages.map((msg) => (
 					<li key={msg._id}>
 						<strong>{msg.sender_id.name}:</strong> {msg.message}
+						<button onClick={() => handleDeleteMessage(msg._id)}>Delete</button>
 					</li>
 				))}
 			</ul>

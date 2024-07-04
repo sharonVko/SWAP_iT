@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UseContextStore } from '../context/ChatContext';
 import { useAuth } from '../context/AuthProvider';
+import SingleChat from './SingleChat'; // Adjust the import path
 
 const Chats = () =>
 {
   const { user, chatData, setChatData, loading } = UseContextStore();
   const [newChatUserName, setNewChatUserName] = useState('');
+  const [selectedChatId, setSelectedChatId] = useState(null); // State to manage selected chat ID
   const { isLoggedIn, userData } = useAuth();
 
   useEffect(() =>
@@ -32,7 +34,6 @@ const Chats = () =>
   {
     e.preventDefault();
 
-    // Check authentication and input validation
     if (!isLoggedIn)
     {
       console.error('User is not logged in! Please log in');
@@ -47,7 +48,6 @@ const Chats = () =>
 
     try
     {
-      // Fetch user data by username
       const userToChat = await axios.get(`http://localhost:8000/users/${newChatUserName}`);
       if (!userToChat || !userToChat.data._id)
       {
@@ -55,7 +55,6 @@ const Chats = () =>
         return;
       }
 
-      // Create new chat
       const response = await axios.post(
         'http://localhost:8000/chats',
         {
@@ -66,7 +65,7 @@ const Chats = () =>
         }
       );
       setChatData(prevChatData => [...prevChatData, response.data]);
-      setNewChatUserName('');  // Reset input field or clear selected user
+      setNewChatUserName('');
     } catch (error)
     {
       console.error('Error starting new chat:', error);
@@ -138,10 +137,11 @@ const Chats = () =>
           {chatData &&
             chatData.map((chat) => (
               <li key={chat._id}>
-
-                {chat.participants
-                  .filter((participant) => participant._id !== userData._id)
-                  .map(participant => participant.username).join(', ')}
+                <span onClick={() => setSelectedChatId(chat._id)} style={{ cursor: 'pointer' }}>
+                  {chat.participants
+                    .filter((participant) => participant._id !== userData._id)
+                    .map(participant => participant.username).join(', ')}
+                </span>
                 <button onClick={() => handleDeleteChat(chat._id)} className='m-4 bg-blue-500 p-2'>Delete</button>
                 <input
                   type="checkbox"
@@ -153,6 +153,7 @@ const Chats = () =>
         </ul>
       </div>
 
+      {selectedChatId && <SingleChat chatId={selectedChatId} />}
     </div>
   );
 };
