@@ -6,57 +6,69 @@ import { useAuth } from '../context/AuthProvider';
 const Chats = () =>
 {
   const { user, chatData, setChatData, loading } = UseContextStore();
-  const [newChatUser, setNewChatUser] = useState('');
+  const [newChatUserName, setNewChatUserName] = useState('');
   const { isLoggedIn, userData } = useAuth();
+
 
   useEffect(() =>
   {
-    if (!loading && chatData.length === 0)
+    const fetchChats = async () =>
     {
-      fetchChats(); // Fetch chats only once user and chatData are available and chatData is empty
-    }
-  }, [user, chatData, loading]);
 
-  const fetchChats = async () =>
-  {
-    try
-    {
-      const response = await axios.get('http://localhost:8000/chats/', {
-        withCredentials: true,
-      });
-      setChatData(response.data);
-      console.log(response.data);
-    } catch (error)
-    {
-      console.error('Error fetching chats:', error);
-    }
-  };
+      try
+      {
+        const response = await axios.get('http://localhost:8000/chats/', {
+          withCredentials: true,
+        });
+        setChatData(response.data);
+        console.log(response.data);
+      } catch (error)
+      {
+        console.error('Error fetching chats:', error);
+      }
+    };
 
-  // console.log(user);
-  // console.log(user._id)
+    fetchChats();
+  }, [setChatData]);
+
+
   const handleNewChat = async (e) =>
   {
     e.preventDefault();
 
     if (!isLoggedIn)
     {
-      console.error('User is not loggedin! , please Login');
+      console.error('User is not logged in! Please log in');
+      return;
+    }
+
+    if (!newChatUserName)
+    {
+      console.error('Please enter a username to start a chat');
       return;
     }
 
     try
     {
+      // Fetch user data by username
+      const userToChat = await axios.get(`http://localhost:8000/users/${newChatUserName}`)
+      if (!userToChat || !userToChat._id)
+      {
+        console.error(`User with username "${newChatUserName}" not found`);
+        return;
+      }
+
       const response = await axios.post(
         'http://localhost:8000/chats',
         {
-          participants: [user._id, newChatUser],
+          participants: [userData._id, newChatUser._id],
         },
         {
           withCredentials: true,
         }
       );
-      setChatData([...chatData, response.data]);
-      setNewChatUser('');
+      setChatData(prevChatData => [...prevChatData, response.data]);
+      setNewChatUserName('');  // Reset input field or clear selected user
     } catch (error)
     {
       console.error('Error starting new chat:', error);
@@ -73,23 +85,17 @@ const Chats = () =>
       <h2>Chats</h2>
       <ul>
         {chatData &&
-          chatData.map((chat) =>
-          {
-            const participantNames = chat.participants
-              .map((participant) => participant.username)
-              .join(', ');
-            return (
-              <li key={chat._id}>
-                {participantNames}
-              </li>
-            );
-          })}
+          chatData.map((chat) => (
+            <li key={chat._id}>
+              {chat.participants.map((participant) => participant.username).join(', ')}
+            </li>
+          ))}
       </ul>
       <div>
         <input
           type="text"
-          value={newChatUser}
-          onChange={(e) => setNewChatUser(e.target.value)}
+          value={newChatUserName}
+          onChange={(e) => setNewChatUserName(e.target.value)}
           required
           placeholder="Enter user name"
         />

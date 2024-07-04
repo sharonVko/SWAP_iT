@@ -14,27 +14,9 @@ export const ChatContext = ({ children }) =>
   const [chatData, setChatData] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userData } = useAuth();
-  console.log(userData);
+  console.log("me:", userData);
 
-  // useEffect(() =>
-  // {
-  //   const fetchUser = async () =>
-  //   {
-  //     try
-  //     {
-  //       const response = await axios.get('http://localhost:8000/users/me');
-  //       setUser(response.data);
-  //     } catch (error)
-  //     {
-  //       console.error('Error fetching user:', error);
-  //     } finally
-  //     {
-  //       setLoading(false); // Set loading to false regardless of success or failure
-  //     }
-  //   };
 
-  //   fetchUser();
-  // }, []);
 
   const values = {
     user,
