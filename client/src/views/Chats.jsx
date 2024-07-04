@@ -78,7 +78,7 @@ const Chats = () =>
   {
     try
     {
-      await axios.delete(`http://localhost:8000/chats/${id}`, {
+      await axios.delete(`http://localhost:8000/chats/${chatId}`, {
         withCredentials: true,
       });
       setChatData(prevChatData => prevChatData.filter(chat => chat._id !== id));

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { UseContextStore } from '../context/ChatContext';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
-
+import { useAuth } from '../context/AuthProvider';
 
 const socket = io();
 
@@ -12,8 +12,11 @@ const SingleChat = () =>
 	const { user } = UseContextStore();
 	const { chatId } = useParams();
 	const [messages, setMessages] = useState([]);
+
 	const [newMessage, setNewMessage] = useState('');
 	const [userMap, setUserMap] = useState({});
+	const { isLoggedIn, userData } = useAuth();
+	// console.log(userData);
 
 	useEffect(() =>
 	{
@@ -73,7 +76,8 @@ const SingleChat = () =>
 				{
 					chatId,
 					message: newMessage,
-					senderId: user._id,
+					senderId: userData._id, // Make sure userData._id is defined and correct
+
 				},
 				{
 					withCredentials: true,
@@ -86,6 +90,7 @@ const SingleChat = () =>
 			console.error('Error sending message:', error);
 		}
 	};
+
 
 	const handleDeleteMessage = async (messageId) =>
 	{
@@ -119,7 +124,7 @@ const SingleChat = () =>
 					onChange={(e) => setNewMessage(e.target.value)}
 					placeholder="Type a message"
 				/>
-				<button onClick={handleSendMessage}>Send</button>
+				<button onClick={handleSendMessage} className='m-4 bg-green-500 p-2'>Send</button>
 			</div>
 		</div>
 	);

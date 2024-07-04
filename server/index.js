@@ -63,7 +63,7 @@ app.use(cookieParser()); // Add cookie-parser middleware
 app.use('/users', usersRouter);
 app.use('/ads', adsRouter);
 app.use('/chats', chatRouter);
-app.use('/message', messageRouter)
+app.use('/message', messageRouter);
 // app.use('/swaps', swapsRouter);
 // app.use('/notifications', notificationsRouter);
 // app.use('/taxonomies', taxonomiesRouter);
