@@ -121,128 +121,166 @@ const CreateAd = () => {
     }
   };
 
+  const toggleAddressSection = () => {
+    // Function to toggle expand/collapse address section
+    setExpandAddress(!expandAddress);
+  };
+
+  const [expandAddress, setExpandAddress] = useState(false);
+
   return (
-    <div>
+    <div className="container mx-auto py-4">
       {isLoggedIn ? (
         <div>
-          <h1>Create Advertisement</h1>
+          <h1 className="text-2xl font-bold mb-4">Create Advertisement</h1>
 
-          <div className="create-ad-form-container">
-            <form className="create-ad-form" onSubmit={handleSubmit}>
+          <div className="shadow-lg p-6 bg-white rounded-lg">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <label>Title:</label>
+                <label className="block mb-1">Title:</label>
                 <input
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label>Description:</label>
+                <label className="block mb-1">Description:</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
+                  rows="4"
                   required
                 ></textarea>
               </div>
-              <div>
-                <label>Trade Option:</label>
+              <div className="flex items-center">
                 <input
                   type="checkbox"
                   name="tradeOption"
                   checked={formData.tradeOption}
                   onChange={handleCheckboxChange}
+                  className="mr-2"
                 />
+                <label className="mb-1">Trade Option</label>
               </div>
               <div>
-                <label>Street:</label>
-                <input
-                  type="text"
-                  name="pickupaddress.street"
-                  value={formData.pickupaddress.street}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label>House Number:</label>
-                <input
-                  type="text"
-                  name="pickupaddress.housenumber"
-                  value={formData.pickupaddress.housenumber}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label>Zip:</label>
-                <input
-                  type="text"
-                  name="pickupaddress.zip"
-                  value={formData.pickupaddress.zip}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label>City:</label>
-                <input
-                  type="text"
-                  name="pickupaddress.city"
-                  value={formData.pickupaddress.city}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label>Country:</label>
-                <input
-                  type="text"
-                  name="pickupaddress.country"
-                  value={formData.pickupaddress.country}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label>Categories:</label>
+                <label className="block mb-1">Categories:</label>
                 <input
                   type="text"
                   name="categories"
                   value={formData.categories}
                   onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label>SubCategory:</label>
+                <label className="block mb-1">SubCategory:</label>
                 <input
                   type="text"
                   name="subCategory"
                   value={formData.subCategory}
                   onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label>Tags:</label>
+                <label className="block mb-1">Tags:</label>
                 <input
                   type="text"
                   name="tags"
                   value={formData.tags}
                   onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md"
                   required
                 />
               </div>
               <div>
-                <label>Media Files:</label>
+                <label className="block mb-1">Media Files:</label>
                 <input
                   type="file"
                   name="media_files"
                   multiple
                   onChange={handleFileChange}
+                  className="mb-2"
                   required
                 />
               </div>
-              <button type="submit">Create Ad</button>
+              <div className="flex items-center mb-4">
+                <button
+                  type="button"
+                  className="text-blue-500 hover:underline focus:outline-none"
+                  onClick={toggleAddressSection}
+                >
+                  {expandAddress ? "Hide Address" : "Add Address (optional)"}
+                </button>
+              </div>
+              {expandAddress && (
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <label className="block mb-1">Street:</label>
+                    <input
+                      type="text"
+                      name="pickupaddress.street"
+                      value={formData.pickupaddress.street}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <label className="block mb-1">House Number:</label>
+                    <input
+                      type="text"
+                      name="pickupaddress.housenumber"
+                      value={formData.pickupaddress.housenumber}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <label className="block mb-1">Zip:</label>
+                    <input
+                      type="text"
+                      name="pickupaddress.zip"
+                      value={formData.pickupaddress.zip}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <label className="block mb-1">City:</label>
+                    <input
+                      type="text"
+                      name="pickupaddress.city"
+                      value={formData.pickupaddress.city}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <label className="block mb-1">Country:</label>
+                    <input
+                      type="text"
+                      name="pickupaddress.country"
+                      value={formData.pickupaddress.country}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                </div>
+              )}
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+              >
+                Create Ad
+              </button>
             </form>
           </div>
         </div>
