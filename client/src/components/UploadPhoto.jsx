@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const UploadPhoto = ({ adId, onSuccess }) => {
   const [mediaFile, setMediaFile] = useState(null);
+  const [token, setToken] = useState(null);
+
+  // Fetch token from localStorage on component mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+    setToken(storedToken);
+  }, []);
 
   const handleFileChange = (e) => {
     setMediaFile(e.target.files[0]);
@@ -17,14 +24,25 @@ const UploadPhoto = ({ adId, onSuccess }) => {
     }
 
     const formData = new FormData();
-    formData.append("media_file", mediaFile);
+    formData.append("media_files", mediaFile);
     formData.append("ad_id", adId);
 
-    try {
-      const token = localStorage.getItem("accessToken"); // Replace with your actual token retrieval logic
+    console.log("FormData content:");
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
 
+    if (!token) {
+      console.error("No access token found. Please log in.");
+      return;
+    }
+
+    console.log("Sending request with formData:", formData);
+    console.log("Authorization Token:", token);
+
+    try {
       const response = await axios.post(
-        "http://localhost:8000/media/",
+        "http://localhost:8000/media",
         formData,
         {
           headers: {
@@ -35,10 +53,14 @@ const UploadPhoto = ({ adId, onSuccess }) => {
       );
 
       console.log("Upload successful:", response.data);
-      onSuccess(); // Trigger any necessary actions upon successful upload
+      onSuccess();
     } catch (error) {
-      console.error("Upload failed:", error);
-      // Handle error response as needed
+      if (error.response && error.response.status === 401) {
+        console.error("Unauthorized. Please log in again.");
+        // Optionally, trigger a logout or re-authentication process here.
+      } else {
+        console.error("Upload failed:", error);
+      }
     }
   };
 

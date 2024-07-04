@@ -64,7 +64,7 @@ const CreateAd = () => {
       );
 
       console.log("Ad created successfully:", response.data);
-      setAdId(response.data.ad_id);
+      setAdId(response.data._id); // Use the ad ID from the response
 
       setFormData({
         title: "",
@@ -197,16 +197,15 @@ const CreateAd = () => {
                   required
                 />
               </div>
+              <button type="submit">Create Ad</button>
             </form>
             {/* UploadPhoto component outside the main form */}
-            {isLoggedIn ? (
+            {adId && (
               <UploadPhoto
                 adId={adId}
                 onSuccess={() => console.log("Media uploaded successfully")}
               />
-            ) : null}
-
-            <button type="submit">Create Ad</button>
+            )}
           </div>
         </div>
       ) : (
