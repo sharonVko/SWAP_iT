@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UseContextStore } from '../context/ChatContext';
+import { useAuth } from '../context/AuthProvider';
 
 const Chats = () =>
 {
   const { user, chatData, setChatData, loading } = UseContextStore();
   const [newChatUser, setNewChatUser] = useState('');
+  const { isLoggedIn, userData } = useAuth();
 
   useEffect(() =>
   {
@@ -36,9 +38,9 @@ const Chats = () =>
   {
     e.preventDefault();
 
-    if (!user || !user._id)
+    if (!isLoggedIn)
     {
-      console.error('User is not defined or does not have _id');
+      console.error('User is not loggedin! , please Login');
       return;
     }
 
@@ -61,9 +63,9 @@ const Chats = () =>
     }
   };
 
-  if (loading)
+  if (!isLoggedIn)
   {
-    return <div>Loading...</div>;
+    return <div>Please Login!...</div>;
   }
 
   return (
@@ -89,7 +91,7 @@ const Chats = () =>
           value={newChatUser}
           onChange={(e) => setNewChatUser(e.target.value)}
           required
-          placeholder="Enter user ID to start chat"
+          placeholder="Enter user name"
         />
         <button onClick={handleNewChat} className='bg-blue-500 m-4'>Start New Chat</button>
       </div>
