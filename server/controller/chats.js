@@ -60,38 +60,30 @@ export const createChat = asyncHandler(async (req, res, next) =>
 // get a chat
 export const getChatbyId = asyncHandler(async (req, res, next) =>
 {
-  const {
-    body,
-    params: { id },
-    uid,
-  } = req;
-  console.log('Request body:', body);
-  console.log('User ID:', uid);
-  console.log('Chat ID:', id);
+  const { params: { id }, uid } = req;
 
-  const chat = await Chat.findById(id).populate('participants').populate('messages');
+  const chat = await Chat.findById(id)
+    .populate('participants', 'username') // Populate username field for participants
+    .populate('messages');
   if (!chat) throw new ErrorResponse('Chat not found', 404);
 
-  // Check if the user is a participant in the chat
   const isParticipant = chat.participants.some(participant => participant._id.toString() === uid.toString());
-
-  // If the user is not a participant, throw an error
   if (!isParticipant) throw new ErrorResponse('You do not have permission to view this chat', 403);
 
-  // If the user is a participant, return the chat
-
   res.status(200).json(chat);
-})
+});
+
 
 // Get all chats for a user
 export const getAllChatsForUser = asyncHandler(async (req, res, next) =>
 {
-  const { uid } = req; // Retrieve uid from the request object
-  console.log(uid);
+  const { uid } = req;
+
   const chats = await Chat.find({
     participants: uid,
-    deletedFor: { $ne: uid } // Exclude chats that the user has marked as deleted
-  }).populate('participants').populate('messages');
+    deletedFor: { $ne: uid }
+  }).populate('participants', 'username') // Populate username field for participants
+    .populate('messages');
 
   res.status(200).json(chats);
 });

@@ -17,7 +17,9 @@ const SingleChat = ({ chatId }) =>
 		{
 			try
 			{
-				const response = await axios.get(`http://localhost:8000/message/${chatId}`);
+				const response = await axios.get(`http://localhost:8000/message/${chatId}`, {
+					withCredentials: true, // Include credentials with the request
+				});
 				setMessages(response.data);
 			} catch (error)
 			{
@@ -51,12 +53,18 @@ const SingleChat = ({ chatId }) =>
 	{
 		try
 		{
-			const response = await axios.post('http://localhost:8000/message/', {
-				chatId,
-				message: newMessage,
-				senderId: user._id,  // Make sure the senderId is set correctly
-				receiverId: '', // Set this appropriately
-			});
+			const response = await axios.post(
+				'http://localhost:8000/message/',
+				{
+					chatId,
+					message: newMessage,
+					senderId: user._id, // Make sure the senderId is set correctly
+					receiverId: '', // Set this appropriately
+				},
+				{
+					withCredentials: true, // Include credentials with the request
+				}
+			);
 			socket.emit('sendMessage', response.data);
 			setNewMessage('');
 		} catch (error)
@@ -69,7 +77,7 @@ const SingleChat = ({ chatId }) =>
 		<div>
 			<h2>Messages</h2>
 			<ul>
-				{messages.map(msg => (
+				{messages.map((msg) => (
 					<li key={msg._id}>
 						<strong>{msg.sender_id.name}:</strong> {msg.message}
 					</li>

@@ -7,10 +7,11 @@ export const UseContextStore = () => useContext(Context);
 
 export const ChatContext = ({ children }) =>
 {
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null); // Initialize user state as null or an empty object
   const [messageData, setMessageData] = useState([]);
   const [adData, setAdData] = useState([]);
   const [chatData, setChatData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() =>
   {
@@ -18,11 +19,14 @@ export const ChatContext = ({ children }) =>
     {
       try
       {
-        const response = await axios.get('/users/me'); // Assume this endpoint returns the current user
+        const response = await axios.get('http://localhost:8000/users/me');
         setUser(response.data);
       } catch (error)
       {
         console.error('Error fetching user:', error);
+      } finally
+      {
+        setLoading(false); // Set loading to false regardless of success or failure
       }
     };
 
@@ -38,6 +42,7 @@ export const ChatContext = ({ children }) =>
     setAdData,
     chatData,
     setChatData,
+    loading,
   };
 
   return <Context.Provider value={values}>{children}</Context.Provider>;

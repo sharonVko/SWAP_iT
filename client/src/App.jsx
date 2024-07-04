@@ -71,7 +71,9 @@ function App()
 						<Route path="/ads/user/:user" element={<FilteredAds />} />
 						<Route path="/ads/single" element={<SingleViewAd />} />
 						<Route path="/chats" element={<Chats />} />
-						<Route path="/singlechat" element={selectedChatId && <SingleChat chatId={selectedChatId} />} />
+						<Route path="/singlechat" element={<SingleChat />} />
+
+						{/* <Route path="/singlechat" element={selectedChatId && <SingleChat chatId={selectedChatId} />} /> */}
 						<Route path="*" element={<NotFound />} />
 					</Routes>
 				</div>
