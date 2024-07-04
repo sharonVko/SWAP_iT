@@ -8,68 +8,77 @@ import usersRouter from './routes/usersRouter.js';
 import adsRouter from './routes/adsRouter.js';
 import mediaRouter from './routes/mediaRouter.js';
 import messageRouter from './routes/messageRouter.js';
-import chatRouter from './routes/chatRouter.js'
-
+import chatRouter from './routes/chatRouter.js';
 
 import http from 'http';
 import { Server } from 'socket.io';
 import authMiddleware from './middleware/authSocket.js';
 
-
 const app = express();
 const PORT = 8000;
 
-const server = http.createServer(app); // Creating an HTTP server using the Express application.
+const server = http.createServer(app);
 
-// Creating a Socket.IO server attached to the HTTP server with CORS configuration.
 const io = new Server(server, {
   cors: {
     origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
 });
 
-io.use(authMiddleware); // Middleware to authenticate Socket.IO connections.
+io.use(authMiddleware);
 
-//Event listener for new socket connections
-io.on('connection', (socket) =>
-{
-  console.log('a user connected');
-  //'joinConversation': Joins the user to a specific conversation room.
-  socket.on('joinConversation', (conversationId) => 
-  {
-    socket.join(conversationId);
-  });
-  // 'sendMessage': Broadcasts a new message to all users in the conversation room.
-  socket.on('sendMessage', (message) =>
-  {
-    io.to(message.conversationId).emit('newMessage', message);
+const onlineUsers = new Map();
+
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+
+  // Store the user details in the online users map
+  onlineUsers.set(socket.user._id, {
+    id: socket.user._id,
+    username: socket.user.username,
   });
 
-  // 'disconnect': Logs when a user disconnects.
-  socket.on('disconnect', () =>
-  {
-    console.log('user disconnected');
+  // Notify others about the new user
+  io.emit('onlineUsers', Array.from(onlineUsers.values()));
+
+  socket.on('joinRoom', (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room ${roomId}`);
+  });
+
+  socket.on('leaveRoom', (roomId) => {
+    socket.leave(roomId);
+    console.log(`User ${socket.id} left room ${roomId}`);
+  });
+
+  socket.on('sendMessage', (message) => {
+    console.log(
+      `Message received from ${message.sender} in room ${message.roomId}: ${message.text}`
+    );
+    io.to(message.roomId).emit('newMessage', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+    onlineUsers.delete(socket.user._id);
+    io.emit('onlineUsers', Array.from(onlineUsers.values()));
   });
 });
-
 
 app.use(express.json());
-// app.use(cors());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
-app.use(cookieParser()); // Add cookie-parser middleware
+app.use(cookieParser());
 
-// ROUTES
 app.use('/users', usersRouter);
 app.use('/ads', adsRouter);
 app.use('/chats', chatRouter);
-app.use('/message', messageRouter)
-// app.use('/swaps', swapsRouter);
-// app.use('/notifications', notificationsRouter);
-// app.use('/taxonomies', taxonomiesRouter);
+app.use('/message', messageRouter);
 app.use('/media', mediaRouter);
 
 app.use(errorHandler);
-app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
 
-io.listen(9000);
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

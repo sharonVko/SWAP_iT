@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 import { useSocket } from '../context/SocketContext';
 
-const SingleChat = () => {
-  const { roomId } = useParams();
+const ChatRoom = ({ roomId }) => {
   const { socket } = useSocket();
   const { userData } = useAuth();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [roomUsers, setRoomUsers] = useState([]);
 
   useEffect(() => {
     if (socket == null) return;
@@ -20,14 +17,9 @@ const SingleChat = () => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    socket.on('roomUsers', (users) => {
-      setRoomUsers(users);
-    });
-
     return () => {
       socket.emit('leaveRoom', roomId);
       socket.off('newMessage');
-      socket.off('roomUsers');
     };
   }, [socket, roomId]);
 
@@ -50,7 +42,6 @@ const SingleChat = () => {
   return (
     <div>
       <h2>Room: {roomId}</h2>
-
       <div>
         {messages.map((message, index) => (
           <div key={index}>
@@ -73,4 +64,4 @@ const SingleChat = () => {
   );
 };
 
-export default SingleChat;
+export default ChatRoom;

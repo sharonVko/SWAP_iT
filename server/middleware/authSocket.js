@@ -1,16 +1,35 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/usersSchema.js';
-import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
-const authMiddleware = asyncHandler(async (req, res, socket, next) =>
-{
-  const token = socket.handshake.query.token;
+const authMiddleware = (socket, next) => {
+  try {
+    const token = socket.handshake.query.token;
 
-  if (!token) throw new ErrorResponse('Authentication error', 401);
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  socket.uid = decoded.uid;
-  next();
-});
+    if (!token) {
+      throw new ErrorResponse('Authentication error: No token provided', 401);
+    }
 
-export default authMiddleware
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return next(
+          new ErrorResponse('Authentication error: Invalid token', 401)
+        );
+      }
+
+      const user = await User.findById(decoded.uid);
+      if (!user) {
+        return next(
+          new ErrorResponse('Authentication error: User not found', 401)
+        );
+      }
+
+      socket.user = user;
+      next();
+    });
+  } catch (error) {
+    next(new ErrorResponse('Authentication error', 401));
+  }
+};
+
+export default authMiddleware;
