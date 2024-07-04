@@ -8,17 +8,28 @@ import User from '../models/usersSchema.js'
 
 export const sendMessage = asyncHandler(async (req, res, next) =>
 {
-  const { chatId, message, receiverId } = req.body; // Include receiverId to create new chat if needed
+  const { chatId, message, receiverId, ad_id } = req.body;
   const { uid } = req;
-
 
   // Check if sender (user) is registered
   const sender = await User.findById(uid);
-  if (!sender) throw new ErrorResponse('Sender not found', 404);
+  if (!sender)
+  {
+    throw new ErrorResponse('Sender not found', 404);
+  }
 
   // Check if receiver is registered
   const receiver = await User.findById(receiverId);
-  if (!receiver) throw new ErrorResponse('Receiver not found', 404);
+  if (!receiver)
+  {
+    throw new ErrorResponse('Receiver not found', 404);
+  }
+
+  // Validate ad_id
+  if (!sender.ads.includes(ad_id) && !receiver.ads.includes(ad_id))
+  {
+    throw new ErrorResponse('Ad does not belong to the sender or receiver', 400);
+  }
 
   let chat;
 
@@ -26,22 +37,32 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   if (chatId)
   {
     chat = await Chat.findById(chatId);
+    if (!chat)
+    {
+      throw new ErrorResponse('Chat not found', 404);
+    }
+    // Ensure ad_id matches and participants include sender and receiver
+    if (chat.ad_id.toString() !== ad_id || !chat.participants.includes(uid) || !chat.participants.includes(receiverId))
+    {
+      throw new ErrorResponse('Invalid chat or ad_id', 400);
+    }
   } else
   {
-    // Check if a chat already exists between the two users
+    // Check if a chat already exists between the two users for the specified ad_id
     chat = await Chat.findOne({
-      participants: { $all: [uid, receiverId] }
+      participants: { $all: [uid, receiverId] },
+      ad_id: ad_id
     });
-  }
 
-  // If chat does not exist, create a new chat with both participants
-  if (!chat)
-  {
-    chat = await Chat.create({ participants: [uid, receiverId] });
+    // If no chat exists, create a new chat
+    if (!chat)
+    {
+      chat = await Chat.create({ participants: [uid, receiverId], ad_id });
+    }
   }
 
   // Create a new message and link it to the chat
-  const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message });
+  const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message, ad_id });
 
   // Add the new message to the chat's messages array
   chat.messages.push(newMessage._id);
@@ -52,6 +73,7 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
 
   res.status(201).json(populatedMessage);
 });
+
 
 
 //get all messages

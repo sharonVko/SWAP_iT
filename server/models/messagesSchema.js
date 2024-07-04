@@ -14,6 +14,11 @@ const messageSchema = new mongoose.Schema({
 		type: String,
 		required: [true, 'message is required'],
 	},
+	ad_id: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Ads',
+		required: [true, "ad required"],
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
