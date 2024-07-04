@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UseContextStore } from '../context/ChatContext';
 import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import SingleChat from './SingleChat'; // Adjust the import path
 
 const Chats = () =>
 {
   const { user, chatData, setChatData, loading } = UseContextStore();
   const [newChatUserName, setNewChatUserName] = useState('');
-  const [selectedChatId, setSelectedChatId] = useState(null); // State to manage selected chat ID
   const { isLoggedIn, userData } = useAuth();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() =>
   {
@@ -21,6 +22,7 @@ const Chats = () =>
           withCredentials: true,
         });
         setChatData(response.data);
+        console.log("chats:", response.data)
       } catch (error)
       {
         console.error('Error fetching chats:', error);
@@ -112,6 +114,11 @@ const Chats = () =>
     );
   };
 
+  const handleChatClick = (id) =>
+  {
+    navigate(`/singlechat/${id}`);
+  };
+
   if (!isLoggedIn)
   {
     return <div>Please Login!...</div>;
@@ -137,7 +144,7 @@ const Chats = () =>
           {chatData &&
             chatData.map((chat) => (
               <li key={chat._id}>
-                <span onClick={() => setSelectedChatId(chat._id)} style={{ cursor: 'pointer' }}>
+                <span onClick={() => handleChatClick(chat._id)} style={{ cursor: 'pointer' }}>
                   {chat.participants
                     .filter((participant) => participant._id !== userData._id)
                     .map(participant => participant.username).join(', ')}
@@ -153,7 +160,6 @@ const Chats = () =>
         </ul>
       </div>
 
-      {selectedChatId && <SingleChat chatId={selectedChatId} />}
     </div>
   );
 };

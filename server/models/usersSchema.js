@@ -77,6 +77,10 @@ const userSchema = new mongoose.Schema({
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads'
 	}],
+	// chats: [{
+	// 	type: mongoose.Schema.ObjectId,
+	// 	ref: 'Chat'
+	// }],
 	creationdate: {
 		type: Date,
 		default: Date.now

@@ -48,7 +48,7 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   await chat.save();
 
   // Populate the sender_id
-  const populatedMessage = await Message.findById(newMessage._id).populate('sender_id');
+  const populatedMessage = await Message.findById(newMessage._id).populate('sender_id', 'username');
 
   res.status(201).json(populatedMessage);
 });

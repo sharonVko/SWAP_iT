@@ -6,7 +6,6 @@ import Message from '../models/messagesSchema.js';
 
 // create a new conversation
 //- x there should be exact 2 participants -  x if both user is registered - x  one of the participants who is loggedin , he has to be sender , - it should save to chat and if there is message then it should save to message controller also , - message should not be empty string
-
 export const createChat = asyncHandler(async (req, res, next) =>
 {
   const { participants, messages, ad_id } = req.body;
@@ -51,6 +50,14 @@ export const createChat = asyncHandler(async (req, res, next) =>
     const createdMessages = await Message.insertMany(newMessages);
     newChat.messages.push(...createdMessages.map(msg => msg._id));
     await newChat.save();
+
+    //     // Update the users' chats arrays
+    //     for (let participant of participants)
+    //     {
+    //       const user = await User.findById(participant);
+    //       user.chats.push(newChat._id);
+    //       await user.save();
+    //     }
 
     res.status(201).json(newChat);
   }
