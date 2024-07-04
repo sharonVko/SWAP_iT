@@ -21,9 +21,8 @@ const CreateAd = () => {
     categories: "",
     subCategory: "",
     tags: "",
+    media_files: [],
   });
-
-  const [adId, setAdId] = useState(null);
 
   useEffect(() => {
     if (userData && userData._id) {
@@ -54,17 +53,52 @@ const CreateAd = () => {
     setFormData({ ...formData, tradeOption: e.target.checked });
   };
 
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, media_files: e.target.files });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formDataToSend = new FormData();
+    formDataToSend.append("user_id", userData._id);
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("tradeOption", formData.tradeOption);
+    formDataToSend.append("categories", formData.categories);
+    formDataToSend.append("subCategory", formData.subCategory);
+    formDataToSend.append("tags", formData.tags);
+    formDataToSend.append(
+      "pickupaddress[street]",
+      formData.pickupaddress.street
+    );
+    formDataToSend.append(
+      "pickupaddress[housenumber]",
+      formData.pickupaddress.housenumber
+    );
+    formDataToSend.append("pickupaddress[zip]", formData.pickupaddress.zip);
+    formDataToSend.append("pickupaddress[city]", formData.pickupaddress.city);
+    formDataToSend.append(
+      "pickupaddress[country]",
+      formData.pickupaddress.country
+    );
+
+    for (let i = 0; i < formData.media_files.length; i++) {
+      formDataToSend.append("media_files", formData.media_files[i]);
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:8000/ads/createAd",
-        formData,
-        { withCredentials: true }
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        }
       );
 
       console.log("Ad created successfully:", response.data);
-      setAdId(response.data._id); // Use the ad ID from the response
 
       setFormData({
         title: "",
@@ -80,6 +114,7 @@ const CreateAd = () => {
         categories: "",
         subCategory: "",
         tags: "",
+        media_files: [],
       });
     } catch (error) {
       console.error("Error creating ad:", error);
@@ -197,15 +232,18 @@ const CreateAd = () => {
                   required
                 />
               </div>
+              <div>
+                <label>Media Files:</label>
+                <input
+                  type="file"
+                  name="media_files"
+                  multiple
+                  onChange={handleFileChange}
+                  required
+                />
+              </div>
               <button type="submit">Create Ad</button>
             </form>
-            {/* UploadPhoto component outside the main form */}
-            {adId && (
-              <UploadPhoto
-                adId={adId}
-                onSuccess={() => console.log("Media uploaded successfully")}
-              />
-            )}
           </div>
         </div>
       ) : (

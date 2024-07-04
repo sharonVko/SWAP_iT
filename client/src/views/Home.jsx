@@ -1,12 +1,13 @@
 import ArticleList from "../components/ArticleList.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
+import SwapSchema from "../components/SwapSchema.jsx";
 
 const Home = () => {
   return (
     <>
       <div></div>
       <h1 className="mt-0 text-center">Top Matches</h1>
-
+      <SwapSchema />
       <ArticleList />
       {/* <HomeSwiper />
       </div>
