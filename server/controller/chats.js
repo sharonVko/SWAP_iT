@@ -7,24 +7,98 @@ import Ads from '../models/adsSchema.js'
 
 // create a new conversation
 //- x there should be exact 2 participants -  x if both user is registered - x  one of the participants who is loggedin , he has to be sender , - it should save to chat and if there is message then it should save to message controller also , - message should not be empty string
+// export const createChat = asyncHandler(async (req, res, next) =>
+// {
+//   const { participants, messages, ad_id } = req.body;
+//   const { uid } = req;
+
+//   // Validate that participants is an array and has exactly two members
+//   if (!Array.isArray(participants) || participants.length !== 2) throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
+
+//   // Ensure the logged-in user is the first participant (sender)
+//   if (!participants.includes(uid.toString())) throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
+
+//   // Check if all participants are registered users
+//   const users = await User.find({ _id: { $in: participants } });
+//   if (users.length !== participants.length) throw new ErrorResponse('All participants must be registered users', 400);
+
+//   // Check if the provided ad_id exists and belongs to one of the participants
+//   const adExists = await Ads.exists({ _id: ad_id, user_id: { $in: participants } });
+//   if (!adExists) throw new ErrorResponse('Ad does not exist or does not belong to any of the participants', 400);
+
+//   // Check if a chat already exists between these participants for the specified ad
+//   let chat = await Chat.findOne({ participants: { $all: participants }, ad_id });
+
+//   // If chat exists, update it with the new messages
+//   if (chat)
+//   {
+//     const newMessages = messages.map(msg => ({
+//       chat: chat._id,
+//       sender_id: uid,
+//       message: msg
+//     }));
+//     const createdMessages = await Message.insertMany(newMessages);
+//     chat.messages.push(...createdMessages.map(msg => msg._id));
+//     chat.updatedAt = Date.now();
+//     await chat.save();
+
+//     res.status(200).json(chat);
+//   } else
+//   {
+//     // If chat does not exist, create a new chat and save the messages
+//     const newChat = await Chat.create({ participants, ad_id });
+//     const newMessages = messages.map(msg => ({
+//       chat: newChat._id,
+//       sender_id: uid,
+//       message: msg
+//     }));
+//     const createdMessages = await Message.insertMany(newMessages);
+//     newChat.messages.push(...createdMessages.map(msg => msg._id));
+//     await newChat.save();
+
+//     // Update the users' chats arrays
+//     // for (let participant of participants)
+//     // {
+//     //   const user = await User.findById(participant);
+//     //   user.chats.push(newChat._id);
+//     //   await user.save();
+//     // }
+
+//     res.status(201).json(newChat);
+//   }
+// });
+
+
 export const createChat = asyncHandler(async (req, res, next) =>
 {
   const { participants, messages, ad_id } = req.body;
   const { uid } = req;
 
   // Validate that participants is an array and has exactly two members
-  if (!Array.isArray(participants) || participants.length !== 2) throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
+  if (!Array.isArray(participants) || participants.length !== 2)
+  {
+    throw new ErrorResponse('Participants must be an array with exactly two user IDs', 400);
+  }
 
   // Ensure the logged-in user is the first participant (sender)
-  if (!participants.includes(uid.toString())) throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
+  if (!participants.includes(uid.toString()))
+  {
+    throw new ErrorResponse('Sender must be logged in, you cannot have a conversation. Please login first!', 400);
+  }
 
   // Check if all participants are registered users
   const users = await User.find({ _id: { $in: participants } });
-  if (users.length !== participants.length) throw new ErrorResponse('All participants must be registered users', 400);
+  if (users.length !== participants.length)
+  {
+    throw new ErrorResponse('All participants must be registered users', 400);
+  }
 
   // Check if the provided ad_id exists and belongs to one of the participants
   const adExists = await Ads.exists({ _id: ad_id, user_id: { $in: participants } });
-  if (!adExists) throw new ErrorResponse('Ad does not exist or does not belong to any of the participants', 400);
+  if (!adExists)
+  {
+    throw new ErrorResponse('Ad does not exist or does not belong to any of the participants', 400);
+  }
 
   // Check if a chat already exists between these participants for the specified ad
   let chat = await Chat.findOne({ participants: { $all: participants }, ad_id });
@@ -35,7 +109,8 @@ export const createChat = asyncHandler(async (req, res, next) =>
     const newMessages = messages.map(msg => ({
       chat: chat._id,
       sender_id: uid,
-      message: msg
+      message: msg,
+      ad_id: ad_id // Include ad_id in each message
     }));
     const createdMessages = await Message.insertMany(newMessages);
     chat.messages.push(...createdMessages.map(msg => msg._id));
@@ -50,25 +125,16 @@ export const createChat = asyncHandler(async (req, res, next) =>
     const newMessages = messages.map(msg => ({
       chat: newChat._id,
       sender_id: uid,
-      message: msg
+      message: msg,
+      ad_id: ad_id // Include ad_id in each message
     }));
     const createdMessages = await Message.insertMany(newMessages);
     newChat.messages.push(...createdMessages.map(msg => msg._id));
     await newChat.save();
 
-    // Update the users' chats arrays
-    // for (let participant of participants)
-    // {
-    //   const user = await User.findById(participant);
-    //   user.chats.push(newChat._id);
-    //   await user.save();
-    // }
-
     res.status(201).json(newChat);
   }
 });
-
-
 
 // get a chat
 export const getChatbyId = asyncHandler(async (req, res, next) =>

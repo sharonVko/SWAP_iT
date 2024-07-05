@@ -74,14 +74,14 @@ const Chats = () =>
     }
   };
 
-  const handleDeleteChat = async (id) =>
+  const handleDeleteChat = async (chatId) =>
   {
     try
     {
       await axios.delete(`http://localhost:8000/chats/${chatId}`, {
         withCredentials: true,
       });
-      setChatData(prevChatData => prevChatData.filter(chat => chat._id !== id));
+      setChatData(prevChatData => prevChatData.filter(chat => chat._id !== chatId));
     } catch (error)
     {
       console.error(`Error deleting chat ${id}:`, error);
@@ -150,11 +150,11 @@ const Chats = () =>
                     .map(participant => participant.username).join(', ')}
                 </span>
                 <button onClick={() => handleDeleteChat(chat._id)} className='m-4 bg-blue-500 p-2'>Delete</button>
-                <input
+                {/* <input
                   type="checkbox"
                   checked={chat.selectedForDeletion || false}
                   onChange={() => handleToggleSelect(chat._id)}
-                />
+                /> */}
               </li>
             ))}
         </ul>
