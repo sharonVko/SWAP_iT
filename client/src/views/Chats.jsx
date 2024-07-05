@@ -7,7 +7,8 @@ import SingleChat from './SingleChat'; // Adjust the import path
 
 const Chats = () =>
 {
-  const { user, chatData, setChatData, loading } = UseContextStore();
+  const { user, loading } = UseContextStore();
+  const [chatData, setChatData] = useState([]);
   const [newChatUserName, setNewChatUserName] = useState('');
   const { isLoggedIn, userData } = useAuth();
   const navigate = useNavigate(); // Initialize useNavigate
@@ -84,7 +85,7 @@ const Chats = () =>
       setChatData(prevChatData => prevChatData.filter(chat => chat._id !== chatId));
     } catch (error)
     {
-      console.error(`Error deleting chat ${id}:`, error);
+      console.error(`Error deleting chat :`, error);
     }
   };
 

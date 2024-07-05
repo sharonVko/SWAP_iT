@@ -178,9 +178,8 @@ export const deleteChat = asyncHandler(async (req, res, next) =>
     uid,
   } = req;
 
-  if (!found) throw new ErrorResponse(`Chat ${id} does not exist`, 404);
   const found = await Chat.findById(id);
-
+  if (!found) throw new ErrorResponse(`Chat ${id} does not exist`, 404);
   const isParticipant = found.participants.some(participant => participant.toString() === uid.toString());
   if (!isParticipant) throw new ErrorResponse('You have no permission to delete this chat', 401);
 
