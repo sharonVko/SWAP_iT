@@ -12,11 +12,9 @@ const SingleChat = () =>
 	const { user } = UseContextStore();
 	const { chatId } = useParams();
 	const [messages, setMessages] = useState([]);
-
 	const [newMessage, setNewMessage] = useState('');
 	const [userMap, setUserMap] = useState({});
 	const { isLoggedIn, userData } = useAuth();
-	// console.log(userData);
 
 	useEffect(() =>
 	{
@@ -28,7 +26,6 @@ const SingleChat = () =>
 					withCredentials: true,
 				});
 				setMessages(response.data);
-				console.log("messages:", response.data);
 
 				// Fetch users
 				const userIds = [...new Set(response.data.map(msg => msg.sender_id))];
@@ -71,13 +68,17 @@ const SingleChat = () =>
 	{
 		try
 		{
+			// Retrieve receiverId (for demonstration, using a hardcoded value, replace with actual logic)
+			const receiverId = 'RECEIVER_USER_ID'; // Replace with actual receiver user ID logic
+			const ad_id = userData.ads[0]; // Assuming ad_id is the first ad in the user's ads array
+
 			const response = await axios.post(
 				'http://localhost:8000/message/',
 				{
 					chatId,
 					message: newMessage,
-					senderId: userData._id, // Make sure userData._id is defined and correct
-
+					receiverId,
+					ad_id,
 				},
 				{
 					withCredentials: true,
@@ -90,7 +91,6 @@ const SingleChat = () =>
 			console.error('Error sending message:', error);
 		}
 	};
-
 
 	const handleDeleteMessage = async (messageId) =>
 	{
