@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { mdiHeartOutline, mdiHeart, mdiMapMarker } from "@mdi/js";
 import { truncateDescription } from "../utils/helpers";
 import "../components/css/ArticleCards.css";
 
 const ArticleCard = ({ article, media }) => {
+	console.log('-->', article);
 	const [clicked, setClicked] = useState(false);
+
 	const [liked, setLiked] = useState(false);
 	const [hearts, setHearts] = useState([]);
 
@@ -202,7 +205,8 @@ const ArticleCard = ({ article, media }) => {
 						</div>
 					</>
 				)}
-				<a href="#">Read More</a>
+
+				<Link to={`/ads/${article._id}`}>Read more</Link>
 			</div>
 			<div className="absolute top-0 right-0 p-2 cursor-pointer">
 				<svg

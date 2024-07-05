@@ -43,7 +43,6 @@ function App()
 		setOpen(isOpen);
 	};
 
-
 	return (
 		<div className="flex flex-col min-h-screen relative overflow-x-hidden">
 			<header>
@@ -69,10 +68,9 @@ function App()
 						<Route path="/ads/tag/:tag" element={<FilteredAds />} />
 						<Route path="/ads/search/:query" element={<FilteredAds />} />
 						<Route path="/ads/user/:user" element={<FilteredAds />} />
-						<Route path="/ads/single" element={<SingleViewAd />} />
+						<Route path="/ads/:articleId" element={<SingleViewAd />} />
 						<Route path="/chats" element={<Chats />} />
 						<Route path="/singlechat/:chatId" element={<SingleChat />} />
-
 						{/* <Route path="/singlechat" element={selectedChatId && <SingleChat chatId={selectedChatId} />} /> */}
 						<Route path="*" element={<NotFound />} />
 					</Routes>

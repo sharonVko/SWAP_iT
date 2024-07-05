@@ -15,8 +15,6 @@ export const ChatContext = ({ children }) =>
   const [loading, setLoading] = useState(true);
   const { userData } = useAuth();
 
-
-
   const values = {
     user,
     setUser,

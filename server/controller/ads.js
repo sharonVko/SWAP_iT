@@ -12,23 +12,37 @@ export const getAllAds = asyncHandler(async (req, res, next) =>
   res.json(ads);
 });
 
+
 //get ad by id
-export const getSingleAd = asyncHandler(async (req, res, next) =>
-{
-  const { id } = req.params;
-  const { uid } = req;
 
-  // Find the ad by its ID
-  const ad = await Ads.findById(id).populate('user_id');
+export const getSingleAd = asyncHandler(async (req, res, next) => {
+	const { id } = req.params;
+	// Find the ad by its ID
+	const ad = await Ads.findById(id);
 
-  // Check if the ad exists
-  if (!ad) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
+	// Check if the ad exists
+	if (!ad) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
 
-  // Check if the logged-in user is the one who posted the ad
-  if (!ad.user_id.equals(uid)) throw new ErrorResponse('You are not authorized to view this ad', 403);
-  // Send the ad data
-  res.send(ad);
+	// Send the ad data
+	res.send(ad);
 });
+
+// export const getSingleAd = asyncHandler(async (req, res, next) => {
+//   const { id } = req.params;
+//   const { uid } = req;
+
+//   // Find the ad by its ID
+//   const ad = await Ads.findById(id).populate("user_id");
+
+//   // Check if the ad exists
+//   if (!ad) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
+
+//   // Check if the logged-in user is the one who posted the ad
+//   if (!ad.user_id.equals(uid))
+//     throw new ErrorResponse("You are not authorized to view this ad", 403);
+//   // Send the ad data
+//   res.send(ad);
+// });
 
 
 // create a ad or post a ad
