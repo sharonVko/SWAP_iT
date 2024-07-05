@@ -27,10 +27,6 @@ export const createMedia = asyncHandler(async (req, res, next) =>
   const { body, uid } = req;
   const { ad_id } = body;
 
-  console.log('Request body:', body); // Log request body
-  console.log('User ID:', uid);
-  console.log('Ad ID:', ad_id);
-
   // Check if the user is logged in
   const user = await User.findById(uid);
   if (!user) throw new ErrorResponse('User not found', 404);
@@ -46,9 +42,12 @@ export const createMedia = asyncHandler(async (req, res, next) =>
   // Create new media entry
   const newMedia = await Media.create({ user_id: uid, ad_id: ad_id, media_files });
 
+  // // Update the ad with the new media ID
+  // ad.media.push(newMedia._id);
+  // await ad.save();
+
   // Update the ad with the new media ID
-  ad.media.push(newMedia._id);
-  await ad.save();
+  await Ads.findByIdAndUpdate(ad_id, { $push: { media: newMedia._id } });
 
   res.status(201).json(newMedia);
 });

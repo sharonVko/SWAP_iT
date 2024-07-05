@@ -13,6 +13,7 @@ const chatsSchema = new mongoose.Schema({
 	ad_id: {
 		type: mongoose.Schema.ObjectId,
 		ref: 'Ads',
+		required: [true, "ad required"],
 	},
 	updatedAt: {
 		type: Date,

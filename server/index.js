@@ -63,14 +63,13 @@ app.use(cookieParser()); // Add cookie-parser middleware
 app.use('/users', usersRouter);
 app.use('/ads', adsRouter);
 app.use('/chats', chatRouter);
-app.use('/message', messageRouter)
+app.use('/message', messageRouter);
 // app.use('/swaps', swapsRouter);
 // app.use('/notifications', notificationsRouter);
 // app.use('/taxonomies', taxonomiesRouter);
 app.use('/media', mediaRouter);
 
 app.use(errorHandler);
-app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
+app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
 
-
-
+io.listen(9000);
