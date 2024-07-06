@@ -11,43 +11,47 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   const { chatId, message, receiverId, ad_id } = req.body;
   const { uid } = req;
 
+
   // Check if sender (user) is registered
   const sender = await User.findById(uid);
-  if (!sender)
-  {
+  if (!sender) {
     throw new ErrorResponse('Sender not found', 404);
   }
 
   // Check if receiver is registered
   const receiver = await User.findById(receiverId);
-  if (!receiver)
-  {
+  if (!receiver) {
     throw new ErrorResponse('Receiver not found', 404);
   }
 
   // Validate ad_id
-  if (!sender.ads.includes(ad_id) && !receiver.ads.includes(ad_id))
-  {
-    throw new ErrorResponse('Ad does not belong to the sender or receiver', 400);
-  }
+  // if (!sender.ads.includes(ad_id) && !receiver.ads.includes(ad_id)) {
+  //   throw new ErrorResponse('Ad does not belong to the sender or receiver', 400);
+  // }
 
   let chat;
 
   // If chatId is provided, check if chat exists with that chatId
-  if (chatId)
-  {
+  if (chatId) {
     chat = await Chat.findById(chatId);
-    if (!chat)
-    {
+
+		if (!chat) {
       throw new ErrorResponse('Chat not found', 404);
     }
+
     // Ensure ad_id matches and participants include sender and receiver
-    if (chat.ad_id.toString() !== ad_id || !chat.participants.includes(uid) || !chat.participants.includes(receiverId))
-    {
-      throw new ErrorResponse('Invalid chat or ad_id', 400);
-    }
-  } else
-  {
+
+		//console.log(chatId, message, receiverId, ad_id);
+		//console.log(chat.ad_id + '--' + ad_id);
+
+    // if (
+		// 	chat.ad_id !== ad_id ||
+		// 	!chat.participants.includes(uid) ||
+		// 	!chat.participants.includes(receiverId)) {
+    //   throw new ErrorResponse('Invalid chat or ad_id', 400);
+    // }
+  }
+	else {
     // Check if a chat already exists between the two users for the specified ad_id
     chat = await Chat.findOne({
       participants: { $all: [uid, receiverId] },
@@ -55,10 +59,9 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
     });
 
     // If no chat exists, create a new chat
-    if (!chat)
-    {
-      chat = await Chat.create({ participants: [uid, receiverId], ad_id });
-    }
+    // if (!chat) {
+    //   chat = await Chat.create({ participants: [uid, receiverId], ad_id });
+    // }
   }
 
   // Create a new message and link it to the chat
@@ -76,10 +79,8 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
 
 
 
-
 //get all messages
-export const getMessages = asyncHandler(async (req, res, next) =>
-{
+export const getMessages = asyncHandler(async (req, res, next) => {
   const { chatId } = req.params;
   const { uid } = req;
 
@@ -98,9 +99,7 @@ export const getMessages = asyncHandler(async (req, res, next) =>
 });
 
 // delete message
-
-export const deleteMessage = asyncHandler(async (req, res, next) =>
-{
+export const deleteMessage = asyncHandler(async (req, res, next) => {
   const { params: { id }, uid } = req;
 
   // Find the message by ID
@@ -115,10 +114,7 @@ export const deleteMessage = asyncHandler(async (req, res, next) =>
 
   res.json({ success: `Message with ID ${id} was deleted` });
 });
-
-
-export const deleteMessages = asyncHandler(async (req, res, next) =>
-{
+export const deleteMessages = asyncHandler(async (req, res, next) => {
   const { ids } = req.body; // Array of message IDs
   const { uid } = req;
 

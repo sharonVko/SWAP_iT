@@ -8,37 +8,47 @@ const SingleViewAd = () => {
   const { isLoggedIn, userData } = useAuth();
   const [article, setArticle] = useState(null);
   const [chatData, setChatData] = useState([]);
+	const [error, setError] = useState('')
   const { articleId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
+
+		// Get Single Ad Data
     const fetchArticle = async () => {
       try {
         const response = await axios.get(
           `http://localhost:8000/ads/${articleId}`
         );
         setArticle(response.data);
-      } catch (error) {
+      }
+			catch (error) {
         console.error('Error fetching article:', error);
       }
     };
+
+		// Get All Chats
     const fetchChats = async () => {
       try {
         const response = await axios.get('http://localhost:8000/chats/', {
           withCredentials: true,
         });
         setChatData(response.data);
-      } catch (error) {
+      }
+			catch (error) {
         console.error('Error fetching chats:', error);
       }
     };
 
     fetchArticle().then();
-    fetchChats().then();
+		if (isLoggedIn) {
+			fetchChats().then();
+		}
   }, [articleId, setChatData]);
 
+	// Start New Chat
   const handleNewChat = async () => {
-    // create new chat
+
     // Ad_Id
     // receiver_user_id = ad creator
     // sender_user_id => loggedin user
@@ -47,38 +57,33 @@ const SingleViewAd = () => {
     const sender_user_id = userData._id; // Loggedin User
     const receiver_user_id = article.user_id; // Ad Creator
 
-    console.log(sender_user_id, receiver_user_id);
-
     try {
       const response = await axios.post(
-        'http://localhost:8000/chats/',
-        {
+        'http://localhost:8000/chats/', {
           participants: [sender_user_id, receiver_user_id],
+					messages: [],
           ad_id: article._id,
         },
         { withCredentials: true }
       );
-
-      console.log(response);
-      //setChatData(prevChatData => [...prevChatData, response.data]);
-    } catch (error) {
+      setChatData(prevChatData => [...prevChatData, response.data]);
+    }
+		catch (error) {
       console.error('Error starting new chat:', error);
+			setError('Error starting new chat');
     }
 
-    console.log(chatData);
-
-    //navigate(`/singlechat/${chatData[0]._id}`);
+    navigate(`/singlechat/${chatData.pop()._id}/${article._id}/${receiver_user_id}`);
   };
-
-  console.log(isLoggedIn);
 
   return (
     <div>
       <h1>Single View Ad</h1>
-      <button className='btn-sm btn-red block mb-2' onClick={handleNewChat}>
-        New Chat
-      </button>
-      {/*<button className="btn-sm btn-red block mb-2">Open Chat</button> */}
+			{isLoggedIn && (
+				<button className='btn-sm btn-red block mb-2' onClick={handleNewChat}>
+					New Chat
+				</button>
+			)}
     </div>
   );
 };

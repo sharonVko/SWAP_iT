@@ -54,18 +54,21 @@ export const createChat = asyncHandler(async (req, res, next) => {
 
   // If chat exists, update it with the new messages
   if (chat) {
+
     const newMessages = messages.map((msg) => ({
       chat: chat._id,
       sender_id: uid,
       message: msg,
       ad_id: ad_id, // Include ad_id in each message
     }));
+
     const createdMessages = await Message.insertMany(newMessages);
     chat.messages.push(...createdMessages.map((msg) => msg._id));
     chat.updatedAt = Date.now();
     await chat.save();
     res.status(200).json(chat);
-  } else {
+  }
+	else {
     // If chat does not exist, create a new chat and save the messages
     const newChat = await Chat.create({ participants, ad_id });
     const newMessages = messages.map((msg) => ({
@@ -83,24 +86,21 @@ export const createChat = asyncHandler(async (req, res, next) => {
 
 // get a chat
 export const getChatbyId = asyncHandler(async (req, res, next) => {
-  const {
-    params: { id },
-    uid,
-  } = req;
+  const { params: { id }, uid } = req;
+
   const chat = await Chat.findById(id)
     .populate('participants', 'username') // Populate username field for participants
     .populate('messages');
+
   if (!chat) throw new ErrorResponse('Chat not found', 404);
 
   const isParticipant = chat.participants.some(
     (participant) => participant._id.toString() === uid.toString()
   );
-  if (!isParticipant)
-    throw new ErrorResponse(
-      'You do not have permission to view this chat',
-      403
-    );
 
+  if (!isParticipant) {
+		throw new ErrorResponse('You do not have permission to view this chat', 403);
+	}
   res.status(200).json(chat);
 });
 
@@ -109,36 +109,62 @@ export const getAllChatsForUser = asyncHandler(async (req, res, next) => {
   const { uid } = req;
   const chats = await Chat.find({
     participants: uid,
-    deletedFor: { $ne: uid },
+    //deletedFor: { $ne: uid },
   })
     .populate('participants', 'username') // Populate username field for participants
     .populate('messages');
 
+
+	console.log(chats);
+
   res.status(200).json(chats);
 });
 
-// Delete a conversation - if user is aprticipants - if he is loggedin - chat should only deleted from his account , other participant can have that chat. - user should be able to delete multiple chats at the same time.
+// Delete a conversation
+// - if user is participant
+// - if he is loggedin
+// - chat should only deleted from his account , other participant can have that chat.
+// - user should be able to delete multiple chats at the same time.
 // we don't really need delete single chat because we can do that using delete multiple chats also.
 // before deleting chat we can ask for confirmation - nice to have or later
+
 export const deleteChat = asyncHandler(async (req, res, next) => {
-  const {
-    params: { id },
-    uid,
-  } = req;
+  const { params: { id }, uid } = req;
+	console.log('chatId: ', id);
+	console.log('userId: ', uid);
+	try {
+		await Chat.findByIdAndDelete(id);
+		res.json({ message: 'Chat was deleted' });
+		console.log('chat was deleted');
+	}
+	catch (error) {
+		next(error);
+	}
+
+
+
+
+	/*
 
   const found = await Chat.findById(id);
   if (!found) throw new ErrorResponse(`Chat ${id} does not exist`, 404);
-  const isParticipant = found.participants.some(
+
+	const isParticipant = found.participants.some(
     (participant) => participant.toString() === uid.toString()
   );
-  if (!isParticipant)
-    throw new ErrorResponse('You have no permission to delete this chat', 401);
+
+  if (!isParticipant) {
+		throw new ErrorResponse('You have no permission to delete this chat', 401);
+	}
 
   if (!found.deletedFor.includes(uid)) {
     found.deletedFor.push(uid);
   }
   await found.save();
   res.json({ success: `Chat ${id} was deleted for user ${uid}` });
+
+	*/
+
 });
 
 // to delete multiple chats

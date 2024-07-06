@@ -12,12 +12,10 @@ import SingleViewAd from "./views/SingleViewAd.jsx";
 
 import RegisterForm from './components/RegisterForm.jsx';
 import LoginForm from "./components/LoginForm.jsx";
-
 import Chats from './views/Chats.jsx';
 
 // import UserLogin from "./views/UserLogin.jsx";
 // import UserSignUp from "./views/UserSignUp.jsx";
-
 
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
@@ -27,8 +25,6 @@ import MyAds from "./views/MyAds.jsx";
 import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
-
-
 
 function App()
 {
@@ -69,9 +65,12 @@ function App()
 						<Route path="/ads/search/:query" element={<FilteredAds />} />
 						<Route path="/ads/user/:user" element={<FilteredAds />} />
 						<Route path="/ads/:articleId" element={<SingleViewAd />} />
+
 						<Route path="/chats" element={<Chats />} />
-						<Route path="/singlechat/:chatId" element={<SingleChat />} />
+						<Route path="/singlechat/:chatId/:adId/:receiverId" element={<SingleChat />} />
+
 						{/* <Route path="/singlechat" element={selectedChatId && <SingleChat chatId={selectedChatId} />} /> */}
+
 						<Route path="*" element={<NotFound />} />
 					</Routes>
 				</div>
