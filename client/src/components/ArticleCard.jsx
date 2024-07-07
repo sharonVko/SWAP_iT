@@ -31,6 +31,7 @@ const ArticleCard = ({ article }) => {
   // Determine trade option label
   const tradeLabel = article.tradeOption ? "Tauschen" : "Verschenken";
 
+
   // Determine which address to display
   let fullAddress = "";
   if (
@@ -85,6 +86,7 @@ const ArticleCard = ({ article }) => {
         <div className="username-label absolute bottom-0 left-0 bg-white text-black p-1 text-xs opacity-50 rounded-lg">
           {article.user_id.username}
         </div>
+
         <div className="trade-label absolute bottom-0 right-0 text-black p-2 text-xs opacity-50 rounded-lg">
           {article.tradeOption ? (
             <div
@@ -148,7 +150,8 @@ const ArticleCard = ({ article }) => {
             </div>
           )}
         </div>
-      </div>
+
+			</div>
       <div
         className="custom-content"
         style={{

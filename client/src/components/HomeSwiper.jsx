@@ -1,10 +1,10 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { register } from 'swiper/element/bundle';
+import ArticleCard from "./ArticleCard.jsx";
+import ArticleCard_02 from "./ArticleCard_02.jsx";
 
-function HomeSwiper({swiperId}) {
-
-	const slides = ["slide1","slide2","slide3","slide4","slide5", "slide6", "slide7", "slide8"];
+function HomeSwiper({swiperId, articles}) {
 
 	const swiperRef = useRef(null);
 	const swiperPaginationRef = useRef(null);
@@ -17,16 +17,15 @@ function HomeSwiper({swiperId}) {
 		const params = {
 			modules: [Navigation, Pagination],
 			slidesPerView: 1,
-			spaceBetween: 20,
+			spaceBetween: 0,
 			breakpoints: {
-				480: {
-					slidesPerView: 2,
-				},
 				768: {
-					slidesPerView: 3,
-					spaceBetween: 30
+					slidesPerView: 2
 				},
-				1024: {
+				960: {
+					slidesPerView: 3
+				},
+				1280: {
 					slidesPerView: 4
 				},
 			},
@@ -52,16 +51,18 @@ function HomeSwiper({swiperId}) {
 		<>
 			<div className="relative">
 				<swiper-container init="false" ref={swiperRef}>
-					{slides.map((slide, i) => (
+					{articles.map((article, i) => (
 						<swiper-slide key={i}>
-							<div className="bg-gray-300 h-20">{slide}</div>
+							<div className="pt-6 px-2 pb-4">
+								<ArticleCard_02 article={article}/>
+							</div>
 						</swiper-slide>
 					))}
 				</swiper-container>
-				<button className={`swiper-arrow swiper-next${swiperId} -right-8`}>
+				<button className={`hidden md:block swiper-arrow swiper-next${swiperId} -right-8`}>
 					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 4l8 8l-8 8"/></svg>
 				</button>
-				<button className={`swiper-arrow swiper-prev${swiperId} -left-8`}>
+				<button className={`hidden md:block swiper-arrow swiper-prev${swiperId} -left-8`}>
 					<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m15 4l-8 8l8 8"/></svg>
 				</button>
 			</div>

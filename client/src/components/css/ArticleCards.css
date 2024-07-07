@@ -173,3 +173,45 @@
   visibility: visible;
   opacity: 1;
 }
+
+
+
+
+
+
+
+
+/******************************************/
+
+.ReactCollapse--collapse {
+  transition: height 200ms;
+}
+
+.article-card {
+  @apply bg-white/60 rounded-xl py-4 px-2 pb-2 cursor-pointer shadow-md max-w-[320px] mx-auto;
+}
+
+.article-card-inner {
+  &.close {
+    @apply translate-y-0 transition-all duration-200 ease-out;
+  }
+  &.open {
+    @apply -translate-y-10 transition-all duration-200 ease-in;
+  }
+}
+
+
+.card-content {
+  @apply text-center;
+  &.close {
+    /*
+    @apply translate-y-0 transition-all duration-200 ease-out;*/
+  }
+  &.open {
+    /*@apply -translate-y-10 transition-all duration-200 ease-in;*/
+  }
+}
+
+.image-box {
+  @apply rounded-lg relative aspect-[4/3] overflow-hidden;
+}
