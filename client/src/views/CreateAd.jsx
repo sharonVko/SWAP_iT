@@ -6,7 +6,6 @@ import { useDropzone } from "react-dropzone";
 import Switch from "react-switch";
 import { categories } from "../utils/categories.js";
 import { tags } from "../utils/tags";
-import bgVideo from "../assets/111.mp4";
 
 const CreateAd = () => {
   const { isLoggedIn, userData } = useAuth();
