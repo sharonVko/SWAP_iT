@@ -1,11 +1,16 @@
 @layer components {
   /*** Buttons ***/
   .btn-sm { @apply uppercase tracking-wider rounded drop-shadow text-sm px-2; }
+
+  .btn-lg { @apply uppercase tracking-wider rounded drop-shadow text-xl leading-none py-2 px-4; }
+  .btn-md { @apply uppercase tracking-wider rounded drop-shadow text-base leading-none py-2 px-4; }
+
   .btn-red { @apply text-peach-300 bg-red-400; }
+  .btn-teal { @apply text-peach-300 bg-teal-500; }
 
   /*** Footer Links ***/
   .footer a {
-    @apply text-peach-300 font-medium tracking-wider hover:text-red-400;
+    @apply text-peach-300 font-medium tracking-wider hover:text-red-300 hover:no-underline;
   }
 
   /*** Nav Drawer ***/
@@ -24,7 +29,6 @@
       transition: opacity 150ms ease-in, visibility 0ms ease-in 0ms;
     }
   }
-
   .drawer {
     @apply absolute top-0 left-0 w-screen sm:w-80 h-full bg-white p-6 pt-28 sm:pt-36 lg:pt-40 z-200;
     @apply -translate-x-full;
@@ -36,4 +40,27 @@
     }
   }
 
+  /*** forms ***/
+  .form-input {
+    @apply rounded w-full p-2 text-sm border border-teal-400 text-gray-900 focus:border-teal-300 focus:outline-none focus:ring-teal-300 focus:ring-2;
+  }
+}
+
+/*** Swiper -> CSS need to be outside of layer ***/
+
+.swiper-arrow {
+  @apply h-8 absolute top-1/2 -translate-y-4 text-3xl text-teal-500;
+  &.swiper-button-disabled {
+    @apply text-teal-500/20;
+  }
+}
+
+.swiper-pagination-bullets {
+  @apply flex gap-2 h-3 justify-center;
+}
+.swiper-pagination-bullet {
+  @apply block bg-white/40 w-3 h-3 rounded-full;
+  &.swiper-pagination-bullet-active {
+    @apply bg-teal-500;
+  }
 }

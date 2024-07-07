@@ -1,7 +1,7 @@
 const Footer = () => {
 	return (
 		<div className="container mx-auto">
-			<div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-4">
+			<div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-4 sm:text-xl">
 				<a href="#">ABOUT US</a>
 				<a href="#">CONTACT US</a>
 				<a href="#">FAQs</a>

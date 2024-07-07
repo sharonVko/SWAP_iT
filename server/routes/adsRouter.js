@@ -7,7 +7,8 @@ import verifyToken from '../middleware/verifyToken.js';
 const adsRouter = Router();
 adsRouter.route('/').get(adsController.getAllAds) // get all ads by all User
 
-adsRouter.route('/:id').get(verifyToken, adsController.getSingleAd); // get single AD
+//adsRouter.route('/:id').get(verifyToken, adsController.getSingleAd); // get single AD
+adsRouter.route('/:id').get(adsController.getSingleAd); // get single AD
 
 adsRouter.route('/createAd').post(verifyToken, adsController.createAd); // create a ad 
 

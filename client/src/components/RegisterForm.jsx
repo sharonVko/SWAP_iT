@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 
 function RegisterForm()
 {
@@ -11,14 +11,13 @@ function RegisterForm()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [zipcode, setZipCode] = useState('');
+	const [errorMsg, setErrorMsg] = useState('');
 
   const navigate = useNavigate();
 
-  const handleRegister = async (e) =>
-  {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    try
-    {
+    try {
       const response = await axios.post(
         'http://localhost:8000/users/register',
         {
@@ -36,101 +35,84 @@ function RegisterForm()
 
       if (response.status === 201)
       {
-        toast.success('Successfully registered! Welcome');
+        //toast.success('Successfully registered! Welcome');
+				console.log('Du hast dich erfolgreich eingeloggt')
         navigate('/login');
       }
-    } catch (error)
-    {
+    }
+		catch (error) {
       // console.error(error);
-      toast.error(error.response.data.error || 'Registration failed');
+      //toast.error(error.response.data.error || 'Registration failed');
+			setErrorMsg(error.response?.data?.message || 'Login failed. Please check your user name and password.');
     }
   };
 
   return (
-    <div>
-      <div >
-        <h2 >Register</h2>
+
+		<div className='max-w-sm mx-auto mt-10'>
+      <h1 className="text-center">Konto einrichten</h1>
+			<div className="bg-white/30 p-8 rounded-xl">
+				{errorMsg && (
+					<div className='mb-4 bg-red-400 text-white text-center p-4 rounded'>
+						{errorMsg}
+					</div>
+				)}
         <form onSubmit={handleRegister}>
 
           <div className='mb-4'>
-            <label className='mb-2 block'>Username:</label>
+            <label className='block mb-2 text-sm uppercase tracking-wider'>Benutzername:</label>
             <input
               type='text'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+							className="form-input"
               required
-              className='border rounded w-full p-2'
             />
           </div>
+
           <div className='mb-4'>
-            <label className='mb-2 block'>Email:</label>
+            <label className='block mb-2 text-sm uppercase tracking-wider'>E-Mail:</label>
             <input
               type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+							className="form-input"
               required
-
             />
           </div>
+
           <div className='mb-4'>
-            <label className='mb-2 block'>Password:</label>
+            <label className='block mb-2 text-sm uppercase tracking-wider'>Passwort:</label>
             <input
               type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+							className="form-input"
               required
-
             />
             {/* validation */}
           </div>
+
           <div className='mb-4'>
-            <label className='mb-2 block'>Zip Code:</label>
+            <label className='block mb-2 text-sm uppercase tracking-wider'>PLZ:</label>
             <input
               type='text'
               value={zipcode}
               onChange={(e) => setZipCode(e.target.value)}
+							className="form-input"
               required
-
             />
           </div>
-          <button
-            type='submit'
-
-          >
-            Register
-          </button>
+					<div className="flex justify-center">
+						<button type='submit' className='btn-teal btn-lg mt-4 px-8'>Anmelden</button>
+					</div>
         </form>
-        <p >
-          Already havean account?{' '}
-          <Link to='/login' >
-            Login here
-          </Link>
-        </p>
-      </div>
-    </div>
+			</div>
+			<p className='mt-4 text-center'>
+				Konto schon vorhanden? <Link to='/login'>Hier einloggen</Link>
+			</p>
+		</div>
   );
 }
 
 export default RegisterForm;
-
-
-// <div >
-// <label >First Name:</label>
-// <input
-//   type='text'
-//   value={firstName}
-//   onChange={(e) => setFirstName(e.target.value)}
-//   required
-//   className='border rounded w-full p-2'
-// />
-// </div>
-// <div className='mb-4'>
-// <label className='mb-2 block'>Last Name:</label>
-// <input
-//   type='text'
-//   value={lastName}
-//   onChange={(e) => setLastName(e.target.value)}
-//   required
-//   className='border rounded w-full p-2'
-// />
-// </div>

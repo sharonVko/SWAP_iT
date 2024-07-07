@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { mdiHeartOutline, mdiHeart, mdiMapMarker } from "@mdi/js";
 import { truncateDescription } from "../utils/helpers";
+import { categories } from "../utils/categories";
 import "../components/css/ArticleCards.css";
 
-const ArticleCard = ({ article, media }) => {
+const ArticleCard = ({ article }) => {
 	const [clicked, setClicked] = useState(false);
 	const [liked, setLiked] = useState(false);
-	const [hearts, setHearts] = useState([]);
 
 	const toggleLike = (e) => {
 		e.stopPropagation(); // Prevent click event propagation
@@ -20,6 +21,12 @@ const ArticleCard = ({ article, media }) => {
 	const truncatedDescription = article.description
 		? truncateDescription(article.description)
 		: "";
+
+	// Function to get category name by ID (including subcategories)
+	const getCategoryNameById = (id) => {
+		const category = categories.find((cat) => cat.cat_id === parseInt(id, 10));
+		return category ? category.name : "Unknown Category";
+	};
 
 	// Determine trade option label
 	const tradeLabel = article.tradeOption ? "Tauschen" : "Verschenken";
@@ -55,20 +62,14 @@ const ArticleCard = ({ article, media }) => {
 		return addressArray.join(", ");
 	}
 
-	// Find the corresponding media file URL
-	let imageUrl = `/Images/${article.image}`; // Default image path
-
-	if (article.media && article.media.length > 0) {
-		const matchingMedia = media.find((item) =>
-			article.media.includes(item._id)
-		);
-		if (
-			matchingMedia &&
-			matchingMedia.media_files &&
-			matchingMedia.media_files.length > 0
-		) {
-			imageUrl = matchingMedia.media_files[0];
-		}
+	// Get the first media file URL
+	let imageUrl = "/Images/default.png"; // Default image path
+	if (
+		article.media &&
+		article.media.length > 0 &&
+		article.media[0].length > 0
+	) {
+		imageUrl = article.media[0][0];
 	}
 
 	return (
@@ -82,7 +83,7 @@ const ArticleCard = ({ article, media }) => {
 				<div className="username-label absolute bottom-0 left-0 bg-white text-black p-1 text-xs opacity-50 rounded-lg">
 					{article.user_id.username}
 				</div>
-				<div className="trade-label absolute bottom-0 right-0  text-black p-2 text-xs opacity-50 rounded-lg">
+				<div className="trade-label absolute bottom-0 right-0 text-black p-2 text-xs opacity-50 rounded-lg">
 					{article.tradeOption ? (
 						<div
 							className="tooltip"
@@ -145,24 +146,6 @@ const ArticleCard = ({ article, media }) => {
 						</div>
 					)}
 				</div>
-
-				{/* Heart animations
-        {hearts.map((heart) => (
-          <div
-            key={heart.id}
-            className="heart-animation"
-            style={{ left: heart.x, top: heart.y }}
-          >
-            <svg
-              className="w-4 h-4 text-red-500 fill-red-500"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              stroke="currentColor"
-            >
-              <path d={mdiHeart} />
-            </svg>
-          </div>
-        ))} */}
 			</div>
 			<div
 				className="custom-content"
@@ -176,9 +159,25 @@ const ArticleCard = ({ article, media }) => {
 					<>
 						<p>{truncatedDescription}</p>
 						<div className="tags">
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1">
-                {article.categories}
-              </span>
+							{Array.isArray(article.categories) ? (
+								article.categories.map((categoryId, index) => (
+									<span
+										key={index}
+										className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1"
+									>
+                    {getCategoryNameById(categoryId)}
+                  </span>
+								))
+							) : (
+								<span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1">
+                  {getCategoryNameById(article.categories)}
+                </span>
+							)}
+							{article.subCategory && (
+								<span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1">
+                  {getCategoryNameById(article.subCategory)}
+                </span>
+							)}
 							{article.tags.split(", ").map((tag, index) => (
 								<span
 									key={index}
@@ -202,17 +201,19 @@ const ArticleCard = ({ article, media }) => {
 						</div>
 					</>
 				)}
-				<a href="#">Read More</a>
+				<Link to={`/ads/${article._id}`}>Read more</Link>
 			</div>
 			<div className="absolute top-0 right-0 p-2 cursor-pointer">
 				<svg
 					className={`h-8 w-8 ${
-						liked ? "text-red-500 fill-red-500" : "text-black"
-					}  rounded-lg`}
-					viewBox="0 0 24 24"
-					fill={liked ? "currentColor" : "none"}
-					stroke="currentColor"
+						liked ? "text-red-500 fill-red-500" : "text-gray-500 fill-gray-500"
+					}`}
 					onClick={toggleLike}
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					strokeWidth="2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
 				>
 					<path d={liked ? mdiHeart : mdiHeartOutline} />
 				</svg>
