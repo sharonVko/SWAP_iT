@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthProvider.jsx';
+//import { toast, ToastContainer } from 'react-toastify';
+//import "react-toastify/dist/ReactToastify.css";
+
 
 function LoginForm({ target }) {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
+	const [errorMsg, setErrorMsg] = useState('');
 	const { checkUser } = useAuth();
 	const navigate = useNavigate();
 
@@ -19,50 +21,68 @@ function LoginForm({ target }) {
 				{ email, password },
 				{ withCredentials: true }
 			);
+
 			if (response.data.status === 'success') {
-				toast.success('Successfully logged in!');
+				// toast.success('Successfully logged in!', {
+				// 	position: "top-center"
+				// });
 				await checkUser(); // Update auth context
-				navigate(target); // Navigate to the dashboard or desired page after login
+				console.log('Du hast dich erfolgreich eingeloggt')
+				navigate(target);  // Navigate to the dashboard or desired page after login
 			}
-		} catch (error) {
-			toast.error(error.response?.data?.message || 'Login failed');
+
+		}
+		catch (error) {
+			// toast.error((error.response?.data?.message || 'Login failed'), {
+			// 	position: "top-center"
+			// });
+			setErrorMsg(error.response?.data?.message || 'Login failed. Please check your user name and password.');
 		}
 	};
 
 	return (
-		<div className='max-w-md mx-auto mt-10'>
-			<h2 className='text-2xl font-bold mb-6'>Login</h2>
-			<form onSubmit={handleLogin}>
-				<div className='mb-4'>
-					<label className='block mb-2'>Email:</label>
-					<input
-						type='email'
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						required
-						className='border rounded w-full p-2'
-					/>
-				</div>
-				<div className='mb-4'>
-					<label className='block mb-2'>Password:</label>
-					<input
-						type='password'
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						required
-						className='border rounded w-full p-2'
-					/>
-				</div>
-				<button type='submit' className='bg-blue-500 text-white p-2 rounded'>
-					Login
-				</button>
-			</form>
-			<p className='mt-4'>
-				Don't have an account?{' '}
-				<a href='/register' className='text-blue-500'>
-					Register here
-				</a>
+		<div className='max-w-sm mx-auto mt-10'>
+			<h1 className='mb-6 text-center'>Login</h1>
+			<div className="bg-white/30 p-8 rounded-xl">
+				{errorMsg && (
+					<div className='mb-4 bg-red-400 text-white text-center p-4 rounded'>
+						{errorMsg}
+					</div>
+				)}
+				<form onSubmit={handleLogin}>
+					<div className='mb-4'>
+						<label className='block mb-2 text-sm uppercase tracking-wider'>Email:</label>
+						<input
+							type='email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							required
+							className='form-input'
+						/>
+					</div>
+
+					<div className='mb-4'>
+						<label className='block mb-2 text-sm uppercase tracking-wider'>Password:</label>
+						<input
+							type='password'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							required
+							className='form-input'
+						/>
+					</div>
+					<div className="flex justify-center">
+						<button type='submit' className='btn-teal btn-lg mt-4 px-8'>Login</button>
+					</div>
+
+
+				</form>
+			</div>
+
+			<p className='mt-4 text-center'>
+				Noch kein Konto? <a href='/signup' className=''>Konto einrichten</a>
 			</p>
+
 		</div>
 	);
 }

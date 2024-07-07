@@ -5,8 +5,8 @@
   align-items: flex-start;
   padding: 2.5rem;
   width: 100%;
-  max-width: 20rem; /* Adjusted to a relative unit */
-  min-width: 19rem; /* Adjusted to a relative unit */
+  max-width: 20rem;
+
   min-height: 20rem; /* Height for collapsed mode */
   background: #fff;
   border-radius: 20px;
@@ -75,6 +75,13 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: #333333;
+  text-wrap: nowrap;
+  overflow: hidden;
+}
+
+.custom-card.active .custom-content h2 {
+  overflow: visible;
+  text-wrap: wrap;
 }
 
 .custom-card .custom-content p {
@@ -89,11 +96,11 @@
 
 .custom-card .custom-content a {
   position: relative;
-  top: 15px;
+
   display: inline-block;
-  padding: 12px 25px;
+
   text-decoration: none;
-  background: #181818;
+
   color: #fff;
   font-weight: 500;
   transition: opacity 0.3s; /* Add transition for hover effect */
@@ -158,11 +165,53 @@
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
-  z-index: 1001; /* Add high z-index to bring to front */
+  z-index: 2000; /* Add high z-index to bring to front */
 }
 
 .tooltip:hover .tooltip-text,
 .tooltip.active .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+
+
+
+
+
+
+
+/******************************************/
+
+.ReactCollapse--collapse {
+  transition: height 200ms;
+}
+
+.article-card {
+  @apply bg-white/60 rounded-xl py-4 px-2 pb-2 cursor-pointer shadow-md max-w-[320px] mx-auto;
+}
+
+.article-card-inner {
+  &.close {
+    @apply translate-y-0 transition-all duration-200 ease-out;
+  }
+  &.open {
+    @apply -translate-y-10 transition-all duration-200 ease-in;
+  }
+}
+
+
+.card-content {
+  @apply text-center;
+  &.close {
+    /*
+    @apply translate-y-0 transition-all duration-200 ease-out;*/
+  }
+  &.open {
+    /*@apply -translate-y-10 transition-all duration-200 ease-in;*/
+  }
+}
+
+.image-box {
+  @apply rounded-lg relative aspect-[4/3] overflow-hidden;
 }
