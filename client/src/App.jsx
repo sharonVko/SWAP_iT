@@ -21,6 +21,7 @@ import MyAds from "./views/MyAds.jsx";
 import CreateAd from "./views/CreateAd.jsx";
 import EditAd from "./views/EditAd.jsx";
 import DeleteAd from "./views/DeleteAd.jsx";
+import ArticleList from "./components/ArticleList.jsx";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -55,13 +56,13 @@ function App() {
             <Route path="/profile/ads/edit/:adid" element={<EditAd />} />
             <Route path="/profile/ads/delete/:adid" element={<DeleteAd />} />
 
-						<Route path="/ads" element={<FilteredAds />} />
-						<Route path="/ads/new" element={<FilteredAds />} />
-						<Route path="/ads/category/:category" element={<FilteredAds />} />
-						<Route path="/ads/tag/:tag" element={<FilteredAds />} />
-						<Route path="/ads/search/:query" element={<FilteredAds />} />
-						<Route path="/ads/user/:user" element={<FilteredAds />} />
-						<Route path="/ads/:articleId" element={<SingleViewAd />} />
+            <Route path="/ads" element={<ArticleList />} />
+            <Route path="/ads/new" element={<FilteredAds />} />
+            <Route path="/ads/category/:category" element={<FilteredAds />} />
+            <Route path="/ads/tag/:tag" element={<FilteredAds />} />
+            <Route path="/ads/search/:query" element={<FilteredAds />} />
+            <Route path="/ads/user/:user" element={<FilteredAds />} />
+            <Route path="/ads/:articleId" element={<SingleViewAd />} />
 
             <Route path="/chats" element={<Chats />} />
             <Route path="/singlechat" element={<SingleChat />} />
