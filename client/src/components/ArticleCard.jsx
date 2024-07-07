@@ -1,21 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { mdiHeartOutline, mdiHeart, mdiMapMarker } from "@mdi/js";
 import { truncateDescription } from "../utils/helpers";
 import { categories } from "../utils/categories";
-import { Link } from "react-router-dom";
 import "../components/css/ArticleCards.css";
 
-const ArticleCard = ({ article }) => {
-  const [clicked, setClicked] = useState(false);
+const ArticleCard = ({ article, toggleFavorite }) => {
   const [liked, setLiked] = useState(false);
 
-  const toggleLike = (e) => {
-    e.stopPropagation(); // Prevent click event propagation
-    setLiked(!liked);
-  };
+  // Check if the article is already liked by the user
+  useEffect(() => {
+    if (article.user_id && article.user_id.favorites.includes(article._id)) {
+      setLiked(true);
+    }
+  }, [article]);
 
-  const toggleClick = () => {
-    setClicked(!clicked);
+  const handleToggleFavorite = async (e) => {
+    e.stopPropagation(); // Prevent click event propagation
+
+    try {
+      await toggleFavorite(article._id); // Pass article ID to toggleFavorite function
+      setLiked(!liked); // Toggle liked state locally
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
   };
 
   const truncatedDescription = article.description
@@ -27,10 +34,6 @@ const ArticleCard = ({ article }) => {
     const category = categories.find((cat) => cat.cat_id === parseInt(id, 10));
     return category ? category.name : "Unknown Category";
   };
-
-  // Determine trade option label
-  const tradeLabel = article.tradeOption ? "Tauschen" : "Verschenken";
-
 
   // Determine which address to display
   let fullAddress = "";
@@ -74,19 +77,13 @@ const ArticleCard = ({ article }) => {
   }
 
   return (
-    <div
-      className={`custom-card ${
-        clicked ? "active" : ""
-      } bg-white/30 shadow-lg rounded-xl `}
-      onClick={toggleClick}
-    >
+    <div className="custom-card bg-white/30 shadow-lg rounded-xl">
       <div className="img-box relative">
         <img src={imageUrl} alt={article.title} />
 
         <div className="username-label absolute bottom-0 left-0 bg-white text-black p-1 text-xs opacity-50 rounded-lg">
           {article.user_id.username}
         </div>
-
         <div className="trade-label absolute bottom-0 right-0 text-black p-2 text-xs opacity-50 rounded-lg">
           {article.tradeOption ? (
             <div
@@ -150,73 +147,64 @@ const ArticleCard = ({ article }) => {
             </div>
           )}
         </div>
-
-			</div>
-      <div
-        className="custom-content"
-        style={{
-          top: clicked ? "130px" : "252px",
-          height: clicked ? "auto" : "35px",
-        }}
-      >
+      </div>
+      <div className="custom-content">
         <h2>{article.title}</h2>
-        {clicked && (
-          <>
-            <p>{truncatedDescription}</p>
-            <div className="tags">
-              {Array.isArray(article.categories) ? (
-                article.categories.map((categoryId, index) => (
-                  <span
-                    key={index}
-                    className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1"
-                  >
-                    {getCategoryNameById(categoryId)}
-                  </span>
-                ))
-              ) : (
-                <span className="inline-block bg-teal-300/60 rounded-full px-3 py-1 text-xs  text-gray-700 mr-2 mb-1">
-                  {getCategoryNameById(article.categories)}
-                </span>
-              )}
-              {article.subCategory && (
-                <span
-                  className="inline-block bg-orange
-              -300/10 rounded-full px-3 py-1 text-xs  text-gray-700 mr-2 mb-1"
-                >
-                  {getCategoryNameById(article.subCategory)}
-                </span>
-              )}
-              {article.tags.split(", ").map((tag, index) => (
-                <span
-                  key={index}
-                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs  text-gray-700 mr-2 mb-1"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <div className="flex items-center mt-2">
-              <svg
-                className="w-6 h-6 text-gray-700 mr-2"
-                viewBox="0 0 24 24"
-                fill="currentColor"
+        <p>{truncatedDescription}</p>
+        <div className="tags">
+          {Array.isArray(article.categories) ? (
+            article.categories.map((categoryId, index) => (
+              <span
+                key={index}
+                className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1"
               >
-                <path d={mdiMapMarker} />
-              </svg>
-              <p className="text-gray-700 text-xs">
-                {fullAddress ? fullAddress : "Address not available"}
-              </p>
-            </div>
-          </>
-        )}
-				<Link to={`/ads/${article._id}`} className="btn-lg btn-teal">Infos</Link>
+                {getCategoryNameById(categoryId)}
+              </span>
+            ))
+          ) : (
+            <span className="inline-block bg-teal-300/60 rounded-full px-3 py-1 text-xs text-gray-700 mr-2 mb-1">
+              {getCategoryNameById(article.categories)}
+            </span>
+          )}
+          {article.subCategory && (
+            <span
+              className="inline-block bg-orange
+              -300/10 rounded-full px-3 py-1 text-xs text-gray-700 mr-2 mb-1"
+            >
+              {getCategoryNameById(article.subCategory)}
+            </span>
+          )}
+          {article.tags.split(", ").map((tag, index) => (
+            <span
+              key={index}
+              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs text-gray-700 mr-2 mb-1"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+        <div className="flex items-center mt-2">
+          <svg
+            className="w-6 h-6 text-gray-700 mr-2"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d={mdiMapMarker} />
+          </svg>
+          <p className="text-gray-700 text-xs">
+            {fullAddress ? fullAddress : "Address not available"}
+          </p>
+        </div>
+        <a href="#" className="btn-lg btn-teal">
+          Infos
+        </a>
       </div>
       <div className="absolute top-0 right-0 p-2 cursor-pointer">
         <svg
           className={`h-8 w-8 ${
             liked ? "text-red-500 fill-red-500" : "text-gray-500 fill-gray-500"
           }`}
-          onClick={toggleLike}
+          onClick={handleToggleFavorite}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           strokeWidth="2"

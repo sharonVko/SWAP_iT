@@ -1,3 +1,4 @@
+/* General styles for grid layout */
 .grid {
   gap: 16px; /* Adjust the gap between grid items */
   display: grid;
@@ -64,6 +65,7 @@
 .articles-per-page select {
   font-size: 0.875rem;
 }
+
 .search-bar {
   flex-grow: 1;
   margin: 0 1rem;
@@ -76,4 +78,17 @@
   padding: 0.5rem;
   border: 1px solid #ccc;
   font-size: 0.875rem;
+}
+
+/* Mobile view styles */
+@media (max-width: 640px) {
+  .filters-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filters-wrapper > div {
+    margin-bottom: 1rem;
+  }
 }

@@ -11,6 +11,8 @@ lerna-debug.log*
 /client/node_modules
 /client/src/_ablage
 /server/node_modules
+/client/public/Images
+
 
 node_modules
 dist

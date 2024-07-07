@@ -1,49 +1,50 @@
-import { useContext, createContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { useContext, createContext, useEffect, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [userData, setUserData] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
 
-	const checkUser = async () => {
-		try {
-			const response = await axios.get('http://localhost:8000/users/me', {
-				withCredentials: true,
-			});
+  const checkUser = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/users/me", {
+        withCredentials: true,
+      });
 
-			if (response.data && response.data._id) {
-				setIsLoggedIn(true);
-				setUserData(response.data);
-			} else {
-				setIsLoggedIn(false);
-				setUserData({});
-			}
-		} catch (error) {
-			setIsLoggedIn(false);
-			setUserData({});
-			console.error(error);
-		}
-	};
+      if (response.data && response.data._id) {
+        setIsLoggedIn(true);
+        setUserData(response.data);
+      } else {
+        setIsLoggedIn(false);
+        setUserData({});
+      }
+    } catch (error) {
+      setIsLoggedIn(false);
+      setUserData({});
+      console.error(error);
+    }
+  };
 
-	useEffect(() => {
-		const token = Cookies.get('token');
-		if (token) {
-			checkUser();
-		}
-	}, []);
+  useEffect(() => {
+    const token = Cookies.get("token");
+    console.log("Token:", token);
+    if (token) {
+      checkUser();
+    }
+  }, []);
 
-	const values = {
-		isLoggedIn,
-		userData,
-		setIsLoggedIn,
-		setUserData,
-		checkUser,
-	};
+  const values = {
+    isLoggedIn,
+    userData,
+    setIsLoggedIn,
+    setUserData,
+    checkUser,
+  };
 
-	return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
