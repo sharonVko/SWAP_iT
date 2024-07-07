@@ -20,8 +20,14 @@ export const ChatContext = ({ children }) => {
   };
 
   const updateUserMap = async (userId) => {
+    if (typeof userId !== 'string') {
+      console.error('Invalid userId:', userId);
+      return;
+    }
+
     if (!userMap[userId]) {
       try {
+        console.log('Fetching user for ID:', userId); // Debugging line
         const response = await axios.get(
           `http://localhost:8000/users/${userId}`
         );

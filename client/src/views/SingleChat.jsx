@@ -1,20 +1,38 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-useless-escape */
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { UseContextStore } from '../context/ChatContext';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 
-const socket = io();
-
 const SingleChat = () => {
   const { chatId, adId, receiverId } = useParams();
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const { isLoggedIn, userData } = useAuth();
-  const { messageData, setMessageData, addMessage, userMap, updateUserMap } =
-    UseContextStore();
+  const socket = useRef(null);
 
   useEffect(() => {
+    if (!socket.current) {
+      // Initialize socket connection only once
+      socket.current = io('http://localhost:9000', {
+        query: {
+          token: document.cookie.replace(
+            /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,
+            '$1'
+          ),
+        },
+      });
+
+      socket.current.on('connect', () => {
+        // console.log('user connected');
+      });
+
+      socket.current.on('newMessage', (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      });
+    }
+
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
@@ -23,43 +41,30 @@ const SingleChat = () => {
             withCredentials: true,
           }
         );
-
-        setMessageData(response.data);
-
-        // Fetch users
-        const userIds = [...new Set(response.data.map((msg) => msg.sender_id))];
-        await Promise.all(userIds.map((id) => updateUserMap(id)));
+        setMessages(response.data);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
     };
 
     fetchMessages();
-  }, [chatId, setMessageData, updateUserMap]);
 
-  useEffect(() => {
-    socket.emit('joinConversation', chatId);
-    socket.on('newMessage', async (message) => {
-      if (message.chatId === chatId) {
-        await updateUserMap(message.sender_id);
-        addMessage(message);
-      }
-    });
+    socket.current.emit('joinConversation', chatId);
+
     return () => {
-      socket.off('newMessage');
-      socket.emit('leaveConversation', chatId);
+      socket.current.off('newMessage');
+      socket.current.emit('leaveConversation', chatId);
     };
-  }, [chatId, addMessage, updateUserMap]);
+  }, [chatId]);
 
   const handleSendMessage = async () => {
     try {
       const newMessageData = {
-        chatId: chatId,
+        chatId,
         message: newMessage,
-        receiverId: receiverId,
+        receiverId,
         ad_id: adId,
       };
-      console.log('Sending message:', newMessageData);
       const response = await axios.post(
         'http://localhost:8000/message/',
         newMessageData,
@@ -67,10 +72,9 @@ const SingleChat = () => {
           withCredentials: true,
         }
       );
-      await updateUserMap(response.data.sender_id);
-      socket.emit('sendMessage', response.data);
       setNewMessage('');
-      addMessage(response.data);
+      setMessages((prevMessages) => [...prevMessages, response.data]); // Update local state immediately
+      socket.current.emit('sendMessage', response.data); // Emit the message to the server
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -81,7 +85,7 @@ const SingleChat = () => {
       await axios.delete(`http://localhost:8000/message/${messageId}`, {
         withCredentials: true,
       });
-      setMessageData((prevMessages) =>
+      setMessages((prevMessages) =>
         prevMessages.filter((msg) => msg._id !== messageId)
       );
     } catch (error) {
@@ -97,9 +101,9 @@ const SingleChat = () => {
         <>
           <h2>Messages</h2>
           <ul>
-            {messageData.map((msg, index) => (
+            {messages.map((msg, index) => (
               <li key={`${msg._id}-${index}`}>
-                <strong>{userMap[msg.sender_id] || 'Unknown User'}:</strong>{' '}
+                <strong>{msg.sender_id.username || 'Unknown User'}:</strong>{' '}
                 {msg.message}
                 <button
                   onClick={() => handleDeleteMessage(msg._id)}

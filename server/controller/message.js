@@ -4,85 +4,47 @@ import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 import User from '../models/usersSchema.js';
 
-// send a message - if senderand receiver is registered - if sender is loggedin - if chat is not exist then it should create also chat id. - message should save in msgschema and chatschema also - right now user is able to chat with himself also. but we can implement that later. - if chat is already exist then it should save those messages to that chat.
-
+// send a message
 export const sendMessage = asyncHandler(async (req, res, next) => {
   const { chatId, message, receiverId, ad_id } = req.body;
   const { uid } = req;
 
-  // Check if sender (user) is registered
-  const sender = await User.findById(uid);
+  const sender = await User.findById(uid).select('username');
   if (!sender) {
     throw new ErrorResponse('Sender not found', 404);
   }
 
-  // Check if receiver is registered
-  const receiver = await User.findById(receiverId);
-  if (!receiver) {
-    throw new ErrorResponse('Receiver not found', 404);
-  }
-
-  // Validate ad_id
-  // if (!sender.ads.includes(ad_id) && !receiver.ads.includes(ad_id)) {
-  //   throw new ErrorResponse('Ad does not belong to the sender or receiver', 400);
-  // }
-
   let chat;
 
-  // If chatId is provided, check if chat exists with that chatId
   if (chatId) {
     chat = await Chat.findById(chatId);
-
     if (!chat) {
       throw new ErrorResponse('Chat not found', 404);
     }
-
-    // Ensure ad_id matches and participants include sender and receiver
-
-    //console.log(chatId, message, receiverId, ad_id);
-    //console.log(chat.ad_id + '--' + ad_id);
-
-    // if (
-    // 	chat.ad_id !== ad_id ||
-    // 	!chat.participants.includes(uid) ||
-    // 	!chat.participants.includes(receiverId)) {
-    //   throw new ErrorResponse('Invalid chat or ad_id', 400);
-    // }
   } else {
-    // Check if a chat already exists between the two users for the specified ad_id
-    chat = await Chat.findOne({
-      participants: { $all: [uid, receiverId] },
-      ad_id: ad_id,
-    });
-
-    // If no chat exists, create a new chat
-    // if (!chat) {
-    //   chat = await Chat.create({ participants: [uid, receiverId], ad_id });
-    // }
+    chat = await Chat.create({ participants: [uid, receiverId], ad_id });
   }
 
-  // Create a new message and link it to the chat
   const newMessage = await Message.create({
     chat: chat._id,
-    sender_id: uid,
+    sender_id: sender._id, // Store sender_id as an ObjectId
     message,
     ad_id,
   });
 
-  // Add the new message to the chat's messages array
   chat.messages.push(newMessage._id);
   await chat.save();
 
-  // Populate the sender_id
   const populatedMessage = await Message.findById(newMessage._id).populate(
     'sender_id',
     'username'
   );
 
   res.status(201).json(populatedMessage);
+  req.io.to(chat._id).emit('newMessage', populatedMessage); // Emit the message to the conversation room
 });
 
-//get all messages
+// get all messages
 export const getMessages = asyncHandler(async (req, res, next) => {
   const { chatId } = req.params;
   const { uid } = req;
@@ -100,10 +62,11 @@ export const getMessages = asyncHandler(async (req, res, next) => {
       403
     );
 
-  // Retrieve messages
-  const messages = await Message.find({ chat: chatId }).sort({ createdAt: 1 });
+  // Retrieve messages and populate sender_id with username
+  const messages = await Message.find({ chat: chatId })
+    .sort({ createdAt: 1 })
+    .populate('sender_id', 'username');
 
-  // if (!messages.length) throw new ErrorResponse('Messages not found', 404);
   res.json(messages);
 });
 
@@ -131,22 +94,16 @@ export const deleteMessage = asyncHandler(async (req, res, next) => {
 
   res.json({ success: `Message with ID ${id} was deleted` });
 });
+
 export const deleteMessages = asyncHandler(async (req, res, next) => {
   const { ids } = req.body; // Array of message IDs
   const { uid } = req;
-
-  // Log the input data
-  console.log('Message IDs to delete:', ids);
-  console.log('User ID:', uid);
 
   if (!Array.isArray(ids) || ids.length === 0)
     throw new ErrorResponse('No message IDs provided', 400);
 
   // Find all messages by IDs
   const messages = await Message.find({ _id: { $in: ids } });
-
-  // Log the found messages
-  console.log('Found messages:', messages);
 
   // Check if all messages exist
   if (messages.length !== ids.length)
@@ -165,14 +122,8 @@ export const deleteMessages = asyncHandler(async (req, res, next) => {
   // Extract chat IDs
   const chatIds = [...new Set(messages.map((msg) => msg.chat.toString()))];
 
-  // Log the chat IDs to be updated
-  console.log('Chat IDs to be updated:', chatIds);
-
   // Delete all authorized messages
   await Message.deleteMany({ _id: { $in: ids } });
-
-  // Log the deletion success
-  console.log('Messages deleted successfully');
 
   // Remove messages from corresponding chats
   await Chat.updateMany(
@@ -180,34 +131,5 @@ export const deleteMessages = asyncHandler(async (req, res, next) => {
     { $pull: { messages: { $in: ids } } }
   );
 
-  // Log the chat update success
-  console.log('Chats updated successfully');
-
   res.json({ success: `Messages with IDs ${ids.join(', ')} were deleted` });
 });
-
-//update message optional and not working in right way but i can implement it later..
-// export const updateMessage = asyncHandler(async (req, res, next) =>
-// {
-//   const { chatId } = req.body;
-//   const { body, uid, params: { id }, } = req;
-//   console.log('Request body:', body); // Log request body
-//   console.log('User ID:', uid); // Log user ID from token
-//   console.log('chat id: ', chatId);
-
-//   const found = await Message.findById(id);
-//   if (!found) throw new ErrorResponse(`message ${id} does not exist`, 404);
-
-//   if (uid !== found.sender_id.toString())
-//     throw new ErrorResponse('You have no permission to update this message', 401);
-
-//   const updatedMessage = await Message.findByIdAndUpdate(id, body, {
-//     new: true,
-//   }).populate('sender_id');
-
-//   await Chat.findByIdAndUpdate(chatId, body, {
-//     new: true,
-//   }).populate('messages');
-
-//   res.json(updatedMessage);
-// });
