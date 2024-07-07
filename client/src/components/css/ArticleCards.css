@@ -5,8 +5,8 @@
   align-items: flex-start;
   padding: 2.5rem;
   width: 100%;
-  /* max-width: 20rem; /* Adjusted to a relative unit */
-  /* min-width: 19rem; /* Adjusted to a relative unit */
+  max-width: 20rem;
+
   min-height: 20rem; /* Height for collapsed mode */
   background: #fff;
   border-radius: 20px;
@@ -75,6 +75,13 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: #333333;
+  text-wrap: nowrap;
+  overflow: hidden;
+}
+
+.custom-card.active .custom-content h2 {
+  overflow: visible;
+  text-wrap: wrap;
 }
 
 .custom-card .custom-content p {
@@ -89,11 +96,11 @@
 
 .custom-card .custom-content a {
   position: relative;
-  top: 15px;
+
   display: inline-block;
-  padding: 12px 25px;
+
   text-decoration: none;
-  background: #181818;
+
   color: #fff;
   font-weight: 500;
   transition: opacity 0.3s; /* Add transition for hover effect */

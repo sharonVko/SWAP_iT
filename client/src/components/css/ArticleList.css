@@ -1,35 +1,79 @@
+.grid {
+  gap: 16px; /* Adjust the gap between grid items */
+  display: grid;
+  justify-items: center; /* Center items horizontally */
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    ); /* Two columns on medium screens */
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(
+      3,
+      minmax(0, 1fr)
+    ); /* Three columns on large screens */
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: repeat(
+      4,
+      minmax(0, 1fr)
+    ); /* Four columns on extra-large screens */
+  }
+}
+
 .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.pagination {
+.pagination ul {
   display: flex;
-  gap: 20px; /* Increase the gap between pagination buttons */
+  list-style: none;
+  padding: 0;
 }
 
-.pagination-button {
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination button {
   padding: 8px 12px;
-  background-color: #fcaa72; /* Default background color */
+  background-color: #fcaa72;
   border: 1px solid #ccc;
   color: #333;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.pagination-button.active {
-  background-color: #333; /* Background color when active */
-  color: #fcaa72; /* Text color when active */
-  border-color: #333; /* Border color when active */
 }
 
 .articles-per-page {
   margin-left: auto; /* Align articles per page dropdown to the right */
   display: flex;
   align-items: center;
+  font-size: 0.625rem;
 }
 
-.articles-per-page label {
-  margin-right: 8px;
+.articles-per-page select {
+  font-size: 0.875rem;
+}
+.search-bar {
+  flex-grow: 1;
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  font-size: 0.875rem;
 }
