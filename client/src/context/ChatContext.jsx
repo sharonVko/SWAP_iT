@@ -11,11 +11,28 @@ export const ChatContext = ({ children }) => {
   const [messageData, setMessageData] = useState([]);
   const [adData, setAdData] = useState([]);
   const [chatData, setChatData] = useState([]);
+  const [userMap, setUserMap] = useState({});
   const [loading, setLoading] = useState(true);
   const { userData } = useAuth();
 
   const addMessage = (newMessage) => {
     setMessageData((prevMessages) => [...prevMessages, newMessage]);
+  };
+
+  const updateUserMap = async (userId) => {
+    if (!userMap[userId]) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/users/${userId}`
+        );
+        setUserMap((prevUserMap) => ({
+          ...prevUserMap,
+          [userId]: response.data.username,
+        }));
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    }
   };
 
   const values = {
@@ -29,6 +46,8 @@ export const ChatContext = ({ children }) => {
     setChatData,
     loading,
     addMessage,
+    userMap,
+    updateUserMap,
   };
 
   return <Context.Provider value={values}>{children}</Context.Provider>;

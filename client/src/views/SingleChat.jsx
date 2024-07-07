@@ -10,9 +10,9 @@ const socket = io();
 const SingleChat = () => {
   const { chatId, adId, receiverId } = useParams();
   const [newMessage, setNewMessage] = useState('');
-  const [userMap, setUserMap] = useState({});
   const { isLoggedIn, userData } = useAuth();
-  const { messageData, setMessageData, addMessage } = UseContextStore();
+  const { messageData, setMessageData, addMessage, userMap, updateUserMap } =
+    UseContextStore();
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -28,26 +28,20 @@ const SingleChat = () => {
 
         // Fetch users
         const userIds = [...new Set(response.data.map((msg) => msg.sender_id))];
-        const userResponses = await Promise.all(
-          userIds.map((id) => axios.get(`http://localhost:8000/users/${id}`))
-        );
-        const userMap = userResponses.reduce((acc, userResponse) => {
-          acc[userResponse.data._id] = userResponse.data.username;
-          return acc;
-        }, {});
-        setUserMap(userMap);
+        await Promise.all(userIds.map((id) => updateUserMap(id)));
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
     };
 
     fetchMessages();
-  }, [chatId, setMessageData]);
+  }, [chatId, setMessageData, updateUserMap]);
 
   useEffect(() => {
     socket.emit('joinConversation', chatId);
-    socket.on('newMessage', (message) => {
+    socket.on('newMessage', async (message) => {
       if (message.chatId === chatId) {
+        await updateUserMap(message.sender_id);
         addMessage(message);
       }
     });
@@ -55,25 +49,28 @@ const SingleChat = () => {
       socket.off('newMessage');
       socket.emit('leaveConversation', chatId);
     };
-  }, [chatId, addMessage]);
+  }, [chatId, addMessage, updateUserMap]);
 
   const handleSendMessage = async () => {
     try {
+      const newMessageData = {
+        chatId: chatId,
+        message: newMessage,
+        receiverId: receiverId,
+        ad_id: adId,
+      };
+      console.log('Sending message:', newMessageData);
       const response = await axios.post(
         'http://localhost:8000/message/',
-        {
-          chatId: chatId,
-          message: newMessage,
-          receiverId: receiverId,
-          ad_id: adId,
-        },
+        newMessageData,
         {
           withCredentials: true,
         }
       );
+      await updateUserMap(response.data.sender_id);
       socket.emit('sendMessage', response.data);
       setNewMessage('');
-      addMessage(response.data); // Add new message to the context
+      addMessage(response.data);
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -100,8 +97,8 @@ const SingleChat = () => {
         <>
           <h2>Messages</h2>
           <ul>
-            {messageData.map((msg) => (
-              <li key={msg._id}>
+            {messageData.map((msg, index) => (
+              <li key={`${msg._id}-${index}`}>
                 <strong>{userMap[msg.sender_id] || 'Unknown User'}:</strong>{' '}
                 {msg.message}
                 <button

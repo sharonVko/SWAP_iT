@@ -2,15 +2,13 @@ import Message from '../models/messagesSchema.js';
 import Chat from '../models/chatsSchema.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
-import User from '../models/usersSchema.js'
+import User from '../models/usersSchema.js';
 
 // send a message - if senderand receiver is registered - if sender is loggedin - if chat is not exist then it should create also chat id. - message should save in msgschema and chatschema also - right now user is able to chat with himself also. but we can implement that later. - if chat is already exist then it should save those messages to that chat.
 
-export const sendMessage = asyncHandler(async (req, res, next) =>
-{
+export const sendMessage = asyncHandler(async (req, res, next) => {
   const { chatId, message, receiverId, ad_id } = req.body;
   const { uid } = req;
-
 
   // Check if sender (user) is registered
   const sender = await User.findById(uid);
@@ -35,27 +33,26 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   if (chatId) {
     chat = await Chat.findById(chatId);
 
-		if (!chat) {
+    if (!chat) {
       throw new ErrorResponse('Chat not found', 404);
     }
 
     // Ensure ad_id matches and participants include sender and receiver
 
-		//console.log(chatId, message, receiverId, ad_id);
-		//console.log(chat.ad_id + '--' + ad_id);
+    //console.log(chatId, message, receiverId, ad_id);
+    //console.log(chat.ad_id + '--' + ad_id);
 
     // if (
-		// 	chat.ad_id !== ad_id ||
-		// 	!chat.participants.includes(uid) ||
-		// 	!chat.participants.includes(receiverId)) {
+    // 	chat.ad_id !== ad_id ||
+    // 	!chat.participants.includes(uid) ||
+    // 	!chat.participants.includes(receiverId)) {
     //   throw new ErrorResponse('Invalid chat or ad_id', 400);
     // }
-  }
-	else {
+  } else {
     // Check if a chat already exists between the two users for the specified ad_id
     chat = await Chat.findOne({
       participants: { $all: [uid, receiverId] },
-      ad_id: ad_id
+      ad_id: ad_id,
     });
 
     // If no chat exists, create a new chat
@@ -65,19 +62,25 @@ export const sendMessage = asyncHandler(async (req, res, next) =>
   }
 
   // Create a new message and link it to the chat
-  const newMessage = await Message.create({ chat: chat._id, sender_id: uid, message, ad_id });
+  const newMessage = await Message.create({
+    chat: chat._id,
+    sender_id: uid,
+    message,
+    ad_id,
+  });
 
   // Add the new message to the chat's messages array
   chat.messages.push(newMessage._id);
   await chat.save();
 
   // Populate the sender_id
-  const populatedMessage = await Message.findById(newMessage._id).populate('sender_id', 'username');
+  const populatedMessage = await Message.findById(newMessage._id).populate(
+    'sender_id',
+    'username'
+  );
 
   res.status(201).json(populatedMessage);
 });
-
-
 
 //get all messages
 export const getMessages = asyncHandler(async (req, res, next) => {
@@ -88,26 +91,40 @@ export const getMessages = asyncHandler(async (req, res, next) => {
   const chat = await Chat.findById(chatId);
   if (!chat) throw new ErrorResponse('Chat not found', 404);
 
-  const isParticipant = chat.participants.some(participant => participant.equals(uid));
-  if (!isParticipant) throw new ErrorResponse('Unauthorized - You are not a participant of this chat', 403);
+  const isParticipant = chat.participants.some((participant) =>
+    participant.equals(uid)
+  );
+  if (!isParticipant)
+    throw new ErrorResponse(
+      'Unauthorized - You are not a participant of this chat',
+      403
+    );
 
   // Retrieve messages
   const messages = await Message.find({ chat: chatId }).sort({ createdAt: 1 });
 
-  if (!messages.length) throw new ErrorResponse('Messages not found', 404);
+  // if (!messages.length) throw new ErrorResponse('Messages not found', 404);
   res.json(messages);
 });
 
 // delete message
 export const deleteMessage = asyncHandler(async (req, res, next) => {
-  const { params: { id }, uid } = req;
+  const {
+    params: { id },
+    uid,
+  } = req;
 
   // Find the message by ID
   const found = await Message.findById(id);
-  if (!found) throw new ErrorResponse(`Message with ID ${id} does not exist`, 404);
+  if (!found)
+    throw new ErrorResponse(`Message with ID ${id} does not exist`, 404);
 
   // Check if the logged-in user is the sender of the message
-  if (uid !== found.sender_id.toString()) throw new ErrorResponse('You do not have permission to delete this message', 401);
+  if (uid !== found.sender_id.toString())
+    throw new ErrorResponse(
+      'You do not have permission to delete this message',
+      401
+    );
 
   // Delete the message
   await Message.findByIdAndDelete(id);
@@ -122,8 +139,8 @@ export const deleteMessages = asyncHandler(async (req, res, next) => {
   console.log('Message IDs to delete:', ids);
   console.log('User ID:', uid);
 
-  if (!Array.isArray(ids) || ids.length === 0) throw new ErrorResponse('No message IDs provided', 400);
-
+  if (!Array.isArray(ids) || ids.length === 0)
+    throw new ErrorResponse('No message IDs provided', 400);
 
   // Find all messages by IDs
   const messages = await Message.find({ _id: { $in: ids } });
@@ -132,15 +149,21 @@ export const deleteMessages = asyncHandler(async (req, res, next) => {
   console.log('Found messages:', messages);
 
   // Check if all messages exist
-  if (messages.length !== ids.length) throw new ErrorResponse('Some messages not found', 404);
-
+  if (messages.length !== ids.length)
+    throw new ErrorResponse('Some messages not found', 404);
 
   // Check if the logged-in user is the sender of each message
-  const unauthorizedMessages = messages.filter(msg => msg.sender_id.toString() !== uid);
-  if (unauthorizedMessages.length > 0) throw new ErrorResponse('You do not have permission to delete some of these messages', 401);
+  const unauthorizedMessages = messages.filter(
+    (msg) => msg.sender_id.toString() !== uid
+  );
+  if (unauthorizedMessages.length > 0)
+    throw new ErrorResponse(
+      'You do not have permission to delete some of these messages',
+      401
+    );
 
   // Extract chat IDs
-  const chatIds = [...new Set(messages.map(msg => msg.chat.toString()))];
+  const chatIds = [...new Set(messages.map((msg) => msg.chat.toString()))];
 
   // Log the chat IDs to be updated
   console.log('Chat IDs to be updated:', chatIds);
@@ -188,5 +211,3 @@ export const deleteMessages = asyncHandler(async (req, res, next) => {
 
 //   res.json(updatedMessage);
 // });
-
-
