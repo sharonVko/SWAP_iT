@@ -27,19 +27,6 @@ const ArticleList = () => {
     fetchArticleData();
   }, []);
 
-  useEffect(() => {
-    const fetchMediaData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/media/`);
-        setMedia(response.data);
-        console.log("Fetched media:", response.data);
-      } catch (error) {
-        console.error("Error fetching media data:", error);
-      }
-    };
-    fetchMediaData();
-  }, []);
-
   const sortedArticles = ads.slice().sort((a, b) => {
     if (sortOrder === "newest") {
       return new Date(b.timestamp) - new Date(a.timestamp);
@@ -201,7 +188,7 @@ const ArticleList = () => {
 
       <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
         {currentArticles.map((ad, index) => (
-          <ArticleCard key={index} article={ad} media={media} />
+          <ArticleCard key={index} article={ad} />
         ))}
       </div>
 

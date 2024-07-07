@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { mdiHeartOutline, mdiHeart, mdiMapMarker } from "@mdi/js";
 import { truncateDescription } from "../utils/helpers";
 import { categories } from "../utils/categories";
+import { Link } from "react-router-dom";
 import "../components/css/ArticleCards.css";
 
 const ArticleCard = ({ article }) => {
@@ -205,9 +206,7 @@ const ArticleCard = ({ article }) => {
             </div>
           </>
         )}
-        <a href="#" className="btn-lg btn-teal">
-          Infos
-        </a>
+				<Link to={`/ads/${article._id}`} className="btn-lg btn-teal">Infos</Link>
       </div>
       <div className="absolute top-0 right-0 p-2 cursor-pointer">
         <svg
