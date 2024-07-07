@@ -165,7 +165,7 @@
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
-  z-index: 1001; /* Add high z-index to bring to front */
+  z-index: 2000; /* Add high z-index to bring to front */
 }
 
 .tooltip:hover .tooltip-text,

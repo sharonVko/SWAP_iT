@@ -68,7 +68,6 @@ const ArticleCard_02 = ({ article }) => {
 		return addressArray.join(", ");
 	}
 
-
 	// Get the first media file URL
 	let imageUrl = "/Images/default.png"; // Default image path
 	if (
@@ -88,7 +87,7 @@ const ArticleCard_02 = ({ article }) => {
 						<div className="bg-white/80 uppercase text-xs px-2 rounded-full flex items-center justify-center"><span>{article.user_id.username}</span></div>
 
 						{article.tradeOption ? (
-							<div className="bg-white/80 px-1 py-1 text-sm rounded-full flex items-center justify-center">
+							<div className="bg-white/80 px-1 py-1 text-sm rounded-full flex items-center justify-center relative">
 								<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
 									<g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5">
 										<path strokeMiterlimit="10" d="M18.024 7.043A8.374 8.374 0 0 0 3.74 12.955"/>
@@ -97,9 +96,12 @@ const ArticleCard_02 = ({ article }) => {
 										<path strokeLinejoin="round" d="m6.65 21.25l-.832-3.372a1.124 1.124 0 0 1 .855-1.382l3.371-.843"/>
 									</g>
 								</svg>
+								<span className="tooltip-text">
+                {article.user_id.username} möchte diesen Artikel tauschen.
+              	</span>
 							</div>
 						) : (
-							<div className="bg-white/80 px-1 py-1 text-sm rounded-full flex items-center justify-center">
+							<div className="bg-white/80 px-1 py-1 text-sm rounded-full flex items-center justify-center relative">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="1em"
@@ -111,13 +113,16 @@ const ArticleCard_02 = ({ article }) => {
 										d="M9.06 1.93C7.17 1.92 5.33 3.74 6.17 6H3a2 2 0 0 0-2 2v2a1 1 0 0 0 1 1h9V8h2v3h9a1 1 0 0 0 1-1V8a2 2 0 0 0-2-2h-3.17C19 2.73 14.6.42 12.57 3.24L12 4l-.57-.78c-.63-.89-1.5-1.28-2.37-1.29M9 4c.89 0 1.34 1.08.71 1.71S8 5.89 8 5a1 1 0 0 1 1-1m6 0c.89 0 1.34 1.08.71 1.71S14 5.89 14 5a1 1 0 0 1 1-1M2 12v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-8h-9v8h-2v-8z"
 									></path>
 								</svg>
+								<span className="tooltip-text">
+                {article.user_id.username} verschenkt diesen Artikel
+              	</span>
 							</div>
 						)}
 
 					</div>
 				</div>
 				<div className={`card-content ${active ? "open" : "close"}`}>
-					<h2 className="font-medium mt-4">Pinsel & Farben</h2>
+					<h2 className="font-medium mt-4">{article.title}</h2>
 					<Collapse isOpened={active}>
 						<div className="mb-4 px-4">{truncatedDescription}</div>
 						<div className="tags">

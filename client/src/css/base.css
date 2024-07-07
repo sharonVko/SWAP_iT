@@ -4,7 +4,7 @@
     @apply bg-gradient-to-b from-peach-600 from-10% via-peach-500 via-30% to-lemon-500 to-90% text-gray-700;
     @apply leading-[1.6em] sm:text-lg md:text-base;
   }
-  h1 {
+  h1, .h1 {
     @apply font-display font-light text-xl sm:text-2xl md:text-3xl my-4;
   }
   h2 {

@@ -18,22 +18,18 @@ const Home = () => {
 		fetchArticleData();
 	}, []);
 
+	ads.reverse();
+
 	const filteredAds = ads.filter((ad, i) => {
 		if (i < 8) return ad;
 	});
 
 	return (
 		<div>
-			<h1 className="mt-0 text-center">Top Matches</h1>
-			<ArticleList/>
-			<div>
-				<h2 className="mt-6 text-center">Favoriten</h2>
-				<HomeSwiper swiperId={1} articles={filteredAds} />
-			</div>
-			<div>
-				<h2 className="h1 mt-6 text-center">Neues aus der Umgebung</h2>
-				<HomeSwiper swiperId={2} articles={filteredAds}/>
-			</div>
+			<h2 className="h1 mt-6 text-center">Favoriten</h2>
+			<HomeSwiper swiperId={1} articles={filteredAds} />
+			<h2 className="h1 mt-6 text-center">Neues aus der Umgebung</h2>
+			<HomeSwiper swiperId={2} articles={filteredAds}/>
 		</div>
 	);
 };
