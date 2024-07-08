@@ -15,7 +15,7 @@ import { Server } from "socket.io";
 import authMiddleware from "./middleware/authSocket.js";
 
 const app = express();
-const PORT = 8000;
+const PORT = 9000;
 
 const server = http.createServer(app); // Creating an HTTP server using the Express application.
 
@@ -30,19 +30,23 @@ const io = new Server(server, {
 io.use(authMiddleware); // Middleware to authenticate Socket.IO connections.
 
 //Event listener for new socket connections
-io.on("connection", (socket) => {
+io.on("connection", (socket) =>
+{
   console.log("a user connected");
   //'joinConversation': Joins the user to a specific conversation room.
-  socket.on("joinConversation", (conversationId) => {
+  socket.on("joinConversation", (conversationId) =>
+  {
     socket.join(conversationId);
   });
   // 'sendMessage': Broadcasts a new message to all users in the conversation room.
-  socket.on("sendMessage", (message) => {
+  socket.on("sendMessage", (message) =>
+  {
     io.to(message.conversationId).emit("newMessage", message);
   });
 
   // 'disconnect': Logs when a user disconnects.
-  socket.on("disconnect", () => {
+  socket.on("disconnect", () =>
+  {
     console.log("user disconnected");
   });
 });
@@ -51,7 +55,7 @@ app.use(express.json());
 // app.use(cors());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: ["http://localhost:5173"],
     credentials: true,
   })
 );
