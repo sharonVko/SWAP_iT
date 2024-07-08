@@ -24,11 +24,6 @@ const Home = () => {
     if (i < 8) return ad;
   });
 
-
-	const filteredAds = ads.filter((ad, i) => {
-		if (i < 8) return ad;
-	});
-
 	return (
 		<div className="pb-12">
 

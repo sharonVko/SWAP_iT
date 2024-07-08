@@ -5,11 +5,11 @@ import { ReactTags } from "react-tag-autocomplete";
 import { suggestions } from "../components/Categories.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
 
-
 const MIN_SELECTED_LENGTH = 3;
 
 const UserSettings = () => {
   const { isLoggedIn, userData } = useAuth();
+
   const [profile, setProfile] = useState({
     firstname: "",
     lastname: "",
@@ -296,7 +296,7 @@ const UserSettings = () => {
       </div>
     </div>
   );
-=======
+
 import axios from 'axios';
 
 const MIN_SELECTED_LENGTH = 3;
