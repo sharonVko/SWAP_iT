@@ -43,7 +43,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<RegisterForm />} />
-            <Route path="/login" element={<LoginForm target="/dashboard" />} />
+            <Route path="/login" element={<LoginForm target="/" />} />
             <Route path="/logout" element={<UserLogout />} />
 
             <Route path="/profile" element={<UserProfile />} />

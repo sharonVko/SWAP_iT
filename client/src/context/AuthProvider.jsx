@@ -11,10 +11,23 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
 
   const checkUser = async () => {
+    const token = Cookies.get("token");
+    console.log("Token in checkUser:", token); // Debugging log
+    if (!token) {
+      setIsLoggedIn(false);
+      setUserData({});
+      return;
+    }
+
     try {
       const response = await axios.get("http://localhost:8000/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         withCredentials: true,
       });
+
+      console.log("User data:", response.data);
 
       if (response.data && response.data._id) {
         setIsLoggedIn(true);
@@ -32,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log("Token:", token);
+    console.log("Token in useEffect:", token); // Debugging log
     if (token) {
       checkUser();
     }
