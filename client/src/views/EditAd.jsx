@@ -128,9 +128,6 @@ const EditAd = () =>
   const handleChange = (e) =>
   {
     const { name, value } = e.target;
-    console.log("Field name:", name);
-    console.log("Field value:", value);
-
     if (name.includes("pickupaddress"))
     {
       const [_, addressField] = name.split(".");
@@ -148,9 +145,7 @@ const EditAd = () =>
         [name]: value,
       }));
     }
-    console.log("Updated formData:", formData);
   };
-
 
   const handleSwitchChange = (checked) =>
   {
@@ -187,34 +182,41 @@ const EditAd = () =>
   {
     e.preventDefault();
 
-    const formDataToSend = {
-      user_id: userData._id,
-      title: formData.title,
-      description: formData.description,
-      tradeOption: formData.tradeOption,
-      categories: formData.categories,
-      subCategory: formData.subCategory,
-      tags: Array.isArray(formData.tags) ? formData.tags.join(",") : "",
-      condition: formData.condition,
-      material: formData.material,
-      color: formData.color,
-      diverse: formData.diverse,
-      pickupaddress: {
-        street: formData.pickupaddress.street,
-        housenumber: formData.pickupaddress.housenumber,
-        zip: formData.pickupaddress.zip,
-        city: formData.pickupaddress.city,
-        country: formData.pickupaddress.country,
-      },
-      media_files: formData.media_files,
-    };
+    const formDataToSend = new FormData();
 
-    console.log("Submitting formData:", formDataToSend);
+    // Append form fields to FormData
+    formDataToSend.append("user_id", userData._id);
+    formDataToSend.append("title", formData.title);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("tradeOption", formData.tradeOption);
+    formDataToSend.append("categories", formData.categories);
+    formDataToSend.append("subCategory", formData.subCategory);
+    formDataToSend.append("tags", Array.isArray(formData.tags) ? formData.tags.join(",") : "");
+    formDataToSend.append("condition", formData.condition);
+    formDataToSend.append("material", formData.material);
+    formDataToSend.append("color", formData.color);
+    formDataToSend.append("diverse", formData.diverse);
+
+    // Append pickup address fields to FormData
+    formDataToSend.append("pickupaddress[street]", formData.pickupaddress.street);
+    formDataToSend.append("pickupaddress[housenumber]", formData.pickupaddress.housenumber);
+    formDataToSend.append("pickupaddress[zip]", formData.pickupaddress.zip);
+    formDataToSend.append("pickupaddress[city]", formData.pickupaddress.city);
+    formDataToSend.append("pickupaddress[country]", formData.pickupaddress.country);
+
+    // Append media files to FormData
+    formData.media_files.forEach((file, index) =>
+    {
+      formDataToSend.append("media_files", file);
+    });
 
     try
     {
       const response = await axiosInstance.put(`/ads/${adid}`, formDataToSend, {
         withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       console.log("Ad updated successfully:", response.data);
@@ -225,32 +227,9 @@ const EditAd = () =>
     }
   };
 
-
   const toggleAddressSection = () =>
   {
     setExpandAddress(!expandAddress);
-  };
-
-  const handleUpdateAd = async () =>
-  {
-    const updatedData = {
-      title: "New Title",
-      description: "Updated description",
-      tags: ["tag1", "tag2", "tag3"],
-      subCategory: "newSubCategory",
-      // include other fields that need to be updated
-    };
-
-    console.log("Request payload:", updatedData);
-
-    try
-    {
-      const response = await axiosInstance.put(`/ads/${adid}`, updatedData);
-      console.log("Ad updated successfully:", response.data);
-    } catch (error)
-    {
-      console.error("Error updating ad:", error);
-    }
   };
 
   return (
@@ -302,240 +281,309 @@ const EditAd = () =>
               </div>
             </div>
 
-            <div className="flex items-center mb-4">
-              <label className="mr-2"></label>
-              <div className="relative">
-                <Switch
-                  onChange={handleSwitchChange}
-                  checked={formData.tradeOption}
-                  className="react-switch"
-                  offColor="#888"
-                  onColor="#4CAF50"
-                  height={20}
-                  width={48}
-                  uncheckedIcon={false}
-                  checkedIcon={false}
-                />
-              </div>
-              <span className="ml-2 text-gray-700">Tauschen Option</span>
-            </div>
-
-            <div className="shadow-lg bg-white/30 p-8 rounded-xl">
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div>
-                  <label className="block mb-1">Titel:</label>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <div className="shadow-lg bg-white/30 p-8 rounded-xl mb-6">
+                <div className="mb-4">
+                  <label
+                    htmlFor="title"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Titel
+                  </label>
                   <input
                     type="text"
+                    id="title"
                     name="title"
                     value={formData.title}
                     onChange={handleChange}
-                    className="form-input"
-                    required
+                    className="w-full p-2 border border-gray-300 rounded-lg"
                   />
                 </div>
 
-                <div className="relative mb-4">
-                  <button
-                    type="button"
-                    className="form-button bg-white/30 text-teal-500 w-fill"
-                    onClick={toggleAddressSection}
+                <div className="mb-4">
+                  <label
+                    htmlFor="description"
+                    className="block text-gray-700 font-medium mb-1"
                   >
-                    {expandAddress ? "Einklappen" : "Alternative Abholadresse?"}
-                  </button>
-                  {expandAddress && (
-                    <div className="p-4 bg-white/30 shadow-md rounded-lg mt-2">
-                      <h2 className="text-xl font-semibold mb-4">Adresse</h2>
-                      <div className="mb-4">
-                        <label className="block mb-1">Straße:</label>
-                        <input
-                          type="text"
-                          name="pickupaddress.street"
-                          value={formData.pickupaddress.street}
-                          onChange={handleChange}
-                          className="form-input"
-                        />
-                      </div>
-                      <div className="mb-4">
-                        <label className="block mb-1">Hausnummer:</label>
-                        <input
-                          type="text"
-                          name="pickupaddress.housenumber"
-                          value={formData.pickupaddress.housenumber}
-                          onChange={handleChange}
-                          className="form-input"
-                        />
-                      </div>
-                      <div className="container flex">
-                        <div className="mb-4">
-                          <label className="block mb-1">PLZ:</label>
-                          <input
-                            type="text"
-                            name="pickupaddress.zip"
-                            value={formData.pickupaddress.zip}
-                            onChange={handleChange}
-                            className="form-input"
-                          />
-                        </div>
-                        <div className="mb-4 flex-row px-3">
-                          <label className="block mb-1">Stadt:</label>
-                          <input
-                            type="text"
-                            name="pickupaddress.city"
-                            value={formData.pickupaddress.city}
-                            onChange={handleChange}
-                            className="form-input"
-                          />
-                        </div>
-                        <div className="mb-4">
-                          <label className="block mb-1">Land:</label>
-                          <input
-                            type="text"
-                            name="pickupaddress.country"
-                            value={formData.pickupaddress.country}
-                            onChange={handleChange}
-                            className="form-input"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                    Beschreibung
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    rows="4"
+                  />
                 </div>
 
-                <div>
-                  <label className="block mb-1">Kategorie:</label>
+                <div className="mb-4">
+                  <label
+                    htmlFor="tradeOption"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Tauschoption
+                  </label>
+                  <Switch
+                    onChange={handleSwitchChange}
+                    checked={formData.tradeOption}
+                    id="tradeOption"
+                    name="tradeOption"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="categories"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Kategorien
+                  </label>
                   <select
+                    id="categories"
                     name="categories"
                     value={selectedCategory}
                     onChange={(e) =>
                     {
+                      handleChange(e);
                       setSelectedCategory(e.target.value);
-                      setFormData({ ...formData, categories: e.target.value });
                     }}
-                    className="form-select"
-                    required
+                    className="w-full p-2 border border-gray-300 rounded-lg"
                   >
-                    <option value="">Wähle eine Kategorie</option>
+                    <option value="">Bitte wählen...</option>
                     {filteredCategories.map((category) => (
-                      <option key={category.cat_id} value={category.cat_id}>
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div>
-                  <label className="block mb-1">Unterkategorie:</label>
+                <div className="mb-4">
+                  <label
+                    htmlFor="subCategory"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Unterkategorie
+                  </label>
                   <select
+                    id="subCategory"
                     name="subCategory"
                     value={formData.subCategory}
                     onChange={handleChange}
-                    className="form-select"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
                   >
-                    <option value="">Wähle eine Unterkategorie</option>
+                    <option value="">Bitte wählen...</option>
                     {subCategories.map((subCategory) => (
-                      <option
-                        key={subCategory.cat_id}
-                        value={subCategory.cat_id}
-                      >
+                      <option key={subCategory.id} value={subCategory.id}>
                         {subCategory.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <div>
-                  <label className="block mb-1">Zustand:</label>
+                <div className="mb-4">
+                  <label
+                    htmlFor="tags"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Tags
+                  </label>
                   <select
+                    id="tags"
+                    name="tags"
+                    value={formData.tags}
+                    onChange={(e) =>
+                      handleTagChange("tags", e.target.value)
+                    }
+                    multiple
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  >
+                    {tags.map((tag) => (
+                      <option key={tag.id} value={tag.id}>
+                        {tag.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    htmlFor="condition"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Zustand
+                  </label>
+                  <input
+                    type="text"
+                    id="condition"
                     name="condition"
                     value={formData.condition}
                     onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option value="">Wähle einen Zustand</option>
-                    {tags
-                      .filter((tag) => tag.parent === 1)
-                      .map((tag) => (
-                        <option key={tag.tag_id} value={tag.tag_id}>
-                          {tag.name}
-                        </option>
-                      ))}
-                  </select>
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
 
-                <div>
-                  <label className="block mb-1">Material:</label>
-                  <select
+                <div className="mb-4">
+                  <label
+                    htmlFor="material"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Material
+                  </label>
+                  <input
+                    type="text"
+                    id="material"
                     name="material"
                     value={formData.material}
                     onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option value="">Wähle das Material</option>
-                    {tags
-                      .filter((tag) => tag.parent === 9)
-                      .map((tag) => (
-                        <option key={tag.tag_id} value={tag.tag_id}>
-                          {tag.name}
-                        </option>
-                      ))}
-                  </select>
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
 
-                <div>
-                  <label className="block mb-1">Farbe:</label>
-                  <select
+                <div className="mb-4">
+                  <label
+                    htmlFor="color"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Farbe
+                  </label>
+                  <input
+                    type="text"
+                    id="color"
                     name="color"
                     value={formData.color}
                     onChange={handleChange}
-                    className="form-select"
-                  >
-                    <option value="">Wähle eine Farbe</option>
-                    {tags
-                      .filter((tag) => tag.parent === 25)
-                      .map((tag) => (
-                        <option key={tag.tag_id} value={tag.tag_id}>
-                          {tag.name}
-                        </option>
-                      ))}
-                  </select>
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
 
-                <div>
-                  <label className="block mb-1">Diverse:</label>
-                  <select
+                <div className="mb-4">
+                  <label
+                    htmlFor="diverse"
+                    className="block text-gray-700 font-medium mb-1"
+                  >
+                    Diverse
+                  </label>
+                  <input
+                    type="text"
+                    id="diverse"
                     name="diverse"
                     value={formData.diverse}
                     onChange={handleChange}
-                    className="form-select"
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <button
+                    type="button"
+                    className="text-blue-600 underline"
+                    onClick={toggleAddressSection}
                   >
-                    <option value="">Wähle diverse</option>
-                    {tags
-                      .filter((tag) => tag.parent === 39)
-                      .map((tag) => (
-                        <option key={tag.tag_id} value={tag.tag_id}>
-                          {tag.name}
-                        </option>
-                      ))}
-                  </select>
+                    {expandAddress ? "Address hide" : "Address expand"}
+                  </button>
                 </div>
 
-                <div>
-                  <label className="block mb-1">Beschreibung:</label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="form-input"
-                    rows="4"
-                    placeholder="Beschreibe deinen Artikel..."
-                  ></textarea>
-                </div>
+                {expandAddress && (
+                  <div className="mb-4">
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pickupaddress.street"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Street
+                      </label>
+                      <input
+                        type="text"
+                        id="pickupaddress.street"
+                        name="pickupaddress.street"
+                        value={formData.pickupaddress.street}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
 
-                <button type="submit" className="btn-teal">
-                  Anzeige aktualisieren
-                </button>
-              </form>
-            </div>
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pickupaddress.housenumber"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Housenumber
+                      </label>
+                      <input
+                        type="text"
+                        id="pickupaddress.housenumber"
+                        name="pickupaddress.housenumber"
+                        value={formData.pickupaddress.housenumber}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pickupaddress.zip"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Zip
+                      </label>
+                      <input
+                        type="text"
+                        id="pickupaddress.zip"
+                        name="pickupaddress.zip"
+                        value={formData.pickupaddress.zip}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pickupaddress.city"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        City
+                      </label>
+                      <input
+                        type="text"
+                        id="pickupaddress.city"
+                        name="pickupaddress.city"
+                        value={formData.pickupaddress.city}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label
+                        htmlFor="pickupaddress.country"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Country
+                      </label>
+                      <input
+                        type="text"
+                        id="pickupaddress.country"
+                        name="pickupaddress.country"
+                        value={formData.pickupaddress.country}
+                        onChange={handleChange}
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
         )
       ) : (
