@@ -15,6 +15,7 @@ import LoginForm from "./components/LoginForm.jsx";
 
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
+import UserSettings from "./views/UserSettings.jsx";
 import ChangePassword from "./views/ChangePassword.jsx";
 import FilteredAds from "./views/FilteredAds.jsx";
 import MyAds from "./views/MyAds.jsx";
@@ -42,11 +43,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<RegisterForm />} />
-            <Route path="/login" element={<LoginForm target="/dashboard" />} />
+            <Route path="/login" element={<LoginForm target="/profile" />} />
             <Route path="/logout" element={<UserLogout />} />
 
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/profile/edit" element={<UserProfile />} />
+						<Route path="/profile" element={<UserProfile />} />
+            <Route path="/profile/settings" element={<UserSettings />} />
             <Route path="/profile/password" element={<ChangePassword />} />
             {/*<Route path="/profile/photo" element={<ChangePhoto />} />*/}
 

@@ -8,8 +8,6 @@ import "../components/css/ArticleCards.css";
 
 const ArticleCard_02 = ({ article }) => {
 
-	console.log(article);
-
 	const [active, setActive] = useState(false);
 	const [liked, setLiked] = useState(false);
 	const navigate = useNavigate();
@@ -173,7 +171,7 @@ const ArticleCard_02 = ({ article }) => {
 					</Collapse>
 				</div>
 			</div>
-			<div className="absolute top-4 right-0 p-3 cursor-pointer">
+			<div className="absolute -top-2 -right-2 p-3 cursor-pointer">
 				<svg
 					className={`h-8 w-8 ${
 						liked ? "text-red-500 fill-red-500" : "text-teal-500 fill-teal-500"
