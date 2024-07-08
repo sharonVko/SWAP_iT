@@ -183,6 +183,7 @@ const EditAd = () =>
     }));
   };
 
+
   const handleSubmit = async (e) =>
   {
     e.preventDefault();
@@ -209,11 +210,9 @@ const EditAd = () =>
       media_files: formData.media_files,
     };
 
-    console.log("Submitting formData:", formDataToSend);
-
     try
     {
-      const response = await axiosInstance.put(`/ads/${adid}`, formDataToSend, {
+      const response = await axiosInstance.patch(`http://localhost:9000/ads/${adid}`, formDataToSend, {
         withCredentials: true,
       });
 
@@ -231,27 +230,27 @@ const EditAd = () =>
     setExpandAddress(!expandAddress);
   };
 
-  const handleUpdateAd = async () =>
-  {
-    const updatedData = {
-      title: "New Title",
-      description: "Updated description",
-      tags: ["tag1", "tag2", "tag3"],
-      subCategory: "newSubCategory",
-      // include other fields that need to be updated
-    };
+  // const handleUpdateAd = async () =>
+  // {
+  //   const updatedData = {
+  //     title: "New Title",
+  //     description: "Updated description",
+  //     tags: ["tag1", "tag2", "tag3"],
+  //     subCategory: "newSubCategory",
+  //     // include other fields that need to be updated
+  //   };
 
-    console.log("Request payload:", updatedData);
+  //   console.log("Request payload:", updatedData);
 
-    try
-    {
-      const response = await axiosInstance.put(`/ads/${adid}`, updatedData);
-      console.log("Ad updated successfully:", response.data);
-    } catch (error)
-    {
-      console.error("Error updating ad:", error);
-    }
-  };
+  //   try
+  //   {
+  //     const response = await axiosInstance.patch(`/ads/${adid}`, updatedData);
+  //     console.log("Ad updated successfully:", response.data);
+  //   } catch (error)
+  //   {
+  //     console.error("Error updating ad:", error);
+  //   }
+  // };
 
   return (
     <div className="container mx-auto py-4">
