@@ -61,8 +61,12 @@ const UserProfile = () => {
           {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
           <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md ">
             <img
-              src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
-              className="absolute top-0 left-0 w-full h-full object-cover  border-2 border-teal-500 rounded"
+              src={
+                ad.media && ad.media[0] && ad.media[0][0]
+                  ? ad.media[0][0]
+                  : "/Images/default.png"
+              }
+              className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
             />
           </div>
           <div className="flex-1 ">
@@ -165,9 +169,12 @@ const UserProfile = () => {
             {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
             <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
               <img
-                src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
-                className="absolute top-0 left-0 w-full h-full object-cover
-                border-2 border-red-400/60 rounded"
+                src={
+                  ad.media && ad.media[0] && ad.media[0][0]
+                    ? ad.media[0][0]
+                    : "/Images/default.png"
+                }
+                className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
               />
             </div>
             <div className="flex-1 ">
