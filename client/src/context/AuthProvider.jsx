@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log("Token:", token);
     if (token) {
       checkUser();
     }
