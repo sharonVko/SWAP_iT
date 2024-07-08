@@ -162,6 +162,20 @@ const EditAd = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const updatedData = {
+      title: formData.title,
+      description: formData.description,
+      tradeOption: formData.tradeOption,
+      categories: formData.categories,
+      subCategory: formData.subCategory,
+      tags: formData.tags,
+      condition: formData.condition,
+      material: formData.material,
+      color: formData.color,
+      diverse: formData.diverse,
+      pickupaddress: formData.pickupaddress,
+    };
+
     const formDataToSend = new FormData();
     formDataToSend.append("user_id", userData._id);
     formDataToSend.append("title", formData.title);
@@ -198,9 +212,9 @@ const EditAd = () => {
     });
 
     try {
-      const response = await axiosInstance.put(`/ads/${adid}`, formDataToSend, {
+      const response = await axiosInstance.patch(`/ads/${adid}`, updatedData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
         withCredentials: true,
       });
@@ -214,25 +228,6 @@ const EditAd = () => {
 
   const toggleAddressSection = () => {
     setExpandAddress(!expandAddress);
-  };
-
-  const handleUpdateAd = async () => {
-    const updatedData = {
-      title: "New Title",
-      description: "Updated description",
-      tags: ["tag1", "tag2", "tag3"],
-      subCategory: "newSubCategory",
-      // include other fields that need to be updated
-    };
-
-    console.log("Request payload:", updatedData);
-
-    try {
-      const response = await axiosInstance.put(`/ads/${adid}`, updatedData);
-      console.log("Ad updated successfully:", response.data);
-    } catch (error) {
-      console.error("Error updating ad:", error);
-    }
   };
 
   return (
