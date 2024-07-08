@@ -6,6 +6,7 @@ import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
 import messagelogo from "../assets/messagelogo.png";
 import leafline from "../assets/leaflineNoBg.png";
+import topswap from "../assets/topswapsfont.png";
 import { truncateDescription } from "../utils/helpers";
 
 const UserProfile = () => {
@@ -28,6 +29,15 @@ const UserProfile = () => {
     fetchArticleData();
   }, []);
 
+  const deleteAd = async (adId) => {
+    try {
+      await axios.delete(`http://localhost:8000/ads/${adId}`);
+      setAds(ads.filter((ad) => ad._id !== adId));
+    } catch (error) {
+      console.error("Error deleting ad:", error);
+    }
+  };
+
   ads.reverse();
 
   const filteredAds = ads.filter((ad, i) => {
@@ -46,12 +56,10 @@ const UserProfile = () => {
 
   return (
     <>
-      <h2 className="h1 mt-6 text-center mb-0 drop-shadow-lg">
-        Das gebe ich ab:{" "}
-      </h2>
-      <div>
+      <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
+      {/* <div>
         <img className="max-w-72 mx-auto opacity-75" src={leafline} />
-      </div>
+      </div> */}
 
       {filteredAds.map((ad, i) => (
         <div
@@ -156,7 +164,12 @@ const UserProfile = () => {
       )}
 
       <div className="sm:px-10 lg:px-20">
-        <h2 className="h1 mt-6 text-center">Top swap matches</h2>
+        {/* <h2 className="h1 mt-6 text-center">Top swap matches</h2> */}
+        <div>
+          {" "}
+          <img className="max-w-72 mx-auto" src={topswap} />{" "}
+        </div>
+
         <HomeSwiper swiperId={2} articles={filteredAds} />
         <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
         {/* <HomeSwiper swiperId={3} articles={filteredAds} /> */}
