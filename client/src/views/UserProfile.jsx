@@ -1,112 +1,193 @@
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Carousel } from "flowbite-react";
-import { Avatar } from "flowbite-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthProvider.jsx";
+import HomeSwiper from "../components/HomeSwiper.jsx";
+import trashbin from "../assets/trashbinlogo.png";
+import pencil from "../assets/pencillogo.png";
 import messagelogo from "../assets/messagelogo.png";
-import taglogo from "../assets/taglogo.png";
-import folderlogo from "../assets/folderlogo.png";
-import locationlogo from "../assets/locationlogo.png";
-import { Button } from "flowbite-react";
-import { categories } from "../utils/categories"; // Make sure to use the correct path to your categories.js file
+import leafline from "../assets/leaflineNoBg.png";
+import { truncateDescription } from "../utils/helpers";
 
-const SingleViewAd = () => {
-  const [article, setArticle] = useState(null);
-  const [username, setUsername] = useState(null); // State to store the username
-  const { articleId } = useParams();
+const UserProfile = () => {
+  const { isLoggedIn, userData } = useAuth();
+
+  const [ads, setAds] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAd, setSelectedAd] = useState(null);
 
   useEffect(() => {
-    const fetchArticleAndUser = async () => {
+    const fetchArticleData = async () => {
       try {
-        // Fetch the article details
-        const articleResponse = await axios.get(
-          `http://localhost:8000/ads/${articleId}`
-        );
-        console.log(articleResponse.data); // Log the article data
-        setArticle(articleResponse.data);
-
-        // Fetch user details based on the user_id from the article data
-        const userResponse = await axios.get(
-          `http://localhost:8000/users/${articleResponse.data.user_id}`
-        );
-        console.log(userResponse.data); // Log the user data
-        setUsername(userResponse.data.username); // Set the username state
+        const response = await axios.get(`http://localhost:8000/ads/`);
+        setAds(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching article data:", error);
       }
     };
+    fetchArticleData();
+  }, []);
 
-    fetchArticleAndUser();
-  }, [articleId]);
+  ads.reverse();
 
-  const getCategoryNameById = (id) => {
-    const category = categories.find((cat) => cat.cat_id === id);
-    return category ? category.name : "Unknown Category";
+  const filteredAds = ads.filter((ad, i) => {
+    if (i < 8) return ad;
+  });
+
+  const handleDelete = (ad) => {
+    setSelectedAd(ad);
+    setShowModal(true);
   };
 
-  let tags;
-
-  if (article) {
-    tags = article.tags.split(",");
-  }
+  const confirmDelete = () => {
+    console.log(`Anzeige mit ID ${selectedAd._id} gelöscht`);
+    setShowModal(false);
+  };
 
   return (
     <>
-      {article && (
-        <div className="mx-auto sm:flex-col max-w-2xl">
-          <div className="mb-8 text-teal-700 text-center">
-            <h1>{article.title}</h1>
-          </div>
-          <div className="mx-auto max-w-2xl h-96">
-            <Carousel slide={false}>
-              {article.media[0].map((image, index) => (
-                <img
-                  className="h-full w-full object-cover"
-                  src={image}
-                  alt="..."
-                  key={index}
-                />
-              ))}
-            </Carousel>
-          </div>
+      <h2 className="h1 mt-6 text-center mb-0 drop-shadow-lg">
+        Das gebe ich ab:{" "}
+      </h2>
+      <div>
+        <img className="max-w-72 mx-auto opacity-75" src={leafline} />
+      </div>
 
-          <div className="w-96 mt-8">
-            <p className="text-teal-700">{article.description}</p>
+      {filteredAds.map((ad, i) => (
+        <div
+          className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
+          key={i}
+        >
+          {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
+          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md ">
+            <img
+              src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
+              className="absolute top-0 left-0 w-full h-full object-cover  border-2 border-teal-500 rounded"
+            />
           </div>
-
-          <div className="flex flex-wrap gap-2 my-6">
-            <img src={folderlogo} className="size-9" title="Kategorie" />
-            <p className="text-teal-700">
-              {getCategoryNameById(parseInt(article.categories))} /{" "}
-              {getCategoryNameById(parseInt(article.subCategory))}
+          <div className="flex-1 ">
+            <p className="mt-0 mb-0 font-bold font-display ">{ad.title}</p>
+            <p className="m-0 text-sm">
+              {ad.description ? truncateDescription(ad.description) : ""}
             </p>
           </div>
-
-          <div className="flex flex-wrap gap-2 my-6">
-            <img src={taglogo} className="size-9" />
-            <p className="text-teal-700">{article.tags}</p>
+          <div className="flex gap-x-7">
+            <button>
+              <img className="h-7 w-6" src={pencil} />
+            </button>{" "}
+            <button onClick={() => handleDelete(ad)}>
+              <img className="h-6 w-5" src={trashbin} />
+            </button>
           </div>
+        </div>
+      ))}
 
-          <div className="flex flex-wrap gap-2 my-6 items-center">
-            <img src={locationlogo} className="size-9" />
-            <p className="text-teal-700">2.5 km entfernt</p>
-          </div>
-
-          <div className="flex flex-wrap gap-2 my-6 items-center">
-            <img src={messagelogo} className="size-9 ml-2" title="Chat" />
-            <p className="text-teal-700">Sende eine Nachricht an {username}</p>
-            <div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-500">
-              <Avatar
-                img="https://randomuser.me/api/portraits/men/42.jpg"
-                size="sm"
-                title={`Profil von ${username}`}
-              />
+      {showModal && (
+        <div
+          id="popup-modal"
+          tabindex="-1"
+          className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-gray-900 bg-opacity-50"
+        >
+          <div className="relative p-4 w-full max-w-md max-h-full">
+            <div className="relative bg-peach-500 rounded-lg shadow dark:bg-gray-700">
+              <button
+                type="button"
+                className="absolute top-3 right-2.5 text-black-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                onClick={() => setShowModal(false)}
+              >
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span className="sr-only">Close modal</span>
+              </button>
+              <div className="p-4 md:p-5 text-center">
+                <svg
+                  className="mx-auto mb-4 text-black-400 w-12 h-12 dark:text-gray-200"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                  />
+                </svg>
+                <h3 className="mb-5 text-lg font-normal text-black-500 dark:text-gray-400">
+                  Möchtest du deine Anzeige{" "}
+                  <strong> {selectedAd?.title}</strong> wirklich unwideruflich
+                  löschen?
+                </h3>
+                <button
+                  onClick={confirmDelete}
+                  className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
+                >
+                  Ja, ich bin sicher
+                </button>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-green-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
+                  Nein, abbrechen
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
+
+      <div className="sm:px-10 lg:px-20">
+        <h2 className="h1 mt-6 text-center">Top swap matches</h2>
+        <HomeSwiper swiperId={2} articles={filteredAds} />
+        <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
+        {/* <HomeSwiper swiperId={3} articles={filteredAds} /> */}
+
+        {filteredAds.map((ad, i) => (
+          <div
+            className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
+            key={i}
+          >
+            {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
+            <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
+              <img
+                src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
+                className="absolute top-0 left-0 w-full h-full object-cover
+                border-2 border-red-400/60 rounded"
+              />
+            </div>
+            <div className="flex-1 ">
+              <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
+              <p className="m-0 text-sm">
+                {ad.description ? truncateDescription(ad.description) : ""}
+              </p>
+            </div>
+            <div className="flex gap-x-7">
+              <button>
+                <img className="h-7 w-6" src={messagelogo} />
+              </button>{" "}
+              <button>
+                <img className="h-6 w-5" src={trashbin} />
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 };
-
-export default SingleViewAd;
+export default UserProfile;

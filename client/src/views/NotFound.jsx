@@ -1,7 +1,8 @@
 import React from "react";
+import desert from "../assets/404desert.jpg";
 
 const NotFound = () => {
-	return <h1>404Page</h1>;
+  return <img src={desert} />;
 };
 
 export default NotFound;
