@@ -4,7 +4,7 @@ import { Label } from "flowbite-react";
 import { ReactTags } from "react-tag-autocomplete";
 import { suggestions } from "../components/Categories.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
-import axiosInstance from "../utils/axios-config.js";
+import axios from 'axios';
 
 const MIN_SELECTED_LENGTH = 3;
 const customClassNames = {
@@ -94,12 +94,12 @@ const UserSettings = () => {
 		console.log('-->', profile);
 
 		try {
-			const response = await axiosInstance.put(`/users/${userData._id}`, profile, {
-				headers: {"Content-Type": "multipart/form-data"},
-				withCredentials: true,
-			});
-
-			console.log(response);
+			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
+				profile,
+				{
+					headers: {"Content-Type": "multipart/form-data"},
+					withCredentials: true,
+				});
 
 			console.log("User updated successfully:", response.data);
 		}
@@ -126,45 +126,45 @@ const UserSettings = () => {
 
 
 	return (
-		<form>
-		<div className="container mx-auto grid grid-cols- md:grid-cols-2 bg-teal-600 bg-opacity-80 rounded-lg">
+		<form onSubmit={handleSave}>
+			<div className="container mx-auto grid grid-cols- md:grid-cols-2 bg-teal-600 bg-opacity-80 rounded-lg">
 
-
-			<div className="max-w-sm mx-auto">
-				<div className="text-4xl pb-12 pt-6 text-peach-300 text-center">
-					Profile Settings
-				</div>
-				<div>
-					<img
-						src={profile.imageUrl}
-						alt="Profilbild"
-						className="rounded-full max-w-sm mx-auto h-29 w-40 border-8 border-peach-500 mb-6"
-					/>
-				</div>
-
-				<input
-					type="file"
-					accept="image/*"
-					onChange={handleImageChange}
-					className="hidden"
-					id="profile-image-upload"
-				/>
-				<label
-					htmlFor="profile-image-upload"
-					className="max-w-sm mx-auto btn-sm btn-red text-lemon-500 py-2 mb-4"
-				>
-					Change your Pic
-				</label>
-
-				<h1 className="h2 text-peach-300 text-center text-3xl font-bold mt-8">
-					{profile.firstname} {profile.lastname}
-				</h1>
 
 				<div className="max-w-sm mx-auto">
-					<button className="bg-green-700 text-white rounded-lg border-peach-300 p-3 w-full mb-9 mt-9">
-						Change your Password
-					</button>
-				</div>
+					<div className="text-4xl pb-12 pt-6 text-peach-300 text-center">
+						Profile Settings
+					</div>
+					<div>
+						<img
+							src={profile.imageUrl}
+							alt="Profilbild"
+							className="rounded-full max-w-sm mx-auto h-29 w-40 border-8 border-peach-500 mb-6"
+						/>
+					</div>
+
+					<input
+						type="file"
+						accept="image/*"
+						onChange={handleImageChange}
+						className="hidden"
+						id="profile-image-upload"
+					/>
+					<label
+						htmlFor="profile-image-upload"
+						className="max-w-sm mx-auto btn-sm btn-red text-lemon-500 py-2 mb-4"
+					>
+						Change your Pic
+					</label>
+
+					<h1 className="h2 text-peach-300 text-center text-3xl font-bold mt-8">
+						{profile.firstname} {profile.lastname}
+					</h1>
+
+					<div className="max-w-sm mx-auto">
+						<button className="bg-green-700 text-white rounded-lg border-peach-300 p-3 w-full mb-9 mt-9">
+							Change your Password
+						</button>
+					</div>
 
 					<div className="mb-2 block">
 						<Label
@@ -212,62 +212,61 @@ const UserSettings = () => {
 						<option className="bg-peach-300 text-black">Garden</option>
 						<option className="bg-peach-300 text-black">Sport</option>
 					</select>
-			</div>
-
-			<div className="md:col-span-1 p-12 flex flex-col">
-				<div>
-					{[
-						"firstname",
-						"lastname",
-						"email",
-						"phone",
-						"street",
-						"number",
-						"zip",
-						"country",
-					].map((field) => (
-						<div key={field} className="mb-6">
-							<div className="text-2xl text-green-200">
-								{field.charAt(0).toUpperCase() + field.slice(1)}
-							</div>
-							<div>
-								{isEditing && editableField === field ? (
-									<input
-										type="text"
-										name={field}
-										value={profile[field]}
-										className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
-										onChange={handleInputChange}
-										onBlur={() => setEditableField(null)}
-										autoFocus
-									/>
-								) : (
-									<div
-										className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
-										onClick={() => {
-											setIsEditing(true);
-											setEditableField(field);
-										}}
-									>
-										{profile[field] || `Edit your ${field}`}
-									</div>
-								)}
-							</div>
-						</div>
-					))}
-
-					{isEditing && (
-						<button
-							className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
-							onClick={handleSave}
-						>
-							Save
-						</button>
-					)}
 				</div>
-			</div>
 
-		</div>
+				<div className="md:col-span-1 p-12 flex flex-col">
+					<div>
+						{[
+							"firstname",
+							"lastname",
+							"email",
+							"phone",
+							"street",
+							"number",
+							"zip",
+							"country",
+						].map((field) => (
+							<div key={field} className="mb-6">
+								<div className="text-2xl text-green-200">
+									{field.charAt(0).toUpperCase() + field.slice(1)}
+								</div>
+								<div>
+									{isEditing && editableField === field ? (
+										<input
+											type="text"
+											name={field}
+											value={profile[field]}
+											className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
+											onChange={handleInputChange}
+											onBlur={() => setEditableField(null)}
+											autoFocus
+										/>
+									) : (
+										<div
+											className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
+											onClick={() => {
+												setIsEditing(true);
+												setEditableField(field);
+											}}
+										>
+											{profile[field] || `Edit your ${field}`}
+										</div>
+									)}
+								</div>
+							</div>
+						))}
+
+						{isEditing && (
+							<button type="submit"
+											className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4"
+							>
+								Save
+							</button>
+						)}
+					</div>
+				</div>
+
+			</div>
 		</form>
 	);
 };
