@@ -8,7 +8,8 @@ import { categories } from "../utils/categories.js";
 import { tags } from "../utils/tags";
 import LoginForm from "../components/LoginForm.jsx";
 
-const EditAd = () => {
+const EditAd = () =>
+{
   const { isLoggedIn, userData } = useAuth();
   const { adid } = useParams();
   const navigate = useNavigate();
@@ -40,9 +41,12 @@ const EditAd = () => {
   const [loading, setLoading] = useState(true);
   const [expandAddress, setExpandAddress] = useState(false);
 
-  useEffect(() => {
-    const fetchAdData = async () => {
-      try {
+  useEffect(() =>
+  {
+    const fetchAdData = async () =>
+    {
+      try
+      {
         const response = await axiosInstance.get(`/ads/${adid}`);
         const adData = response.data;
 
@@ -71,24 +75,29 @@ const EditAd = () => {
         setSelectedImages(adData.media_files || []); // Load existing images
         setSelectedCategory(adData.categories || "");
         setLoading(false);
-      } catch (error) {
+      } catch (error)
+      {
         console.error("Error fetching ad data:", error);
         setLoading(false);
       }
     };
 
-    if (adid) {
+    if (adid)
+    {
       fetchAdData();
     }
   }, [adid]);
 
-  useEffect(() => {
-    if (selectedCategory) {
+  useEffect(() =>
+  {
+    if (selectedCategory)
+    {
       const filteredSubCategories = categories.filter(
         (category) => category.parent === parseInt(selectedCategory)
       );
       setSubCategories(filteredSubCategories);
-    } else {
+    } else
+    {
       setSubCategories([]);
     }
   }, [selectedCategory]);
@@ -98,7 +107,8 @@ const EditAd = () => {
   );
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles) =>
+    {
       const updatedImages = [...selectedImages, ...acceptedFiles];
       setSelectedImages(updatedImages);
       setFormData((prev) => ({
@@ -115,9 +125,14 @@ const EditAd = () => {
     multiple: true,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
+  {
     const { name, value } = e.target;
-    if (name.includes("pickupaddress")) {
+    console.log("Field name:", name);
+    console.log("Field value:", value);
+
+    if (name.includes("pickupaddress"))
+    {
       const [_, addressField] = name.split(".");
       setFormData((prev) => ({
         ...prev,
@@ -126,19 +141,27 @@ const EditAd = () => {
           [addressField]: value,
         },
       }));
-    } else {
-      setFormData({ ...formData, [name]: value });
+    } else
+    {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
+    console.log("Updated formData:", formData);
   };
 
-  const handleSwitchChange = (checked) => {
+
+  const handleSwitchChange = (checked) =>
+  {
     setFormData((prev) => ({
       ...prev,
       tradeOption: checked,
     }));
   };
 
-  const handleTagChange = (name, value) => {
+  const handleTagChange = (name, value) =>
+  {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -149,7 +172,8 @@ const EditAd = () => {
     }));
   };
 
-  const handleDeleteImage = (index) => {
+  const handleDeleteImage = (index) =>
+  {
     const updatedImages = [...selectedImages];
     updatedImages.splice(index, 1);
     setSelectedImages(updatedImages);
@@ -159,75 +183,78 @@ const EditAd = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) =>
+  {
     e.preventDefault();
 
-    const updatedData = {
+
+    const formDataToSend = {
+      user_id: userData._id,
       title: formData.title,
       description: formData.description,
       tradeOption: formData.tradeOption,
       categories: formData.categories,
       subCategory: formData.subCategory,
-      tags: formData.tags,
+      tags: Array.isArray(formData.tags) ? formData.tags.join(",") : "",
+
       condition: formData.condition,
       material: formData.material,
       color: formData.color,
       diverse: formData.diverse,
-      pickupaddress: formData.pickupaddress,
+
+      pickupaddress: {
+        street: formData.pickupaddress.street,
+        housenumber: formData.pickupaddress.housenumber,
+        zip: formData.pickupaddress.zip,
+        city: formData.pickupaddress.city,
+        country: formData.pickupaddress.country,
+      },
+      media_files: selectedImages,
     };
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("user_id", userData._id);
-    formDataToSend.append("title", formData.title);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append("tradeOption", formData.tradeOption);
-    formDataToSend.append("categories", formData.categories);
-    formDataToSend.append("subCategory", formData.subCategory);
-    formDataToSend.append(
-      "tags",
-      Array.isArray(formData.tags) ? formData.tags.join(",") : ""
-    );
+    try
+    {
+      const response = await axiosInstance.patch(`http://localhost:9000/ads/${adid}`, formDataToSend, {
 
-    formDataToSend.append("condition", formData.condition);
-    formDataToSend.append("material", formData.material);
-    formDataToSend.append("color", formData.color);
-    formDataToSend.append("diverse", formData.diverse);
-    formDataToSend.append(
-      "pickupaddress[street]",
-      formData.pickupaddress.street
-    );
-    formDataToSend.append(
-      "pickupaddress[housenumber]",
-      formData.pickupaddress.housenumber
-    );
-    formDataToSend.append("pickupaddress[zip]", formData.pickupaddress.zip);
-    formDataToSend.append("pickupaddress[city]", formData.pickupaddress.city);
-    formDataToSend.append(
-      "pickupaddress[country]",
-      formData.pickupaddress.country
-    );
-
-    formData.media_files.forEach((file) => {
-      formDataToSend.append("media_files", file);
-    });
-
-    try {
-      const response = await axiosInstance.patch(`/ads/${adid}`, updatedData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
         withCredentials: true,
       });
 
       console.log("Ad updated successfully:", response.data);
       navigate(`/ads/${adid}`); // Redirect to the ad detail page
-    } catch (error) {
+    } catch (error)
+    {
       console.error("Error updating ad:", error);
     }
   };
 
-  const toggleAddressSection = () => {
+
+
+  const toggleAddressSection = () =>
+  {
     setExpandAddress(!expandAddress);
+  };
+
+
+  const handleUpdateAd = async () =>
+  {
+    const updatedData = {
+      title: "New Title",
+      description: "Updated description",
+      tags: ["tag1", "tag2", "tag3"],
+      subCategory: "newSubCategory",
+      // include other fields that need to be updated
+    };
+
+    console.log("Request payload:", updatedData);
+
+    try
+    {
+      const response = await axiosInstance.patch(`/ads/${adid}`, updatedData);
+      console.log("Ad updated successfully:", response.data);
+    } catch (error)
+    {
+      console.error("Error updating ad:", error);
+    }
   };
 
   return (
@@ -383,7 +410,8 @@ const EditAd = () => {
                   <select
                     name="categories"
                     value={selectedCategory}
-                    onChange={(e) => {
+                    onChange={(e) =>
+                    {
                       setSelectedCategory(e.target.value);
                       setFormData({ ...formData, categories: e.target.value });
                     }}
@@ -419,7 +447,7 @@ const EditAd = () => {
                   </select>
                 </div>
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Zustand:</label>
                   <select
                     name="condition"
@@ -436,9 +464,9 @@ const EditAd = () => {
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Material:</label>
                   <select
                     name="material"
@@ -455,9 +483,9 @@ const EditAd = () => {
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Farbe:</label>
                   <select
                     name="color"
@@ -474,9 +502,9 @@ const EditAd = () => {
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Diverse:</label>
                   <select
                     name="diverse"
@@ -493,7 +521,7 @@ const EditAd = () => {
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block mb-1">Beschreibung:</label>

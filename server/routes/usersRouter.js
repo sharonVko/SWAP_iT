@@ -8,11 +8,7 @@ const usersRouter = Router();
 usersRouter.post("/register", userController.register); // register
 usersRouter.post("/login", userController.login); // login
 usersRouter.post("/logout", verifyToken, userController.logout); // logout
-usersRouter.post(
-  "/change-password",
-  verifyToken,
-  userController.changePassword
-); // change password
+usersRouter.post("/change-password", verifyToken, userController.changePassword); // change password
 
 usersRouter.get("/me", verifyToken, userController.getUser); // get your profile
 usersRouter.get("/", userController.getAllUsers); // get all users

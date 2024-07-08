@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
@@ -197,4 +198,5 @@ const UserProfile = () => {
     </>
   );
 };
+
 export default UserProfile;

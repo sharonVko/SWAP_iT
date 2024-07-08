@@ -10,6 +10,7 @@ import locationlogo from "../assets/locationlogo.png";
 import { Button } from "flowbite-react";
 import { categories } from "../utils/categories"; // Make sure to use the correct path to your categories.js file
 
+
 const SingleViewAd = () => {
   const [article, setArticle] = useState(null);
   const [username, setUsername] = useState(null); // State to store the username
@@ -38,6 +39,7 @@ const SingleViewAd = () => {
 
     fetchArticleAndUser();
   }, [articleId]);
+
 
   const getCategoryNameById = (id) => {
     const category = categories.find((cat) => cat.cat_id === id);
@@ -70,6 +72,7 @@ const SingleViewAd = () => {
             </Carousel>
           </div>
 
+
           <div className="w-96 mt-8 mx-auto">
             <p className="text-teal-700 text-lg leading-relaxed">
               {article.description}
@@ -99,6 +102,7 @@ const SingleViewAd = () => {
                 </span>
               ))}
           </div>
+
 
           <div className="flex flex-wrap gap-2 my-6 items-center">
             <img src={locationlogo} className="size-9" />
@@ -130,6 +134,7 @@ const SingleViewAd = () => {
       )}
     </>
   );
+
 };
 
 export default SingleViewAd;
