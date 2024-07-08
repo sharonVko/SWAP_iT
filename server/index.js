@@ -15,7 +15,7 @@ import { Server } from "socket.io";
 import authMiddleware from "./middleware/authSocket.js";
 
 const app = express();
-const PORT = 9000;
+const PORT = 	8000;
 
 const server = http.createServer(app); // Creating an HTTP server using the Express application.
 

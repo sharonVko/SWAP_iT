@@ -28,15 +28,23 @@
       transition: opacity 150ms ease-in, visibility 0ms ease-in 0ms;
     }
   }
+
   .drawer {
-    @apply absolute top-0 left-0 w-screen sm:w-80 h-full bg-white p-6 pt-28 sm:pt-36 lg:pt-40 z-200;
+    @apply absolute top-0 left-0 w-screen sm:w-80 h-full z-200 flex flex-col;
     @apply -translate-x-full;
-    @apply bg-gradient-to-b from-peach-500 to-lemon-500;
     transition: transform 150ms ease-in-out;
     &.show {
       @apply translate-x-0;
       transition: transform 150ms ease-in-out;
     }
+  }
+
+  .drawer-inner-top {
+    @apply h-16 sm:h-24 md:h-32;
+  }
+
+  .drawer-inner {
+    @apply bg-gradient-to-b from-peach-500 to-lemon-500 p-6 flex-1;
   }
 
   /*** forms ***/
