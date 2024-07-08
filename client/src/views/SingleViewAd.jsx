@@ -11,21 +11,32 @@ import locationlogo from "../assets/locationlogo.png";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { Button } from "flowbite-react";
 
-const SingleViewAd = () => {
+const SingleViewAd = () =>
+{
 	const { isLoggedIn, userData } = useAuth();
 	const [article, setArticle] = useState(null);
 	const { articleId } = useParams();
 
-	useEffect(() => {
+	// useEffect(() =>
+	// {
+	// 	axios
+	// 		.get(`http://localhost:8000/ads/${articleId}`)
+
+	// 		.then((res) => setArticle(res.data))
+	// 		.catch((err) => console.error(err));
+	// }, [articleId]);
+
+	useEffect(() =>
+	{
 		axios
 			.get(`http://localhost:8000/ads/${articleId}`)
 			.then((res) => setArticle(res.data))
 			.catch((err) => console.error(err));
 	}, [articleId]);
-
 	let tags;
 
-	if (article) {
+	if (article)
+	{
 		tags = article.tags.split(",");
 	}
 
@@ -33,10 +44,9 @@ const SingleViewAd = () => {
 		<>
 			{article && (
 				<div className="mx-auto sm:flex-col max-w-2xl">
-					<div className="mb-8  text-teal-700 text-center">
+					<div className="mb-8 text-teal-700 text-center">
 						<h1>{article.title}</h1>
 					</div>
-					{/* <div className="mx-auto w-64 h-64 xl:h-80 xl:w-80  2xl:h-96 2xl:w-96"> */}
 					<div className="mx-auto max-w-2xl h-96">
 						<Carousel slide={false}>
 							{article.media[0].map((image, index) => (
@@ -61,12 +71,14 @@ const SingleViewAd = () => {
 						</p>
 					</div>
 
-					<div className="flex flex-wrap gap-2 my-6">
+					{/* <div className="flex flex-wrap gap-2 my-6">
 						<img src={taglogo} className="size-9" />
-						<p className="text-teal-700">{article.tags}</p>
-					</div>
+						<p className="text-teal-700">
+							{tags.join(", ")}
+						</p>
+					</div> */}
 
-					{/* // nur für eingeloggte User sichtbar */}
+
 					{isLoggedIn && (
 						<div className="flex flex-wrap gap-2 my-6">
 							<img src={locationlogo} className="size-9" />
@@ -87,7 +99,8 @@ const SingleViewAd = () => {
 								Nachricht
 							</Button>
 
-							<p className="text-teal-700"> an Username</p>
+							{/* not working  */}
+							{/* <p className="text-teal-700">{article.user_id.username}</p>
 
 							<div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-500">
 								<Avatar
@@ -95,7 +108,7 @@ const SingleViewAd = () => {
 									size="sm"
 									title="Profil von Username"
 								/>
-							</div>
+							</div> */}
 						</div>
 					)}
 				</div>
@@ -103,4 +116,5 @@ const SingleViewAd = () => {
 		</>
 	);
 };
+
 export default SingleViewAd;
