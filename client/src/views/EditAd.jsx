@@ -442,7 +442,7 @@ const EditAd = () =>
                   </select>
                 </div>
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Zustand:</label>
                   <select
                     name="condition"
@@ -459,9 +459,9 @@ const EditAd = () =>
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Material:</label>
                   <select
                     name="material"
@@ -478,9 +478,9 @@ const EditAd = () =>
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Farbe:</label>
                   <select
                     name="color"
@@ -497,9 +497,9 @@ const EditAd = () =>
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
-                <div>
+                {/* <div>
                   <label className="block mb-1">Diverse:</label>
                   <select
                     name="diverse"
@@ -516,7 +516,7 @@ const EditAd = () =>
                         </option>
                       ))}
                   </select>
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block mb-1">Beschreibung:</label>
