@@ -49,13 +49,13 @@ const SingleChat = () => {
 
     fetchMessages();
 
-    socket.current.emit('joinConversation', chatId);
+    socket.current.emit('joinConversation', { chatId, adId });
 
     return () => {
       socket.current.off('newMessage');
-      socket.current.emit('leaveConversation', chatId);
+      socket.current.emit('leaveConversation', { chatId, adId });
     };
-  }, [chatId]);
+  }, [chatId, adId]);
 
   const handleSendMessage = async () => {
     try {

@@ -9,7 +9,7 @@ export const createChat = asyncHandler(async (req, res, next) => {
   const { participants, messages, ad_id } = req.body;
   const { uid } = req;
 
-  console.log(req.body);
+  console.log('Request Body:', req.body);
 
   // Validate that participants is an array and has exactly two members
   if (!Array.isArray(participants) || participants.length !== 2) {
@@ -29,11 +29,14 @@ export const createChat = asyncHandler(async (req, res, next) => {
 
   // Check if all participants are registered users
   const users = await User.find({ _id: { $in: participants } });
+  console.log('Participants:', participants);
+  console.log('Found Users:', users);
+
   if (users.length !== participants.length) {
     throw new ErrorResponse('All participants must be registered users', 400);
   }
 
-  //Check if the provided ad_id exists and belongs to one of the participants
+  // Check if the provided ad_id exists and belongs to one of the participants
   const adExists = await Ads.exists({
     _id: ad_id,
     user_id: { $in: participants },
@@ -54,7 +57,6 @@ export const createChat = asyncHandler(async (req, res, next) => {
 
   // If chat exists, update it with the new messages
   if (chat) {
-
     const newMessages = messages.map((msg) => ({
       chat: chat._id,
       sender_id: uid,
@@ -67,8 +69,7 @@ export const createChat = asyncHandler(async (req, res, next) => {
     chat.updatedAt = Date.now();
     await chat.save();
     res.status(200).json(chat);
-  }
-	else {
+  } else {
     // If chat does not exist, create a new chat and save the messages
     const newChat = await Chat.create({ participants, ad_id });
     const newMessages = messages.map((msg) => ({
@@ -86,7 +87,10 @@ export const createChat = asyncHandler(async (req, res, next) => {
 
 // get a chat
 export const getChatbyId = asyncHandler(async (req, res, next) => {
-  const { params: { id }, uid } = req;
+  const {
+    params: { id },
+    uid,
+  } = req;
 
   const chat = await Chat.findById(id)
     .populate('participants', 'username') // Populate username field for participants
@@ -99,8 +103,11 @@ export const getChatbyId = asyncHandler(async (req, res, next) => {
   );
 
   if (!isParticipant) {
-		throw new ErrorResponse('You do not have permission to view this chat', 403);
-	}
+    throw new ErrorResponse(
+      'You do not have permission to view this chat',
+      403
+    );
+  }
   res.status(200).json(chat);
 });
 
@@ -114,8 +121,7 @@ export const getAllChatsForUser = asyncHandler(async (req, res, next) => {
     .populate('participants', 'username') // Populate username field for participants
     .populate('messages');
 
-
-	console.log(chats);
+  console.log(chats);
 
   res.status(200).json(chats);
 });
@@ -129,22 +135,21 @@ export const getAllChatsForUser = asyncHandler(async (req, res, next) => {
 // before deleting chat we can ask for confirmation - nice to have or later
 
 export const deleteChat = asyncHandler(async (req, res, next) => {
-  const { params: { id }, uid } = req;
-	console.log('chatId: ', id);
-	console.log('userId: ', uid);
-	try {
-		await Chat.findByIdAndDelete(id);
-		res.json({ message: 'Chat was deleted' });
-		console.log('chat was deleted');
-	}
-	catch (error) {
-		next(error);
-	}
+  const {
+    params: { id },
+    uid,
+  } = req;
+  console.log('chatId: ', id);
+  console.log('userId: ', uid);
+  try {
+    await Chat.findByIdAndDelete(id);
+    res.json({ message: 'Chat was deleted' });
+    console.log('chat was deleted');
+  } catch (error) {
+    next(error);
+  }
 
-
-
-
-	/*
+  /*
 
   const found = await Chat.findById(id);
   if (!found) throw new ErrorResponse(`Chat ${id} does not exist`, 404);
@@ -164,7 +169,6 @@ export const deleteChat = asyncHandler(async (req, res, next) => {
   res.json({ success: `Chat ${id} was deleted for user ${uid}` });
 
 	*/
-
 });
 
 // to delete multiple chats
