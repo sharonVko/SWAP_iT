@@ -53,7 +53,7 @@ function HomeSwiper({swiperId, articles}) {
 				<swiper-container init="false" ref={swiperRef}>
 					{articles.map((article, i) => (
 						<swiper-slide key={i}>
-							<div className="pt-6 px-2 pb-4">
+							<div className="pt-6 px-2 pb-4 relative">
 								<ArticleCard_02 article={article}/>
 							</div>
 						</swiper-slide>

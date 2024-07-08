@@ -3,10 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const AuthContext = createContext();
-
 export const useAuth = () => useContext(AuthContext);
-
 export const AuthProvider = ({ children }) => {
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
 
@@ -32,7 +31,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    console.log("Token:", token);
     if (token) {
       checkUser();
     }

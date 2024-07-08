@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import ArticleList from "../components/ArticleList.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 
 const Home = () => {
@@ -25,11 +24,19 @@ const Home = () => {
 	});
 
 	return (
-		<div>
-			<h2 className="h1 mt-6 text-center">Favoriten</h2>
+		<div className="pb-12">
+
+			<h1 className="text-center">Deine Tauschangebote</h1>
 			<HomeSwiper swiperId={1} articles={filteredAds} />
-			<h2 className="h1 mt-6 text-center">Neues aus der Umgebung</h2>
+
+			<h2 className="h1 mt-8 text-center">Das könnte dir gefallen</h2>
 			<HomeSwiper swiperId={2} articles={filteredAds}/>
+			<button className="block btn-teal btn-md mx-auto mt-4">Mehr Angebote</button>
+
+			<h2 className="h1 mt-8 text-center">Neue Angebote aus der Umgebung</h2>
+			<HomeSwiper swiperId={2} articles={filteredAds}/>
+			<button className="block btn-teal btn-md mx-auto mt-4">Mehr Angebote</button>
+
 		</div>
 	);
 };

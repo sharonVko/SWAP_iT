@@ -59,6 +59,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser()); // Add cookie-parser middleware
 
 // ROUTES
