@@ -61,7 +61,11 @@ const UserProfile = () => {
           {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
           <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md ">
             <img
-              src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
+              src={
+                ad.media && ad.media[0] && ad.media[0][0]
+                  ? ad.media[0][0]
+                  : "/Images/default.png"
+              }
               className="absolute top-0 left-0 w-full h-full object-cover  border-2 border-teal-500 rounded"
             />
           </div>
@@ -165,7 +169,11 @@ const UserProfile = () => {
             {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
             <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
               <img
-                src={ad.media[0][0] ? ad.media[0][0] : "/Images/default.png"}
+                src={
+                  ad.media && ad.media[0] && ad.media[0][0]
+                    ? ad.media[0][0]
+                    : "/Images/default.png"
+                }
                 className="absolute top-0 left-0 w-full h-full object-cover
                 border-2 border-red-400/60 rounded"
               />
@@ -180,7 +188,7 @@ const UserProfile = () => {
               <button>
                 <img className="h-7 w-6" src={messagelogo} />
               </button>{" "}
-              <button>
+              <button onClick={() => handleDelete(ad)}>
                 <img className="h-6 w-5" src={trashbin} />
               </button>
             </div>
