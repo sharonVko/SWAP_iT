@@ -20,13 +20,16 @@ function HomeSwiper({swiperId, articles}) {
 			spaceBetween: 0,
 			breakpoints: {
 				768: {
-					slidesPerView: 2
+					slidesPerView: 2,
+					slidesPerGroup: 2
 				},
 				960: {
-					slidesPerView: 3
+					slidesPerView: 3,
+					slidesPerGroup: 3
 				},
 				1280: {
-					slidesPerView: 4
+					slidesPerView: 4,
+					slidesPerGroup: 4
 				},
 			},
 			navigation: {
@@ -37,7 +40,7 @@ function HomeSwiper({swiperId, articles}) {
 				el: swiperPaginationRef.current,
 				type: 'bullets',
 				clickable: true
-			}
+			},
 		};
 
 		// Assign it to swiper element

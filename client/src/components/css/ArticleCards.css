@@ -96,11 +96,8 @@
 
 .custom-card .custom-content a {
   position: relative;
-
   display: inline-block;
-
   text-decoration: none;
-
   color: #fff;
   font-weight: 500;
   transition: opacity 0.3s; /* Add transition for hover effect */
@@ -175,12 +172,6 @@
 }
 
 
-
-
-
-
-
-
 /******************************************/
 
 .ReactCollapse--collapse {
@@ -200,15 +191,13 @@
   }
 }
 
-
 .card-content {
   @apply text-center;
-  &.close {
-    /*
-    @apply translate-y-0 transition-all duration-200 ease-out;*/
+  &.close h2 {
+    @apply text-nowrap;
   }
-  &.open {
-    /*@apply -translate-y-10 transition-all duration-200 ease-in;*/
+  &.open h2 {
+    @apply text-wrap;
   }
 }
 

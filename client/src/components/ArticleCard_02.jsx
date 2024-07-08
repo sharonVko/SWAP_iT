@@ -119,7 +119,7 @@ const ArticleCard_02 = ({ article }) => {
 
 					</div>
 				</div>
-				<div className={`card-content ${active ? "open" : "close"}`}>
+				<div className={`card-content overflow-hidden ${active ? "open" : "close"}`}>
 					<h2 className="font-medium mt-4">{article.title}</h2>
 					<Collapse isOpened={active}>
 						<div className="mb-4 px-4">{truncatedDescription}</div>

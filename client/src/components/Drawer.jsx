@@ -11,11 +11,26 @@ export const Drawer = (props) => {
 			<div className={`drawer ${open ? 'show' : ''}`} tabIndex="-1">
 				<div className="drawer-inner-top"></div>
 				<div className="drawer-inner">
+
 					<div className="flex justify-end">
 						<button onClick={onClose} className="text-teal text-3xl">
 							<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m11 5l-7 7l7 7m-7-7h16"/></svg>
 						</button>
 					</div>
+
+					<div>Home</div>
+					<div>Alle Anzeigen</div>
+					<div>Angebote in der Nähe</div>
+					<div>Konto einrichten</div>
+					-----
+					<div>Nachrichten</div>
+					<div>Tauschangebote</div>
+					<div>Meine Favoriten</div>
+					-----
+					<div>Meine Anzeigen</div>
+					<div>Anzeige erstellen</div>
+
+
 				</div>
 			</div>
 

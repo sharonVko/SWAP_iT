@@ -19,7 +19,7 @@ const Home = () => {
 	ads.reverse();
 
 	const filteredAds = ads.filter((ad, i) => {
-		if (i < 8) return ad;
+		if (i < 20) return ad;
 	});
 
 	return (
@@ -32,8 +32,8 @@ const Home = () => {
 			<HomeSwiper swiperId={2} articles={filteredAds}/>
 			<button className="block btn-teal btn-md mx-auto mt-4">Mehr Angebote</button>
 
-			<h2 className="h1 mt-8 text-center">Neue Angebote aus der Umgebung</h2>
-			<HomeSwiper swiperId={2} articles={filteredAds}/>
+			<h2 className="h1 mt-8 text-center">Neue Angebote</h2>
+			<HomeSwiper swiperId={3} articles={filteredAds}/>
 			<button className="block btn-teal btn-md mx-auto mt-4">Mehr Angebote</button>
 
 		</div>
