@@ -1,23 +1,29 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import HomeSwiper from "../components/HomeSwiper.jsx";
+import SwapSchema from "../components/SwapSchema.jsx";
+import ArticleCard from "../components/ArticleCard.jsx";
 
 const Home = () => {
+  const [ads, setAds] = useState([]);
+  useEffect(() => {
+    const fetchArticleData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/ads/`);
+        setAds(response.data);
+      } catch (error) {
+        console.error("Error fetching article data:", error);
+      }
+    };
+    fetchArticleData();
+  }, []);
 
-	const [ads, setAds] = useState([]);
-	useEffect(() => {
-		const fetchArticleData = async () => {
-			try {
-				const response = await axios.get(`http://localhost:8000/ads/`);
-				setAds(response.data);
-			} catch (error) {
-				console.error("Error fetching article data:", error);
-			}
-		};
-		fetchArticleData();
-	}, []);
+  ads.reverse();
 
-	ads.reverse();
+  const filteredAds = ads.filter((ad, i) => {
+    if (i < 8) return ad;
+  });
+
 
 	const filteredAds = ads.filter((ad, i) => {
 		if (i < 8) return ad;
@@ -39,6 +45,7 @@ const Home = () => {
 
 		</div>
 	);
+
 };
 
 export default Home;

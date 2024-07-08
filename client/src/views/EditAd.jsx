@@ -187,6 +187,7 @@ const EditAd = () =>
   {
     e.preventDefault();
 
+
     const formDataToSend = {
       user_id: userData._id,
       title: formData.title,
@@ -195,10 +196,12 @@ const EditAd = () =>
       categories: formData.categories,
       subCategory: formData.subCategory,
       tags: Array.isArray(formData.tags) ? formData.tags.join(",") : "",
+
       condition: formData.condition,
       material: formData.material,
       color: formData.color,
       diverse: formData.diverse,
+
       pickupaddress: {
         street: formData.pickupaddress.street,
         housenumber: formData.pickupaddress.housenumber,
@@ -212,6 +215,7 @@ const EditAd = () =>
     try
     {
       const response = await axiosInstance.patch(`http://localhost:9000/ads/${adid}`, formDataToSend, {
+
         withCredentials: true,
       });
 
@@ -229,6 +233,7 @@ const EditAd = () =>
   {
     setExpandAddress(!expandAddress);
   };
+
 
   const handleUpdateAd = async () =>
   {
