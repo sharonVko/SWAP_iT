@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 
 const Home = () => {
-
 	const [ads, setAds] = useState([]);
 	useEffect(() => {
 		const fetchArticleData = async () => {
