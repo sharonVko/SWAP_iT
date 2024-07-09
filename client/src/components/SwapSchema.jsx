@@ -3,7 +3,6 @@ import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
 
 function SwapSchema({ setInterestAds, setSwapAds }) {
-
   const { userData } = useAuth(); // Accessing user data from AuthProvider
   const [users, setUsers] = useState([]);
   const [ads, setAds] = useState([]);
@@ -40,7 +39,7 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
       };
 
       const getMatchingAds = (user) => {
-        const ownAds = ads.filter((ad) => ad.user_id === user._id);
+        const ownAdIds = user.ads.map((ad) => ad.toString()); // Convert ObjectIds to strings
         const swap_ads = [];
         const interestAds = [];
 
@@ -50,8 +49,15 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
           !user.preferredSubcats ||
           !user.preferredtags
         ) {
+          console.log("Invalid user or missing preferences:", user);
           return { swap_ads, interestAds };
         }
+
+        console.log("User preferences:", {
+          preferredcats: user.preferredcats,
+          preferredSubcats: user.preferredSubcats,
+          preferredtags: user.preferredtags,
+        });
 
         const preferredCatsArray = user.preferredcats
           .split(",")
@@ -63,8 +69,18 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
           .split(",")
           .map((tag) => tag.trim());
 
+        console.log("Preferred categories:", preferredCatsArray);
+        console.log("Preferred subcategories:", preferredSubcatsArray);
+        console.log("Preferred tags:", preferredTagsArray);
+
         ads.forEach((ad) => {
-          const adOwner = getUserById(ad.user_id);
+          console.log("Checking ad:", ad);
+
+          // Skip user's own ads
+          if (ownAdIds.includes(ad._id.toString())) {
+            console.log(`Skipping own ad: ${ad._id}`);
+            return;
+          }
 
           const adCategories = Array.isArray(ad.categories)
             ? ad.categories
@@ -98,8 +114,9 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
             (match_type === "Gold" && commonTags.length === 2) ||
             (match_type === "Silver" && commonTags.length === 1)
           ) {
+            console.log(`Adding to swap_ads: ${ad._id}`);
             let swapWithAdId = null;
-            const ownAd = ownAds.find((ownAd) => ownAd._id !== ad._id);
+            const ownAd = user.ads.find((ownAd) => ownAd._id !== ad._id); // Corrected here
             if (ownAd) {
               swapWithAdId = ownAd._id;
             }
@@ -112,11 +129,11 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
 
           // Add to interestAds if it meets the conditions
           if (
-            ad.user_id !== user._id && // Exclude user's own ads
             !swap_ads.some((swapAd) => swapAd._id === ad._id) &&
             (commonCategories.length > 0 ||
               preferredSubcatsArray.includes(ad.subCategory.toString()))
           ) {
+            console.log(`Adding to interestAds: ${ad._id}`);
             interestAds.push({
               ...ad,
               match_type: "", // No match type for interestAds
@@ -132,6 +149,9 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
         // Sort interestAds by score
         interestAds.sort((a, b) => b.score - a.score);
 
+        console.log("Final swap_ads:", swap_ads);
+        console.log("Final interestAds:", interestAds);
+
         return {
           swap_ads,
           interestAds,
@@ -140,13 +160,12 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
 
       const currentUser = users.find((user) => user._id === userData._id);
       if (currentUser) {
-
         const { swap_ads, interestAds } = getMatchingAds(currentUser);
 
         console.log("Fetched swap_ads:", swap_ads);
         console.log("Fetched interestAds:", interestAds);
         setInterestAds(interestAds);
-				setSwapAds(swap_ads);
+        setSwapAds(swap_ads);
       }
     }
   }, [users, ads, userData, setInterestAds, setSwapAds]);
