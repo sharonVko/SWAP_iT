@@ -9,11 +9,18 @@ import folderlogo from "../assets/folderlogo.png";
 import locationlogo from "../assets/locationlogo.png";
 import { Button } from "flowbite-react";
 import { categories } from "../utils/categories"; // Make sure to use the correct path to your categories.js file
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const SingleViewAd = () => {
   const [article, setArticle] = useState(null);
   const [username, setUsername] = useState(null); // State to store the username
+	const [chatData, setChatData] = useState([]);
+	const [error, setError] = useState('');
+
+	const { isLoggedIn, userData } = useAuth();
   const { articleId } = useParams();
+	const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArticleAndUser = async () => {
@@ -39,6 +46,31 @@ const SingleViewAd = () => {
     fetchArticleAndUser();
   }, [articleId]);
 
+
+	// Start New Chat
+	const handleNewChat = async () => {
+		const sender_user_id = userData._id; // Loggedin User
+		const receiver_user_id = article.user_id; // Ad Creator
+
+		try {
+			const response = await axios.post(
+				'http://localhost:8000/chats/',
+				{
+					participants: [sender_user_id, receiver_user_id],
+					messages: [],
+					ad_id: article._id,
+				},
+				{ withCredentials: true }
+			);
+			setChatData((prevChatData) => [...prevChatData, response.data]);
+			navigate(
+				`/singlechat/${response.data._id}/${article._id}/${receiver_user_id}`
+			);
+		} catch (error) {
+			console.error('Error starting new chat:', error);
+			setError('Error starting new chat');
+		}
+	};
 
   const getCategoryNameById = (id) => {
     const category = categories.find((cat) => cat.cat_id === id);
@@ -108,16 +140,20 @@ const SingleViewAd = () => {
             <p className="text-teal-700 text-lg">2.5 km entfernt</p>
           </div>
 
+					{isLoggedIn && (
           <div
             className="flex flex-wrap gap-4 my-6  p-4 rounded-lg"
             gradientDuoTone="greenToBlue"
           >
+
             <Button
               gradientDuoTone="greenToBlue"
               className="border-2 border-teal-500 text-teal-700"
+							onClick={handleNewChat}
             >
               Nachricht
             </Button>
+
             <p className="text-teal-700 text-lg">
               an <span className="font-bold underline">{username}</span>
             </p>
@@ -128,7 +164,10 @@ const SingleViewAd = () => {
                 title={`Profil von ${username}`}
               />
             </div>
+
           </div>
+					)}
+
         </div>
       )}
     </>

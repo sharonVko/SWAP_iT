@@ -51,7 +51,8 @@ const Chats = () => {
   }
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex'>
+
       <div className='w-1/3 bg-gray-100 p-4 overflow-y-auto'>
         <h1 className='text-2xl font-bold mb-4'>Chats</h1>
         <ul>

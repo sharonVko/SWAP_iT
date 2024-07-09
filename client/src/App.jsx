@@ -69,7 +69,8 @@ function App() {
             <Route path="/ads/:articleId" element={<SingleViewAd />} />
 
 						<Route path="/chats" element={<Chats />} />
-						<Route path="/singlechat" element={<SingleChat />} />
+						<Route path="/singlechat/:chatId/:adId/:receiverId" element={<SingleChat />} />
+
 						<Route path="*" element={<NotFound />} />
 
 					</Routes>
