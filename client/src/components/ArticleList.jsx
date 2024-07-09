@@ -271,7 +271,6 @@ const ArticleList = () => {
           {currentArticles.map((ad, index) => (
             <>
               <ArticleCard_02 key={index} article={ad} media={media} />
-              <ArticleCard_02 key={index} article={ad} media={media} />
             </>
           ))}
         </div>
