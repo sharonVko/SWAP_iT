@@ -42,7 +42,7 @@ function App() {
       <header>
         <Navbar onToggleNav={handleToggle} onClose={handleClose} />
       </header>
-      <main className="px-4 py-8 flex-1">
+      <main className="px-4 py-8 flex-1 relative">
         <div className="container mx-auto">
           <Routes>
             <Route path="/" element={<Home />} />

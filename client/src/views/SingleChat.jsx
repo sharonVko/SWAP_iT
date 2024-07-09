@@ -9,6 +9,7 @@ const SingleChat = () => {
   const { chatId, adId, receiverId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+	const [receiver, setReceiver] = useState('');
   const { isLoggedIn, userData } = useAuth();
   const socket = useRef(null);
 
@@ -23,11 +24,9 @@ const SingleChat = () => {
           ),
         },
       });
-
       socket.current.on('connect', () => {
         // console.log('user connected');
       });
-
       socket.current.on('newMessage', (message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
       });
@@ -48,14 +47,31 @@ const SingleChat = () => {
     };
 
     fetchMessages();
-
     socket.current.emit('joinConversation', { chatId, adId });
 
     return () => {
       socket.current.off('newMessage');
       socket.current.emit('leaveConversation', { chatId, adId });
     };
-  }, [chatId, adId]);
+
+  }, [chatId, adId, receiverId]);
+
+	useEffect(() => {
+		const fetchReceiver = async () => {
+			try {
+				const response = await axios.get(
+					`http://localhost:8000/users/${receiverId}`, {
+						withCredentials: true,
+					}
+				);
+				setReceiver(response.data.username);
+			} catch (error) {
+				console.error('Error fetching messages:', error);
+			}
+		};
+
+		fetchReceiver().then();
+	}, [receiverId]);
 
   const handleSendMessage = async () => {
     try {
@@ -68,14 +84,13 @@ const SingleChat = () => {
       const response = await axios.post(
         'http://localhost:8000/message/',
         newMessageData,
-        {
-          withCredentials: true,
-        }
+				{ withCredentials: true }
       );
       setNewMessage('');
       setMessages((prevMessages) => [...prevMessages, response.data]); // Update local state immediately
       socket.current.emit('sendMessage', response.data); // Emit the message to the server
-    } catch (error) {
+    }
+		catch (error) {
       console.error('Error sending message:', error);
     }
   };
@@ -94,44 +109,42 @@ const SingleChat = () => {
   };
 
   return (
-    <div>
+		<>
       {!isLoggedIn ? (
         <p>Login ...</p>
       ) : (
-        <>
-          <h2>Messages</h2>
-          <ul>
-            {messages.map((msg, index) => (
-              <li key={`${msg._id}-${index}`}>
-                <strong>{msg.sender_id.username || 'Unknown User'}:</strong>{' '}
-                {msg.message}
-                <button
-                  onClick={() => handleDeleteMessage(msg._id)}
-                  className='m-4 bg-blue-500 p-2'
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-          <div>
-            <input
-              type='text'
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder='Type a message'
-            />
-            <button
-              onClick={handleSendMessage}
-              className='m-4 bg-green-500 p-2'
-            >
-              Send
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
+				<>
+					<h1 className="text-center mb-6">Neue Nachricht an {receiver}</h1>
+					<div className="bg-white/30 rounded-lg p-4 md:p-8 max-w-[960px] mx-auto flex flex-col">
+						<ul className="flex-1">
+							{messages.map((msg, index) => (
+								<li key={`${msg._id}-${index}`}>
+									<strong>{msg.sender_id.username || 'Unknown User'}:</strong>{' '}
+									{msg.message}
+									<button
+										onClick={() => handleDeleteMessage(msg._id)}
+										className='m-4 bg-blue-500 p-2'
+									>
+										Delete
+									</button>
+								</li>
+							))}
+						</ul>
+						<div className="flex gap-4">
+							<input
+								type='text'
+								value={newMessage}
+								onChange={(e) => setNewMessage(e.target.value)}
+								placeholder='Type a message'
+								className="flex-1 form-input"
+							/>
+							<button onClick={handleSendMessage} className='btn-teal btn-md'>Senden</button>
+						</div>
+					</div>
+				</>
+			)}
+		</>
+	);
 };
 
 export default SingleChat;
