@@ -9,6 +9,7 @@ import leafline from "../assets/leaflineNoBg.png";
 import topswap from "../assets/topswapsfont.png";
 import topswap2 from "../assets/topswapfont2.png";
 import { truncateDescription } from "../utils/helpers";
+import SwapSchema from "../components/SwapSchema.jsx";
 
 const UserProfile = () => {
   const { isLoggedIn, userData } = useAuth();
@@ -57,6 +58,7 @@ const UserProfile = () => {
 
   return (
     <>
+      <SwapSchema />
       <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
       {/* <div>
         <img className="max-w-72 mx-auto opacity-75" src={leafline} />

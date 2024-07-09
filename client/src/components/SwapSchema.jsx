@@ -1,7 +1,7 @@
-import React from "react";
 import { categories } from "../utils/categories.js";
-import { users } from "../utils/users.js";
-import { ads } from "../utils/ads.js";
+// tags
+import { users } from "../utils/users.js"; // fetch users (useEffect & useState)
+import { ads } from "../utils/ads.js"; // fetch ads
 
 function SwapSchema() {
   const getCategories = (id = 0) => {

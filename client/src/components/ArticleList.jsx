@@ -4,6 +4,7 @@ import axios from "axios";
 import { categories } from "../utils/categories";
 import "../components/css/ArticleList.css";
 import { FaSearch } from "react-icons/fa";
+import { useAuth } from "../context/AuthProvider.jsx";
 
 const ArticleList = () => {
   const [ads, setAds] = useState([]);
@@ -16,7 +17,9 @@ const ArticleList = () => {
   const [searchText, setSearchText] = useState("");
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const { isLoggedIn, userData } = useAuth();
 
+  console.log(userData);
   useEffect(() => {
     const fetchArticleData = async () => {
       try {
