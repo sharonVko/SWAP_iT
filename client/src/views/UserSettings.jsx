@@ -96,7 +96,8 @@ const UserSettings = () => {
 	return (
 		<form onSubmit={handleSave}>
       <h1 className="mb-6 text-center">Konto-Einstellungen</h1>
-			<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-xl p-4 sm:p-8 md:p-12 mb-12">
+			<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-xl p-4 sm:p-8 md:p-12 mb-12 gap-8 md:gap-16">
+
 				<div className="mx-auto text-center w-full">
           <div>
 						<img src={profile.imageUrl} alt="Profilbild" className="rounded-full max-w-sm mx-auto h-29 w-40 ring-8 ring-white/50 mb-6"/>
@@ -132,8 +133,7 @@ const UserSettings = () => {
 						<TagSelect suggestions={suggestions_tags}  />
           </div>
         </div>
-
-				<div className="md:col-span-1 p-12 flex flex-col">
+				<div className=" w-full">
 					<div>
 						{[
 							"firstname",
@@ -175,13 +175,17 @@ const UserSettings = () => {
 							</div>
 						))}
 
-						{isEditing && (
-							<button type="submit" className="btn-sm btn-red text-lemon-500 px-4 py-2 rounded block mt-4">
-								Save
-							</button>
-						)}
 					</div>
 				</div>
+
+				<div className="md:col-span-2">
+					{/*{isEditing && (*/}
+					<button type="submit" className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6">
+						Einstellungen speichern
+					</button>
+					{/*)}*/}
+				</div>
+
 			</div>
 		</form>
 	);
