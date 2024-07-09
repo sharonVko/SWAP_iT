@@ -38,7 +38,7 @@ function SwapSchema() {
       };
 
       const getMatchingAds = (user) => {
-        const ownAd = ads.find((ad) => ad.user_id === user._id);
+        const ownAds = ads.filter((ad) => ad.user_id === user._id);
         const swap_ads = [];
         const interestAds = [];
 
@@ -90,52 +90,45 @@ function SwapSchema() {
             }
           }
 
+          // Add to swap_ads if match_type is set
           if (
             (match_type === "Diamond" && commonTags.length >= 3) ||
             (match_type === "Gold" && commonTags.length === 2) ||
             (match_type === "Silver" && commonTags.length === 1)
           ) {
+            let swapWithAdId = null;
+            const ownAd = ownAds.find((ownAd) => ownAd._id !== ad._id);
+            if (ownAd) {
+              swapWithAdId = ownAd._id;
+            }
             swap_ads.push({
               ...ad,
               match_type,
-              swap_with_ad: ownAd ? ownAd._id : null,
+              swap_with_ad: swapWithAdId,
             });
           }
 
+          // Add to interestAds if it meets the conditions
           if (
-            ad.user_id !== user._id &&
+            ad.user_id !== user._id && // Exclude user's own ads
             !swap_ads.some((swapAd) => swapAd._id === ad._id) &&
             (commonCategories.length > 0 ||
-              preferredSubcatsArray.includes(ad.subCategory.toString()) ||
-              commonTags.length > 0)
+              preferredSubcatsArray.includes(ad.subCategory.toString()))
           ) {
             interestAds.push({
               ...ad,
-              match_type,
+              match_type: "", // No match type for interestAds
               score:
                 (commonCategories.length > 0 ? 1 : 0) +
                 (preferredSubcatsArray.includes(ad.subCategory.toString())
                   ? 1
-                  : 0) +
-                commonTags.length,
+                  : 0),
             });
           }
         });
 
+        // Sort interestAds by score
         interestAds.sort((a, b) => b.score - a.score);
-
-        if (ownAd && preferredCatsArray.includes(ownAd.categories.toString())) {
-          swap_ads.push({
-            ...ownAd,
-            match_type: "",
-            swap_with_ad: ownAd ? ownAd._id : null,
-          });
-          interestAds.push({
-            ...ownAd,
-            match_type: "",
-            score: 0,
-          });
-        }
 
         return {
           swap_ads,
