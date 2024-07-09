@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
-import HomeSwiper from "../components/HomeSwiper.jsx";
+import HomeSwiper from "../components/HomeSwiper.jsx"; // Adjust the import path as necessary
 import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
 import messagelogo from "../assets/messagelogo.png";
@@ -42,7 +42,7 @@ const UserProfile = () => {
     };
 
     fetchUserAds();
-  }, [isLoggedIn, userData]);
+  }, [isLoggedIn, userData, interestAds, swapAds]);
 
   const deleteAd = async (adId) => {
     try {
@@ -75,7 +75,7 @@ const UserProfile = () => {
           className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
           key={i}
         >
-          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md ">
+          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
             <img
               src={
                 ad.media && ad.media[0] && ad.media[0][0]
@@ -83,20 +83,21 @@ const UserProfile = () => {
                   : "/Images/default.png"
               }
               className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
+              alt={ad.title}
             />
           </div>
-          <div className="flex-1 ">
-            <p className="mt-0 mb-0 font-bold font-display ">{ad.title}</p>
+          <div className="flex-1">
+            <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
             <p className="m-0 text-sm">
               {ad.description ? truncateDescription(ad.description) : ""}
             </p>
           </div>
           <div className="flex gap-x-7">
             <button>
-              <img className="h-7 w-6" src={pencil} />
+              <img className="h-7 w-6" src={pencil} alt="Edit" />
             </button>
             <button onClick={() => handleDelete(ad)}>
-              <img className="h-6 w-5" src={trashbin} />
+              <img className="h-6 w-5" src={trashbin} alt="Delete" />
             </button>
           </div>
         </div>
@@ -173,11 +174,15 @@ const UserProfile = () => {
 
       <div className="sm:px-10 lg:px-20">
         <div>
-          <img className="max-w-80 mx-auto mt-12 mb-2" src={topswap2} />
+          <img
+            className="max-w-80 mx-auto mt-12 mb-2"
+            src={topswap2}
+            alt="Top Swap"
+          />
         </div>
-        <HomeSwiper swiperId={2} articles={swapAds} />
+        <HomeSwiper swiperId={2} articles={interestAds} />{" "}
+        {/* Display swapAds */}
         <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
-
         {interestAds.map((ad, i) => (
           <div
             className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
@@ -191,21 +196,14 @@ const UserProfile = () => {
                     : "/Images/default.png"
                 }
                 className="absolute top-0 left-0 w-full h-full object-cover border-2 border-red-400/60 rounded"
+                alt={ad.title}
               />
             </div>
-            <div className="flex-1 ">
+            <div className="flex-1">
               <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
               <p className="m-0 text-sm">
                 {ad.description ? truncateDescription(ad.description) : ""}
               </p>
-            </div>
-            <div className="flex gap-x-7">
-              <button>
-                <img className="h-7 w-6" src={messagelogo} />
-              </button>
-              <button onClick={() => handleDelete(ad)}>
-                <img className="h-6 w-5" src={trashbin} />
-              </button>
             </div>
           </div>
         ))}
