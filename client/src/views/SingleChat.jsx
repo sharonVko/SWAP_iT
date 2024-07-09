@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
+import LoginForm from "../components/LoginForm.jsx";
 import { useAuth } from '../context/AuthProvider';
 
 const SingleChat = () => {
@@ -111,25 +112,27 @@ const SingleChat = () => {
   return (
 		<>
       {!isLoggedIn ? (
-        <p>Login ...</p>
+				<LoginForm target="/" />
       ) : (
 				<>
 					<h1 className="text-center mb-6">Neue Nachricht an {receiver}</h1>
 					<div className="bg-white/30 rounded-lg p-4 md:p-8 max-w-[960px] mx-auto flex flex-col">
-						<ul className="flex-1">
+						<ul className="flex-1 mb-8 text-lg">
 							{messages.map((msg, index) => (
-								<li key={`${msg._id}-${index}`}>
-									<strong>{msg.sender_id.username || 'Unknown User'}:</strong>{' '}
-									{msg.message}
-									<button
-										onClick={() => handleDeleteMessage(msg._id)}
-										className='m-4 bg-blue-500 p-2'
-									>
-										Delete
+								<li key={`${msg._id}-${index}`} className="flex border-b border-b-teal-700/30">
+									<span className="block flex-1 py-6">
+										<strong>{msg.sender_id.username || 'Unknown User'}</strong>{' '}<br />
+										{msg.message}
+									</span>
+									<button onClick={() => handleDeleteMessage(msg._id)} className=''>
+										<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+											<path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M20 20L4 4m16 0L4 20"/>
+										</svg>
 									</button>
 								</li>
 							))}
 						</ul>
+
 						<div className="flex gap-4">
 							<input
 								type='text'

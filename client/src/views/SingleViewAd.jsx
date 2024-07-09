@@ -36,7 +36,7 @@ const SingleViewAd = () => {
         const userResponse = await axios.get(
           `http://localhost:8000/users/${articleResponse.data.user_id}`
         );
-        console.log(userResponse.data); // Log the user data
+        //console.log(userResponse.data); // Log the user data
         setUsername(userResponse.data.username); // Set the username state
       } catch (error) {
         console.error("Error fetching data:", error);
