@@ -141,11 +141,10 @@ const SingleViewAd = () => {
           </div>
 
 					{isLoggedIn && (
-          <div
-            className="flex flex-wrap gap-4 my-6  p-4 rounded-lg"
-            gradientDuoTone="greenToBlue"
-          >
+          <div className="flex flex-wrap gap-4 my-6  p-4 rounded-lg" gradientDuoTone="greenToBlue">
 
+						{article.user_id !== userData._id ? (
+							<>
             <Button
               gradientDuoTone="greenToBlue"
               className="border-2 border-teal-500 text-teal-700"
@@ -157,6 +156,7 @@ const SingleViewAd = () => {
             <p className="text-teal-700 text-lg">
               an <span className="font-bold underline">{username}</span>
             </p>
+
             <div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-700">
               <Avatar
                 img="https://randomuser.me/api/portraits/men/42.jpg"
@@ -164,6 +164,10 @@ const SingleViewAd = () => {
                 title={`Profil von ${username}`}
               />
             </div>
+						</>
+						) : (
+							<div>(eigene Anzeige)</div>
+						)}
 
           </div>
 					)}
