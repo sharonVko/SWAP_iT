@@ -10,7 +10,6 @@ import locationlogo from "../assets/locationlogo.png";
 import { Button } from "flowbite-react";
 import { categories } from "../utils/categories"; // Make sure to use the correct path to your categories.js file
 
-
 const SingleViewAd = () => {
   const [article, setArticle] = useState(null);
   const [username, setUsername] = useState(null); // State to store the username

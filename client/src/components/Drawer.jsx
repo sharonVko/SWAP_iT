@@ -20,17 +20,14 @@ export const Drawer = (props) => {
 
 					<div>Home</div>
 					<div>Alle Anzeigen</div>
-					<div>Angebote in der Nähe</div>
 					<div>Konto einrichten</div>
 					-----
 					<div>Nachrichten</div>
-					<div>Tauschangebote</div>
-					<div>Meine Favoriten</div>
-					-----
 					<div>Meine Anzeigen</div>
 					<div>Anzeige erstellen</div>
-
-
+					-----
+					<div>Profil-Übersicht</div>
+					<div>Konto-Einstellungen</div>
 				</div>
 			</div>
 

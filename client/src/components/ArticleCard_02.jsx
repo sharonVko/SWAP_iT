@@ -83,7 +83,6 @@ const ArticleCard_02 = ({ article }) => {
 					<img src={imageUrl} alt={article.title} className="absolute top-0 left-0 w-full h-full object-cover"/>
 					<div className="absolute bottom-2 left-1 flex gap-1">
 						<div className="bg-white/80 uppercase text-xs px-2 rounded-full flex items-center justify-center"><span>{article.user_id.username}</span></div>
-
 						{article.tradeOption ? (
 							<div className="bg-white/80 px-1 py-1 text-sm rounded-full flex items-center justify-center relative">
 								<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -116,11 +115,10 @@ const ArticleCard_02 = ({ article }) => {
               	</span>
 							</div>
 						)}
-
 					</div>
 				</div>
 				<div className={`card-content overflow-hidden ${active ? "open" : "close"}`}>
-					<h2 className="font-medium mt-4">{article.title}</h2>
+					<h2 className="font-medium mt-4">---{article.title}</h2>
 					<Collapse isOpened={active}>
 						<div className="mb-4 px-4">{truncatedDescription}</div>
 						<div className="tags">
@@ -130,7 +128,6 @@ const ArticleCard_02 = ({ article }) => {
 										key={index}
 										className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-1"
 									>
-
                     {getCategoryNameById(categoryId)}
                   </span>
                 ))
@@ -169,7 +166,7 @@ const ArticleCard_02 = ({ article }) => {
             </button>
           </Collapse>
         </div>
-        <div className="absolute top-0 right-0 p-0 cursor-pointer">
+        <div className="absolute -top-2 -right-1 p-0 cursor-pointer">
           <svg
             className={`h-8 w-8 ${
               liked
