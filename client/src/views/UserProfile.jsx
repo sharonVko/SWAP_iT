@@ -8,6 +8,7 @@ import messagelogo from "../assets/messagelogo.png";
 import topswap2 from "../assets/topswapfont2.png";
 import { truncateDescription } from "../utils/helpers";
 import SwapSchema from "../components/SwapSchema.jsx";
+import "../css/UserProfile.css";
 
 const UserProfile = () => {
   const { isLoggedIn, userData } = useAuth();
@@ -63,13 +64,23 @@ const UserProfile = () => {
     setShowModal(false);
   };
 
-	console.log('--->>>', swapAds);
+  console.log("--->>>", swapAds);
 
   return (
     <>
-
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
-      <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
+
+      <div className="bg-teal-500">
+        <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+          <img
+            className="max-w-80 mx-auto mt-12 mb-2"
+            src={topswap2}
+            alt="Top Swap"
+          />
+        </div>
+        <HomeSwiper swiperId={2} articles={swapAds} /> {/* Display swapAds */}
+      </div>
+      <h2 className="h1 mt-6 text-center drop-shadow-lg">Meine Anzeigen: </h2>
       {userAds.map((ad, i) => (
         <div
           className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
@@ -173,15 +184,6 @@ const UserProfile = () => {
       )}
 
       <div className="sm:px-10 lg:px-20">
-        <div>
-          <img
-            className="max-w-80 mx-auto mt-12 mb-2"
-            src={topswap2}
-            alt="Top Swap"
-          />
-        </div>
-        <HomeSwiper swiperId={2} articles={interestAds} />{" "}
-        {/* Display swapAds */}
         <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
         {interestAds.map((ad, i) => (
           <div
