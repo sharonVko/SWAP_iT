@@ -4,7 +4,7 @@
   .btn-md { @apply uppercase tracking-wider rounded drop-shadow text-base leading-none py-2 px-4; }
   .btn-lg { @apply uppercase tracking-wider rounded drop-shadow text-xl leading-none py-2 px-4; }
 
-  .btn-red { @apply text-peach-300 bg-red-400; }
+  .btn-red { @apply bg-red-400 text-lemon-500; }
   .btn-teal { @apply text-peach-300 bg-teal-500; }
 
   /*** Footer Links ***/
