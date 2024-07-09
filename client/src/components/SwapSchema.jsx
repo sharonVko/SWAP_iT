@@ -48,11 +48,9 @@ function SwapSchema() {
           !user.preferredSubcats ||
           !user.preferredtags
         ) {
-          //console.error("User preferences are not properly defined:", user);
           return { swap_ads, interestAds };
         }
 
-        // Convert preferredcats, preferredSubcats, and preferredtags to arrays
         const preferredCatsArray = user.preferredcats
           .split(",")
           .map((cat) => cat.trim());
@@ -66,7 +64,6 @@ function SwapSchema() {
         ads.forEach((ad) => {
           const adOwner = getUserById(ad.user_id);
 
-          // Convert ad.categories to an array if it's not already
           const adCategories = Array.isArray(ad.categories)
             ? ad.categories
             : [ad.categories];
@@ -84,19 +81,19 @@ function SwapSchema() {
             ad.subCategory &&
             preferredSubcatsArray.includes(ad.subCategory.toString())
           ) {
-            if (commonTags.length >= 2) {
+            if (commonTags.length >= 3) {
               match_type = "Diamond";
-            } else if (commonTags.length === 1) {
+            } else if (commonTags.length === 2) {
               match_type = "Gold";
-            } else {
+            } else if (commonTags.length === 1) {
               match_type = "Silver";
             }
           }
 
           if (
-            (match_type === "Diamond" && commonTags.length >= 2) ||
-            (match_type === "Gold" && commonTags.length === 1) ||
-            (match_type === "Silver" && commonTags.length === 0)
+            (match_type === "Diamond" && commonTags.length >= 3) ||
+            (match_type === "Gold" && commonTags.length === 2) ||
+            (match_type === "Silver" && commonTags.length === 1)
           ) {
             swap_ads.push({
               ...ad,
@@ -105,10 +102,9 @@ function SwapSchema() {
             });
           }
 
-          // Collect all interest ads regardless of match type and exclude own ads and ads in swap_ads
           if (
-            ad.user_id !== user._id && // Exclude own ads
-            !swap_ads.some((swapAd) => swapAd._id === ad._id) && // Exclude ads in swap_ads
+            ad.user_id !== user._id &&
+            !swap_ads.some((swapAd) => swapAd._id === ad._id) &&
             (commonCategories.length > 0 ||
               preferredSubcatsArray.includes(ad.subCategory.toString()) ||
               commonTags.length > 0)
@@ -126,7 +122,6 @@ function SwapSchema() {
           }
         });
 
-        // Sort interestAds by score in descending order
         interestAds.sort((a, b) => b.score - a.score);
 
         if (ownAd && preferredCatsArray.includes(ownAd.categories.toString())) {
@@ -161,9 +156,8 @@ function SwapSchema() {
   }, [users, ads]);
 
   console.log("Fetched SwapAds:", myUsers);
-  // Output to check swap_ads and interestAds for each user
 
-  return null; // Komponente rendert nichts
+  return null; // Component doesn't render anything
 }
 
 export default SwapSchema;
