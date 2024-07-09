@@ -179,7 +179,7 @@ const UserProfile = () => {
             alt="Top Swap"
           />
         </div>
-        <HomeSwiper swiperId={2} articles={interestAds} />{" "}
+        <HomeSwiper swiperId={2} articles={swapAds} />{" "}
         {/* Display swapAds */}
         <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
         {interestAds.map((ad, i) => (
