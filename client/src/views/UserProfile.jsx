@@ -7,6 +7,7 @@ import pencil from "../assets/pencillogo.png";
 import messagelogo from "../assets/messagelogo.png";
 import leafline from "../assets/leaflineNoBg.png";
 import topswap from "../assets/topswapsfont.png";
+import topswap2 from "../assets/topswapfont2.png";
 import { truncateDescription } from "../utils/helpers";
 
 const UserProfile = () => {
@@ -167,7 +168,7 @@ const UserProfile = () => {
         {/* <h2 className="h1 mt-6 text-center">Top swap matches</h2> */}
         <div>
           {" "}
-          <img className="max-w-72 mx-auto" src={topswap} />{" "}
+          <img className="max-w-80 mx-auto mt-12 mb-2" src={topswap2} />{" "}
         </div>
 
         <HomeSwiper swiperId={2} articles={filteredAds} />
@@ -202,7 +203,7 @@ const UserProfile = () => {
                 <img className="h-7 w-6" src={messagelogo} />
               </button>{" "}
               <button onClick={() => handleDelete(ad)}>
-                <img className="h-6 w-5" src={trashbin} />
+                <img className="h-6 w-5" src={trashbin} />{" "}
               </button>
             </div>
           </div>
