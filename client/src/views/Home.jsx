@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import SwapSchema from "../components/SwapSchema.jsx";
@@ -7,9 +7,9 @@ import SwapSchema from "../components/SwapSchema.jsx";
 const Home = () => {
   const { userData } = useAuth();
   const [ads, setAds] = useState([]);
-  const [interestAds, setInterestAds] = useState([]);
-  const [swapAds, setSwapAds] = useState([]);
-  const [myNewestAds, setMyNewestAds] = useState([]);
+  const [myInterestAds, setMyInterestAds] = useState([]); // Update to interestAds state updater
+  const [swapAds, setSwapAds] = useState([]); // Declare swapAds state updater
+  const [myNewestAds, setMyNewestAds] = useState([]); // State for newest ads
 
   useEffect(() => {
     const fetchAdData = async () => {
@@ -36,31 +36,30 @@ const Home = () => {
       );
       const newestAds = filteredInterestAds.slice(0, 20);
 
-      // Set interestAds state
-      setMyNewestAds(newestAds);
+      setMyInterestAds(filteredInterestAds); // Update interestAds state
+      setMyNewestAds(newestAds); // Update myNewestAds state
     }
   }, [userData, ads]);
 
-  console.log("----->>>", myNewestAds);
-
   return (
     <div className="pb-12">
-      {/* Pass setSwapAds and setInterestAds as props to SwapSchema */}
-      <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
+      {/* Pass setInterestAds and setSwapAds as props to SwapSchema */}
+      <SwapSchema setInterestAds={setMyInterestAds} setSwapAds={setSwapAds} />
+
       <h1 className="text-center">Deine Tauschangebote</h1>
-      {/* Display user's ads with filteredAds */}
-      <HomeSwiper swiperId={1} articles={ads} />
+      {/* Display user's ads with swapAds */}
+      <HomeSwiper swiperId={1} articles={swapAds} />
 
       <h2 className="h1 mt-8 text-center">Das könnte dir gefallen</h2>
       {/* Display interestAds under "Das könnte dir gefallen" */}
-      <HomeSwiper swiperId={2} articles={interestAds} />
+      <HomeSwiper swiperId={2} articles={myInterestAds} />
       <button className="block btn-teal btn-md mx-auto mt-4">
         Mehr Angebote
       </button>
 
       <h2 className="h1 mt-8 text-center">Neue Angebote</h2>
       {/* Display newest 20 articles under "Neue Angebote" */}
-      <HomeSwiper swiperId={3} articles={myNewestAds.slice(0, 20)} />
+      <HomeSwiper swiperId={3} articles={myNewestAds} />
       <button className="block btn-teal btn-md mx-auto mt-4">
         Mehr Angebote
       </button>
