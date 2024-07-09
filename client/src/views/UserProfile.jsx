@@ -63,11 +63,23 @@ const UserProfile = () => {
     setShowModal(false);
   };
 
-	console.log('--->>>', swapAds);
-
   return (
     <>
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
+
+			<div className="sm:px-10 lg:px-20 py-8 relative -top-12">
+
+				<div>
+					<img
+						className="max-w-80 mx-auto mt-12 mb-2"
+						src={topswap2}
+						alt="Top Swap"
+					/>
+				</div>
+				<HomeSwiper swiperId={2} articles={swapAds} />{" "}
+			</div>
+
+
       <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
       {userAds.map((ad, i) => (
         <div
@@ -101,6 +113,7 @@ const UserProfile = () => {
           </div>
         </div>
       ))}
+
 
       {showModal && (
         <div
@@ -171,42 +184,32 @@ const UserProfile = () => {
         </div>
       )}
 
-      <div className="sm:px-10 lg:px-20">
-        <div>
-          <img
-            className="max-w-80 mx-auto mt-12 mb-2"
-            src={topswap2}
-            alt="Top Swap"
-          />
-        </div>
-        <HomeSwiper swiperId={2} articles={swapAds} />{" "}
-        {/* Display swapAds */}
-        <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
-        {interestAds.map((ad, i) => (
-          <div
-            className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
-            key={i}
-          >
-            <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
-              <img
-                src={
-                  ad.media && ad.media[0] && ad.media[0][0]
-                    ? ad.media[0][0]
-                    : "/Images/default.png"
-                }
-                className="absolute top-0 left-0 w-full h-full object-cover border-2 border-red-400/60 rounded"
-                alt={ad.title}
-              />
-            </div>
-            <div className="flex-1">
-              <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
-              <p className="m-0 text-sm">
-                {ad.description ? truncateDescription(ad.description) : ""}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+			<h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
+			{interestAds.map((ad, i) => (
+				<div
+					className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
+					key={i}
+				>
+					<div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
+						<img
+							src={
+								ad.media && ad.media[0] && ad.media[0][0]
+									? ad.media[0][0]
+									: "/Images/default.png"
+							}
+							className="absolute top-0 left-0 w-full h-full object-cover border-2 border-red-400/60 rounded"
+							alt={ad.title}
+						/>
+					</div>
+					<div className="flex-1">
+						<p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
+						<p className="m-0 text-sm">
+							{ad.description ? truncateDescription(ad.description) : ""}
+						</p>
+					</div>
+				</div>
+			))}
+
     </>
   );
 };
