@@ -58,12 +58,15 @@ const userSchema = new mongoose.Schema({
   preferredcats: {
     type: String, // if we want to keep it as a category_id as string or reference to taxonomies
     //ex: "1,2,3"  cat_ids
+    default: "",
   },
   preferredSubcats: {
     type: String,
+    default: "",
   },
   preferredtags: {
     type: String,
+    default: "",
   },
   favorites: [
     {
