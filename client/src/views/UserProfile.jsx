@@ -1,12 +1,10 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
 import messagelogo from "../assets/messagelogo.png";
-import leafline from "../assets/leaflineNoBg.png";
-import topswap from "../assets/topswapsfont.png";
 import topswap2 from "../assets/topswapfont2.png";
 import { truncateDescription } from "../utils/helpers";
 import SwapSchema from "../components/SwapSchema.jsx";
@@ -14,37 +12,47 @@ import SwapSchema from "../components/SwapSchema.jsx";
 const UserProfile = () => {
   const { isLoggedIn, userData } = useAuth();
 
-  const [ads, setAds] = useState([]);
-
+  const [userAds, setUserAds] = useState([]);
+  const [interestAds, setInterestAds] = useState([]);
+  const [swapAds, setSwapAds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedAd, setSelectedAd] = useState(null);
 
   useEffect(() => {
-    const fetchArticleData = async () => {
+    const fetchUserAds = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/ads/`);
-        setAds(response.data);
+        if (isLoggedIn && userData) {
+          const adDetailsPromises = userData.ads.map(async (adId) => {
+            try {
+              const response = await axios.get(
+                `http://localhost:8000/ads/${adId}`
+              );
+              return response.data;
+            } catch (error) {
+              console.error(`Error fetching ad ${adId}:`, error);
+              return null;
+            }
+          });
+
+          const userAdsData = await Promise.all(adDetailsPromises);
+          setUserAds(userAdsData.filter((ad) => ad !== null));
+        }
       } catch (error) {
-        console.error("Error fetching article data:", error);
+        console.error("Error fetching user ads:", error);
       }
     };
-    fetchArticleData();
-  }, []);
+
+    fetchUserAds();
+  }, [isLoggedIn, userData]);
 
   const deleteAd = async (adId) => {
     try {
       await axios.delete(`http://localhost:8000/ads/${adId}`);
-      setAds(ads.filter((ad) => ad._id !== adId));
+      setUserAds(userAds.filter((ad) => ad._id !== adId));
     } catch (error) {
       console.error("Error deleting ad:", error);
     }
   };
-
-  ads.reverse();
-
-  const filteredAds = ads.filter((ad, i) => {
-    if (i < 8) return ad;
-  });
 
   const handleDelete = (ad) => {
     setSelectedAd(ad);
@@ -58,18 +66,13 @@ const UserProfile = () => {
 
   return (
     <>
-      <SwapSchema />
+      <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
       <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
-      {/* <div>
-        <img className="max-w-72 mx-auto opacity-75" src={leafline} />
-      </div> */}
-
-      {filteredAds.map((ad, i) => (
+      {userAds.map((ad, i) => (
         <div
           className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
           key={i}
         >
-          {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
           <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md ">
             <img
               src={
@@ -77,7 +80,7 @@ const UserProfile = () => {
                   ? ad.media[0][0]
                   : "/Images/default.png"
               }
-              className="absolute top-0 left-0 w-full h-full object-cover  border-2 border-teal-500 rounded"
+              className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
             />
           </div>
           <div className="flex-1 ">
@@ -89,7 +92,7 @@ const UserProfile = () => {
           <div className="flex gap-x-7">
             <button>
               <img className="h-7 w-6" src={pencil} />
-            </button>{" "}
+            </button>
             <button onClick={() => handleDelete(ad)}>
               <img className="h-6 w-5" src={trashbin} />
             </button>
@@ -100,7 +103,7 @@ const UserProfile = () => {
       {showModal && (
         <div
           id="popup-modal"
-          tabindex="-1"
+          tabIndex="-1"
           className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-gray-900 bg-opacity-50"
         >
           <div className="relative p-4 w-full max-w-md max-h-full">
@@ -119,9 +122,9 @@ const UserProfile = () => {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                   />
                 </svg>
@@ -137,9 +140,9 @@ const UserProfile = () => {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
                   />
                 </svg>
@@ -167,22 +170,17 @@ const UserProfile = () => {
       )}
 
       <div className="sm:px-10 lg:px-20">
-        {/* <h2 className="h1 mt-6 text-center">Top swap matches</h2> */}
         <div>
-          {" "}
-          <img className="max-w-80 mx-auto mt-12 mb-2" src={topswap2} />{" "}
+          <img className="max-w-80 mx-auto mt-12 mb-2" src={topswap2} />
         </div>
-
-        <HomeSwiper swiperId={2} articles={filteredAds} />
+        <HomeSwiper swiperId={2} articles={swapAds} />
         <h2 className="h1 mt-6 text-center">Das hätte ich gerne: </h2>
-        {/* <HomeSwiper swiperId={3} articles={filteredAds} /> */}
 
-        {filteredAds.map((ad, i) => (
+        {interestAds.map((ad, i) => (
           <div
             className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
             key={i}
           >
-            {/* <HomeSwiper swiperId={1} articles={filteredAds} /> */}
             <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
               <img
                 src={
@@ -190,8 +188,7 @@ const UserProfile = () => {
                     ? ad.media[0][0]
                     : "/Images/default.png"
                 }
-                className="absolute top-0 left-0 w-full h-full object-cover
-                border-2 border-red-400/60 rounded"
+                className="absolute top-0 left-0 w-full h-full object-cover border-2 border-red-400/60 rounded"
               />
             </div>
             <div className="flex-1 ">
@@ -203,9 +200,9 @@ const UserProfile = () => {
             <div className="flex gap-x-7">
               <button>
                 <img className="h-7 w-6" src={messagelogo} />
-              </button>{" "}
+              </button>
               <button onClick={() => handleDelete(ad)}>
-                <img className="h-6 w-5" src={trashbin} />{" "}
+                <img className="h-6 w-5" src={trashbin} />
               </button>
             </div>
           </div>
@@ -214,4 +211,5 @@ const UserProfile = () => {
     </>
   );
 };
+
 export default UserProfile;
