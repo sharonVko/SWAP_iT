@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useAuth } from "../context/AuthProvider.jsx";
 
-function SwapSchema() {
+function SwapSchema({ setInterestAds }) {
+  const { userData } = useAuth(); // Accessing user data from AuthProvider
   const [users, setUsers] = useState([]);
   const [ads, setAds] = useState([]);
-  const [myUsers, setMyUsers] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,7 +33,7 @@ function SwapSchema() {
   }, []);
 
   useEffect(() => {
-    if (users.length > 0 && ads.length > 0) {
+    if (users.length > 0 && ads.length > 0 && userData) {
       const getUserById = (id) => {
         return users.find((user) => user._id === id);
       };
@@ -136,19 +137,15 @@ function SwapSchema() {
         };
       };
 
-      const updatedUsers = users.map((user) => ({
-        user_id: user._id,
-        name: user.username,
-        pref_cats: user.preferredcats,
-        swap_ads: getMatchingAds(user).swap_ads,
-        interestAds: getMatchingAds(user).interestAds,
-      }));
-
-      setMyUsers(updatedUsers);
+      const currentUser = users.find((user) => user._id === userData._id);
+      if (currentUser) {
+        const { swap_ads, interestAds } = getMatchingAds(currentUser);
+        console.log("Fetched swap_ads:", swap_ads);
+        console.log("Fetched interestAds:", interestAds);
+        setInterestAds(interestAds);
+      }
     }
-  }, [users, ads]);
-
-  console.log("Fetched SwapAds:", myUsers);
+  }, [users, ads, userData, setInterestAds]);
 
   return null; // Component doesn't render anything
 }
