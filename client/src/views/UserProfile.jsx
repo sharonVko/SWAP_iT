@@ -67,7 +67,6 @@ const UserProfile = () => {
 
   return (
     <>
-
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
       <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
       {userAds.map((ad, i) => (

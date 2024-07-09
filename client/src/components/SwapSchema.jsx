@@ -31,6 +31,7 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
 
     fetchUserData();
     fetchAdData();
+
   }, []);
 
   useEffect(() => {
