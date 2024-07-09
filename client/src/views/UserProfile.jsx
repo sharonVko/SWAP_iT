@@ -11,7 +11,6 @@ import SwapSchema from "../components/SwapSchema.jsx";
 
 const UserProfile = () => {
   const { isLoggedIn, userData } = useAuth();
-
   const [userAds, setUserAds] = useState([]);
   const [interestAds, setInterestAds] = useState([]);
   const [swapAds, setSwapAds] = useState([]);
@@ -64,8 +63,11 @@ const UserProfile = () => {
     setShowModal(false);
   };
 
+	console.log('--->>>', swapAds);
+
   return (
     <>
+
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
       <h2 className="h1 mt-6 text-center drop-shadow-lg">Das gebe ich ab: </h2>
       {userAds.map((ad, i) => (

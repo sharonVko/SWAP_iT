@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
 
-function SwapSchema({ setInterestAds }) {
+function SwapSchema({ setInterestAds, setSwapAds }) {
+
   const { userData } = useAuth(); // Accessing user data from AuthProvider
   const [users, setUsers] = useState([]);
   const [ads, setAds] = useState([]);
@@ -139,13 +140,16 @@ function SwapSchema({ setInterestAds }) {
 
       const currentUser = users.find((user) => user._id === userData._id);
       if (currentUser) {
+
         const { swap_ads, interestAds } = getMatchingAds(currentUser);
+
         console.log("Fetched swap_ads:", swap_ads);
         console.log("Fetched interestAds:", interestAds);
         setInterestAds(interestAds);
+				setSwapAds(swap_ads);
       }
     }
-  }, [users, ads, userData, setInterestAds]);
+  }, [users, ads, userData, setInterestAds, setSwapAds]);
 
   return null; // Component doesn't render anything
 }
