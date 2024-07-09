@@ -1,3 +1,4 @@
 ### Swap it frontend
 
-T
+install ...
+axios socket.io-client axios tailwind 

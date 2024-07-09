@@ -5,7 +5,6 @@ import verifyToken from '../middleware/verifyToken.js';
 const messageRouter = Router();
 
 messageRouter.route('/:chatId').get(verifyToken, messageController.getMessages);
-
 messageRouter.route('/').post(verifyToken, messageController.sendMessage);
 
 // messageRouter.route('/:id').put(verifyToken, messageController.updateMessage);
