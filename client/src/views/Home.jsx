@@ -4,12 +4,15 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import SwapSchema from "../components/SwapSchema.jsx";
 
+
 const Home = () => {
   const { userData } = useAuth();
   const [ads, setAds] = useState([]);
   const [myInterestAds, setMyInterestAds] = useState([]); // Update to interestAds state updater
   const [swapAds, setSwapAds] = useState([]); // Declare swapAds state updater
   const [myNewestAds, setMyNewestAds] = useState([]); // State for newest ads
+
+
 
   useEffect(() => {
     const fetchAdData = async () => {
@@ -23,9 +26,12 @@ const Home = () => {
     fetchAdData();
   }, []);
 
+
   useEffect(() => {
     if (userData && ads.length > 0) {
-      // Filter out user's ads
+
+			// Filter out user's ads
+			// eigene Anzeiogen werden ausgefiltert
       const filteredInterestAds = ads.filter(
         (ad) => ad.user_id !== userData._id
       );
@@ -36,8 +42,12 @@ const Home = () => {
       );
       const newestAds = filteredInterestAds.slice(0, 20);
 
-      setMyInterestAds(filteredInterestAds); // Update interestAds state
-      setMyNewestAds(newestAds); // Update myNewestAds state
+
+			console.log("+++", filteredInterestAds);
+
+
+      setMyInterestAds(filteredInterestAds); 	// Update interestAds state
+      setMyNewestAds(newestAds); 							// Update myNewestAds state
     }
   }, [userData, ads]);
 
