@@ -28,7 +28,7 @@ export const Drawer = (props) => {
 
       <div className={`drawer ${open ? "show" : ""}`} tabIndex="-1">
         <div className="drawer-inner-top"></div>
-        <div className="drawer-inner p-4 space-y-4">
+        <div className="drawer-inner p-4 pt-8 space-y-4">
           <div className="flex justify-end">
             <button onClick={onClose} className="text-teal text-3xl">
               <svg
