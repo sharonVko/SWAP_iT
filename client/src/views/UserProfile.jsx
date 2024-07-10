@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
-import messagelogo from "../assets/messagelogo.png";
 import topswap2 from "../assets/topswapfont2.png";
 import { truncateDescription } from "../utils/helpers";
 import SwapSchema from "../components/SwapSchema.jsx";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const { isLoggedIn, userData } = useAuth();
@@ -16,6 +16,7 @@ const UserProfile = () => {
   const [swapAds, setSwapAds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedAd, setSelectedAd] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserAds = async () => {
@@ -63,6 +64,10 @@ const UserProfile = () => {
     setShowModal(false);
   };
 
+  const gotoSingle = (adId) => {
+    navigate("/ads/" + adId);
+  };
+
   return (
     <>
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
@@ -85,15 +90,17 @@ const UserProfile = () => {
           key={i}
         >
           <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
-            <img
-              src={
-                ad.media && ad.media[0] && ad.media[0][0]
-                  ? ad.media[0][0]
-                  : "/Images/default.png"
-              }
-              className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
-              alt={ad.title}
-            />
+            <div onClick={() => gotoSingle(ad._id)}>
+              <img
+                src={
+                  ad.media && ad.media[0] && ad.media[0][0]
+                    ? ad.media[0][0]
+                    : "/Images/default.png"
+                }
+                className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
+                alt={ad.title}
+              />
+            </div>
           </div>
           <div className="flex-1">
             <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
