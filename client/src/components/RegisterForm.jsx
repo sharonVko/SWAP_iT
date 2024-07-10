@@ -121,7 +121,7 @@ function RegisterForm() {
 							className="ms-2 text-xs font-medium text-gray-900 dark:text-gray-300"
 						>
 							Ich akzeptiere die{" "}
-							<a href="#" className="text-teal-600 hover:underline">
+							<a href="#" className="text-teal-500 hover:underline">
 								AGBs{" "}
 							</a>
 							und{" "}
