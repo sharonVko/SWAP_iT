@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
-import topswap2 from "../assets/topswapfont2.png";
+import topswap2 from "../assets/topswapsnew1.png";
 import { truncateDescription } from "../utils/helpers";
 import SwapSchema from "../components/SwapSchema.jsx";
 import { useNavigate } from "react-router-dom";
