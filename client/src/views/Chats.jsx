@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import ChatRowContent from "../components/ChatRowContent.jsx";
 import LoginForm from '../components/LoginForm.jsx';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
@@ -22,9 +23,11 @@ const Chats = () => {
         console.error('Error fetching chats:', error);
       }
     };
+
     if (isLoggedIn) {
       fetchChats();
     }
+
   }, [isLoggedIn]);
 
   const handleDeleteChat = async (chatId) => {
@@ -41,9 +44,9 @@ const Chats = () => {
       console.error(`Error deleting chat:`, error);
     }
   };
-
   const handleChatClick = (chat) => {
-    setSelectedChat(chat); // Set selected chat
+    //setSelectedChat(chat); // Set selected chat
+		navigate(`/singlechat/${chat._id}/${chat.ad_id}/${chat.participants[1]._id}`);
   };
 
   if (!isLoggedIn) {
@@ -51,48 +54,60 @@ const Chats = () => {
   }
 
   return (
-    <div className='flex'>
+	<>
+	{!isLoggedIn ? (
+		<LoginForm target="/" />
+	) : (
+		<>
+			<h1 className="text-center mb-6">Meine Nachrichten</h1>
+			<div className="rounded-lg p-4 md:p-8 max-w-[960px] mx-auto">
+				<ul>
+					{chatData && chatData.map((chat) => (
 
-      <div className='w-1/3 bg-gray-100 p-4 overflow-y-auto'>
-        <h1 className='text-2xl font-bold mb-4'>Chats</h1>
-        <ul>
-          {chatData &&
-            chatData.map((chat) => (
-              <li
-                key={chat._id}
-                className='p-4 mb-2 bg-white rounded shadow cursor-pointer flex justify-between items-center'
-                onClick={() => handleChatClick(chat)}
-              >
-                <div>
-                  Product {chat.ad_id} -
-                  {chat.participants
-                    .filter((participant) => participant._id !== userData._id)
-                    .map((participant) => participant.username)
-                    .join(', ')}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteChat(chat._id);
-                  }}
-                  className='bg-red-500 text-white p-2 rounded'
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-        </ul>
-      </div>
-      <div className='w-2/3'>
-        {selectedChat ? (
-          <ChatRoom chat={selectedChat} userData={userData} />
-        ) : (
-          <div className='flex items-center justify-center h-full'>
-            <p className='text-gray-500'>Select a chat to start messaging</p>
-          </div>
-        )}
-      </div>
-    </div>
+							<li
+								key={chat._id}
+								className='p-2 pr-4 mb-4 bg-white/30 rounded cursor-pointer flex justify-between items-center'
+								onClick={() => handleChatClick(chat)}>
+
+								{/*<div>*/}
+								{/*	Product {chat.ad_id } - {}*/}
+
+								{/*	{chat.participants*/}
+								{/*		.filter((participant) => participant._id !== userData._id)*/}
+								{/*		.map((participant) => participant.username)*/}
+								{/*		.join(', ')}*/}
+								{/*</div>*/}
+
+								<ChatRowContent chat={chat} />
+
+								<button
+									onClick={(e) => {
+										e.stopPropagation();
+										handleDeleteChat(chat._id);
+									}}>
+									<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+										<path fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M20 20L4 4m16 0L4 20"/>
+									</svg>
+								</button>
+							</li>
+						))}
+
+				</ul>
+			</div>
+		</>
+	)}
+
+      {/*<div className='w-2/3'>*/}
+      {/*  {selectedChat ? (*/}
+      {/*    <ChatRoom chat={selectedChat} userData={userData} />*/}
+      {/*  ) : (*/}
+      {/*    <div className='flex items-center justify-center h-full'>*/}
+      {/*      <p className='text-gray-500'>Select a chat to start messaging</p>*/}
+      {/*    </div>*/}
+      {/*  )}*/}
+      {/*</div>*/}
+
+    </>
   );
 };
 

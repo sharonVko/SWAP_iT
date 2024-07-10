@@ -67,7 +67,7 @@ const UserProfile = () => {
     <>
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
 
-			<div className="sm:px-10 lg:px-20 py-8 relative -top-12">
+			<div className="sm:px-10 lg:px-20 relative -top-8">
 
 				<div>
 					<img
