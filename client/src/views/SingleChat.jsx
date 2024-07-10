@@ -72,6 +72,7 @@ const SingleChat = () => {
 		};
 
 		fetchReceiver().then();
+
 	}, [receiverId]);
 
   const handleSendMessage = async () => {
