@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import ArticleCard_02 from "./ArticleCard_02";
 import axios from "axios";
 import { categories } from "../utils/categories";
@@ -18,8 +18,6 @@ const ArticleList = () => {
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const { isLoggedIn, userData } = useAuth();
-
-  //console.log(userData);
 
   useEffect(() => {
     const fetchArticleData = async () => {

@@ -1,12 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
+import LoginForm from "../components/LoginForm.jsx";
 
-const Ads = () => {
+const FilteredAds = ({ filter }) => {
+	const { isLoggedIn, userData } = useAuth();
+
 	return (
-		<div>
-			Filtered Ads<br />
-			Suchergebnisse, Kategorie, Tag, User, New, All ...
-		</div>
+		<>
+			{!isLoggedIn ? (
+				<LoginForm target="/" />
+			) : (
+				<>
+					<div>Filtered Ads</div>
+				</>
+			)};
+		</>
 	);
 };
 
-export default Ads;
+export default FilteredAds;

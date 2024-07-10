@@ -62,6 +62,7 @@ function App() {
 
             <Route path="/ads" element={<ArticleList />} />
             <Route path="/ads/new" element={<FilteredAds />} />
+						<Route path="/ads/interest" element={<FilteredAds />} />
             <Route path="/ads/category/:category" element={<FilteredAds />} />
             <Route path="/ads/tag/:tag" element={<FilteredAds />} />
             <Route path="/ads/search/:query" element={<FilteredAds />} />
@@ -70,7 +71,6 @@ function App() {
 
 						<Route path="/chats" element={<Chats />} />
 						<Route path="/singlechat/:chatId/:adId/:receiverId" element={<SingleChat />} />
-
 						<Route path="*" element={<NotFound />} />
 
 					</Routes>
