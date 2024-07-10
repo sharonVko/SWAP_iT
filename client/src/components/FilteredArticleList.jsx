@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import ArticleCard_02 from "./ArticleCard_02";
 import axios from "axios";
 import { categories } from "../utils/categories";
@@ -18,8 +18,6 @@ const ArticleList = () => {
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const { isLoggedIn, userData } = useAuth();
-
-  //console.log(userData);
 
   useEffect(() => {
     const fetchArticleData = async () => {
@@ -269,9 +267,9 @@ const ArticleList = () => {
 
       <div className="flex flex-col items-center w-full">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
-          {currentArticles.map((ad, i) => (
+          {currentArticles.map((ad, index) => (
             <>
-              <ArticleCard_02 key={i} article={ad} media={media} />
+              <ArticleCard_02 key={index} article={ad} media={media} />
             </>
           ))}
         </div>

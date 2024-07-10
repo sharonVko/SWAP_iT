@@ -1,111 +1,176 @@
-import React from "react";
-import { categories } from "../utils/categories.js";
-import { users } from "../utils/users.js";
-import { ads } from "../utils/ads.js";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "../context/AuthProvider.jsx";
 
-function SwapSchema() {
-  const getCategories = (id = 0) => {
-    return categories.filter((category) => category.parent === id);
-  };
+function SwapSchema({ setInterestAds, setSwapAds }) {
+  const { userData } = useAuth(); // Accessing user data from AuthProvider
+  const [users, setUsers] = useState([]);
+  const [ads, setAds] = useState([]);
 
-  const getUserById = (id) => {
-    return users.find((user) => user.user_id === id);
-  };
-
-  const getMatchingAds = (user) => {
-    const ownAd = ads.find((ad) => ad.user_id === user.user_id);
-    const swap_ads = [];
-    const interestAds = [];
-
-    ads.forEach((ad) => {
-      const adOwner = getUserById(ad.user_id);
-
-      // Convert ad.ad_cat to an array if it's not already
-      const adCategories = Array.isArray(ad.ad_cat) ? ad.ad_cat : [ad.ad_cat];
-      const commonCategories = user.pref_cats.filter((cat) =>
-        adCategories.includes(cat)
-      );
-      const commonTags = ad.tags.filter((tag) => user.pre_tags.includes(tag));
-
-      let match_type = "";
-      if (
-        commonCategories.length > 0 &&
-        ad.ad_child_cat &&
-        user.pref_child_cats.includes(ad.ad_child_cat)
-      ) {
-        if (commonTags.length >= 2) {
-          match_type = "Diamond";
-        } else if (commonTags.length === 1) {
-          match_type = "Gold";
-        } else {
-          match_type = "Silver";
-        }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/users/`);
+        setUsers(response.data);
+        console.log("Fetched users:", response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
-
-      if (
-        (match_type === "Diamond" && commonTags.length >= 2) ||
-        (match_type === "Gold" && commonTags.length === 1) ||
-        (match_type === "Silver" && commonTags.length === 0)
-      ) {
-        swap_ads.push({
-          ...ad,
-          match_type,
-          swap_with_ad: ownAd ? ownAd.ad_id : null,
-        });
-      }
-
-      // Collect all interest ads regardless of match type and exclude own ads and ads in swap_ads
-      if (
-        ad.user_id !== user.user_id && // Exclude own ads
-        !swap_ads.some((swapAd) => swapAd.ad_id === ad.ad_id) && // Exclude ads in swap_ads
-        (commonCategories.length > 0 ||
-          user.pref_child_cats.includes(ad.ad_child_cat) ||
-          commonTags.length > 0)
-      ) {
-        interestAds.push({
-          ...ad,
-          match_type,
-          score:
-            (commonCategories.length > 0 ? 1 : 0) +
-            (user.pref_child_cats.includes(ad.ad_child_cat) ? 1 : 0) +
-            commonTags.length,
-        });
-      }
-    });
-
-    // Sort interestAds by score in descending order
-    interestAds.sort((a, b) => b.score - a.score);
-
-    if (ownAd && user.pref_cats.includes(ownAd.ad_cat)) {
-      swap_ads.push({
-        ...ownAd,
-        match_type: "",
-        swap_with_ad: ownAd ? ownAd.ad_id : null,
-      });
-      interestAds.push({
-        ...ownAd,
-        match_type: "",
-        score: 0,
-      });
-    }
-
-    return {
-      swap_ads,
-      interestAds,
     };
-  };
 
-  const myUsers = users.map((user) => ({
-    user_id: user.user_id,
-    name: user.name,
-    pref_cats: user.pref_cats,
-    swap_ads: getMatchingAds(user).swap_ads,
-    interestAds: getMatchingAds(user).interestAds,
-  }));
+    const fetchAdData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/ads/`);
+        setAds(response.data);
+        console.log("Fetched ads:", response.data);
+      } catch (error) {
+        console.error("Error fetching ad data:", error);
+      }
+    };
 
-  console.log(myUsers); // Output to check swap_ads and interestAds for each user
+    fetchUserData();
+    fetchAdData();
+  }, []);
 
-  return null; // Komponente rendert nichts
+  useEffect(() => {
+    if (users.length > 0 && ads.length > 0 && userData) {
+      const getUserById = (id) => {
+        return users.find((user) => user._id === id);
+      };
+
+      const getMatchingAds = (user) => {
+        const ownAdIds = user.ads.map((ad) => ad.toString()); // Convert ObjectIds to strings
+        const swap_ads = [];
+        const interestAds = [];
+
+        if (
+          !user ||
+          !user.preferredcats ||
+          !user.preferredSubcats ||
+          !user.preferredtags
+        ) {
+          console.log("Invalid user or missing preferences:", user);
+          return { swap_ads, interestAds };
+        }
+
+        console.log("User preferences:", {
+          preferredcats: user.preferredcats,
+          preferredSubcats: user.preferredSubcats,
+          preferredtags: user.preferredtags,
+        });
+
+        const preferredCatsArray = user.preferredcats
+          .split(",")
+          .map((cat) => cat.trim());
+        const preferredSubcatsArray = user.preferredSubcats
+          .split(",")
+          .map((subcat) => subcat.trim());
+        const preferredTagsArray = user.preferredtags
+          .split(",")
+          .map((tag) => tag.trim());
+
+        console.log("Preferred categories:", preferredCatsArray);
+        console.log("Preferred subcategories:", preferredSubcatsArray);
+        console.log("Preferred tags:", preferredTagsArray);
+
+        ads.forEach((ad) => {
+          console.log("Checking ad:", ad);
+
+          // Skip user's own ads
+          if (ownAdIds.includes(ad._id.toString())) {
+            console.log(`Skipping own ad: ${ad._id}`);
+            return;
+          }
+
+          const adCategories = Array.isArray(ad.categories)
+            ? ad.categories
+            : [ad.categories];
+          const commonCategories = preferredCatsArray.filter((cat) =>
+            adCategories.includes(cat)
+          );
+          const commonTags = ad.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter((tag) => preferredTagsArray.includes(tag));
+
+          let match_type = "";
+          if (
+            commonCategories.length > 0 &&
+            ad.subCategory &&
+            preferredSubcatsArray.includes(ad.subCategory.toString())
+          ) {
+            if (commonTags.length >= 3) {
+              match_type = "Diamond";
+            } else if (commonTags.length === 2) {
+              match_type = "Gold";
+            } else if (commonTags.length === 1) {
+              match_type = "Silver";
+            }
+          }
+
+          // Add to swap_ads if match_type is set
+          if (
+            (match_type === "Diamond" && commonTags.length >= 3) ||
+            (match_type === "Gold" && commonTags.length === 2) ||
+            (match_type === "Silver" && commonTags.length === 1)
+          ) {
+            console.log(`Adding to swap_ads: ${ad._id}`);
+            let swapWithAdId = null;
+            const ownAd = user.ads.find((ownAd) => ownAd._id !== ad._id); // Corrected here
+            if (ownAd) {
+              swapWithAdId = ownAd._id;
+            }
+            swap_ads.push({
+              ...ad,
+              match_type,
+              swap_with_ad: swapWithAdId,
+            });
+          }
+
+          // Add to interestAds if it meets the conditions
+          if (
+            !swap_ads.some((swapAd) => swapAd._id === ad._id) &&
+            (commonCategories.length > 0 ||
+              preferredSubcatsArray.includes(ad.subCategory.toString()))
+          ) {
+            console.log(`Adding to interestAds: ${ad._id}`);
+            interestAds.push({
+              ...ad,
+              match_type: "", // No match type for interestAds
+              score:
+                (commonCategories.length > 0 ? 1 : 0) +
+                (preferredSubcatsArray.includes(ad.subCategory.toString())
+                  ? 1
+                  : 0),
+            });
+          }
+        });
+
+        // Sort interestAds by score
+        interestAds.sort((a, b) => b.score - a.score);
+
+        console.log("Final swap_ads:", swap_ads);
+        console.log("Final interestAds:", interestAds);
+
+        return {
+          swap_ads,
+          interestAds,
+        };
+      };
+
+      const currentUser = users.find((user) => user._id === userData._id);
+      if (currentUser) {
+        const { swap_ads, interestAds } = getMatchingAds(currentUser);
+
+        console.log("Fetched swap_ads:", swap_ads);
+        console.log("Fetched interestAds:", interestAds);
+        setInterestAds(interestAds);
+        setSwapAds(swap_ads);
+      }
+    }
+  }, [users, ads, userData, setInterestAds, setSwapAds]);
+
+  return null; // Component doesn't render anything
 }
 
 export default SwapSchema;

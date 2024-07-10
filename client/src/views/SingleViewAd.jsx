@@ -9,12 +9,17 @@ import folderlogo from "../assets/folderlogo.png";
 import locationlogo from "../assets/locationlogo.png";
 import { Button } from "flowbite-react";
 import { categories } from "../utils/categories"; // Make sure to use the correct path to your categories.js file
-
+import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const SingleViewAd = () => {
   const [article, setArticle] = useState(null);
   const [username, setUsername] = useState(null); // State to store the username
+  const [chatData, setChatData] = useState([]);
+  const [error, setError] = useState("");
+  const { isLoggedIn, userData } = useAuth();
   const { articleId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchArticleAndUser = async () => {
@@ -30,16 +35,38 @@ const SingleViewAd = () => {
         const userResponse = await axios.get(
           `http://localhost:8000/users/${articleResponse.data.user_id}`
         );
-        console.log(userResponse.data); // Log the user data
+        // console.log(userResponse.data); // Log the user data
         setUsername(userResponse.data.username); // Set the username state
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchArticleAndUser();
   }, [articleId]);
 
+  // Start New Chat
+  const handleNewChat = async () => {
+    const sender_user_id = userData._id; // Logged-in User
+    const receiver_user_id = article.user_id; // Ad Creator
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/chats/",
+        {
+          participants: [sender_user_id, receiver_user_id],
+          messages: [],
+          ad_id: article._id,
+        },
+        { withCredentials: true }
+      );
+      setChatData((prevChatData) => [...prevChatData, response.data]);
+      navigate(
+        `/singlechat/${response.data._id}/${article._id}/${receiver_user_id}`
+      );
+    } catch (error) {
+      console.error("Error starting new chat:", error);
+      setError("Error starting new chat");
+    }
+  };
 
   const getCategoryNameById = (id) => {
     const category = categories.find((cat) => cat.cat_id === id);
@@ -47,13 +74,12 @@ const SingleViewAd = () => {
   };
 
   let tags;
-
   if (article) {
     tags = article.tags.split(",");
   }
 
   return (
-    <>
+    <div>
       {article && (
         <div className="mx-auto sm:flex-col max-w-2xl p-4">
           <div className="mb-8 text-teal-700 text-center">
@@ -63,7 +89,7 @@ const SingleViewAd = () => {
             <Carousel slide={false}>
               {article.media[0].map((image, index) => (
                 <img
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain"
                   src={image}
                   alt="..."
                   key={index}
@@ -71,14 +97,11 @@ const SingleViewAd = () => {
               ))}
             </Carousel>
           </div>
-
-
-          <div className="w-96 mt-8 mx-auto">
+          <div className="w-96 mt-8 mb-14 mx-auto">
             <p className="text-teal-700 text-lg leading-relaxed">
               {article.description}
             </p>
           </div>
-
           <div className="flex flex-wrap gap-2 my-6 items-center">
             <img src={folderlogo} className="size-9" title="Kategorie" />
             <p className="text-teal-700 bg-green-400/40 px-3 py-1 rounded-full">
@@ -89,7 +112,6 @@ const SingleViewAd = () => {
               {getCategoryNameById(parseInt(article.subCategory))}
             </p>
           </div>
-
           <div className="flex flex-wrap gap-2 my-6 items-center">
             <img src={taglogo} className="size-9" />
             {tags &&
@@ -102,39 +124,45 @@ const SingleViewAd = () => {
                 </span>
               ))}
           </div>
-
-
           <div className="flex flex-wrap gap-2 my-6 items-center">
             <img src={locationlogo} className="size-9" />
             <p className="text-teal-700 text-lg">2.5 km entfernt</p>
           </div>
-
-          <div
-            className="flex flex-wrap gap-4 my-6  p-4 rounded-lg"
-            gradientDuoTone="greenToBlue"
-          >
-            <Button
+          {isLoggedIn && (
+            <div
+              className="flex flex-wrap gap-4 my-6 p-4 rounded-lg"
               gradientDuoTone="greenToBlue"
-              className="border-2 border-teal-500 text-teal-700"
             >
-              Nachricht
-            </Button>
-            <p className="text-teal-700 text-lg">
-              an <span className="font-bold underline">{username}</span>
-            </p>
-            <div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-700">
-              <Avatar
-                img="https://randomuser.me/api/portraits/men/42.jpg"
-                size="sm"
-                title={`Profil von ${username}`}
-              />
+              {article.user_id !== userData._id ? (
+                <>
+                  <Button
+                    gradientDuoTone="greenToBlue"
+                    className="border-2 border-teal-500 text-teal-700"
+                    onClick={handleNewChat}
+                  >
+                    Nachricht
+                  </Button>
+                  <p className="text-teal-700 text-lg mr-1">
+                    an{" "}
+                    <span className="font-bold text-xl underline ml-1">
+                      {username}
+                    </span>
+                  </p>
+                  <div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-700">
+                    <Avatar
+                      img="https://randomuser.me/api/portraits/men/42.jpg"
+                      size="sm"
+                      title={`Profil von ${username}`}
+                    />
+                  </div>
+                </>
+              ) : null}
             </div>
-          </div>
+          )}
         </div>
       )}
-    </>
+    </div>
   );
-
 };
 
 export default SingleViewAd;
