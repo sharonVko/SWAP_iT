@@ -40,7 +40,7 @@ const UserSettings = () => {
 				zip: userData.address?.zip || "",
 				country: userData.address?.city || "",
 				name: userData.username || "",
-				imageUrl: userData.profileImage || beispielfotoprofil,
+				imageUrl: userData.profileimage || beispielfotoprofil,
 			}));
 		}
 	}, [isLoggedIn, userData]);
