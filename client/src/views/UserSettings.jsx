@@ -95,16 +95,22 @@ const UserSettings = () => {
 
 	return (
 		<form onSubmit={handleSave}>
-      <h1 className="mb-6 text-center">Konto-Einstellungen</h1>
+			<h1 className="mb-6 text-center">Kontoeinstellungen</h1>
 			<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-xl p-4 sm:p-8 md:p-12 mb-12 gap-8 md:gap-16">
-
 				<div className="mx-auto text-center w-full">
-          <div>
-						<img src={profile.imageUrl} alt="Profilbild" className="rounded-full max-w-sm mx-auto h-29 w-40 ring-8 ring-white/50 mb-6"/>
+					<div>
+						<img
+							src={profile.imageUrl}
+							alt="Profilbild"
+							className="rounded-full max-w-sm mx-auto h-29 w-40 ring-8 ring-white/50 mb-6"
+						/>
 						<h2 className="h2 text-peach-300 text-center text-3xl my-8">
 							{profile.firstname} {profile.lastname}
 						</h2>
-						<label htmlFor="profile-image-upload" className="w-[200px] btn-sm btn-red py-2 block mb-3 mx-auto cursor-pointer">
+						<label
+							htmlFor="profile-image-upload"
+							className="w-[200px] btn-sm btn-red py-2 block mb-3 mx-auto cursor-pointer"
+						>
 							Profilbild ändern
 						</label>
 						<input
@@ -117,22 +123,28 @@ const UserSettings = () => {
 						<button className="w-[200px] btn-sm btn-red py-2 block mx-auto">
 							Passwort ändern
 						</button>
-          </div>
+					</div>
 
-          <h2 className="h1 mt-12 text-peach-300 ">Sucheinstellungen</h2>
-          <div className="w-full text-left">
-            <p className="text-2xl text-green-200 mb-4 mt-8 text-center">Mindestens 3 Kategorien auswählen</p>
-            <TagSelect suggestions={suggestions_cats}  />
-          </div>
-          <div className="w-full text-left">
-            <p className="text-2xl text-green-200 mb-4 mt-8 text-center">Mindestens 3 Sub-Kategorien auswählen</p>
-						<TagSelect suggestions={suggestions_subcats}  />
-          </div>
-          <div className="w-full text-left">
-            <p className="text-2xl text-green-200 mb-4 mt-8 text-center">Mindestens 3 Tags auswählen</p>
-						<TagSelect suggestions={suggestions_tags}  />
-          </div>
-        </div>
+					<h2 className="h1 mt-12 text-peach-300 ">Sucheinstellungen</h2>
+					<div className="w-full text-left">
+						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
+							Bitte wähle mindestens 3 Kategorien
+						</p>
+						<TagSelect suggestions={suggestions_cats} />
+					</div>
+					<div className="w-full text-left">
+						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
+							Wähle mindestens 3 Sub-Kategorien
+						</p>
+						<TagSelect suggestions={suggestions_subcats} />
+					</div>
+					<div className="w-full text-left">
+						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
+							Wähle mindestens 3 Tags
+						</p>
+						<TagSelect suggestions={suggestions_tags} />
+					</div>
+				</div>
 				<div className=" w-full">
 					<div>
 						{[
@@ -174,18 +186,19 @@ const UserSettings = () => {
 								</div>
 							</div>
 						))}
-
 					</div>
 				</div>
 
 				<div className="md:col-span-2">
 					{/*{isEditing && (*/}
-					<button type="submit" className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6">
+					<button
+						type="submit"
+						className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6"
+					>
 						Einstellungen speichern
 					</button>
 					{/*)}*/}
 				</div>
-
 			</div>
 		</form>
 	);
