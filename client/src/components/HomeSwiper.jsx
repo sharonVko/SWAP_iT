@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { Navigation, Pagination } from "swiper/modules";
 import { register } from "swiper/element/bundle";
 import ArticleCard from "./ArticleCard.jsx";
-import ArticleCard_02 from "./ArticleCard_02.jsx";
 
 function HomeSwiper({ swiperId, articles }) {
   const swiperRef = useRef(null);
@@ -56,7 +55,7 @@ function HomeSwiper({ swiperId, articles }) {
           {articles.map((article, i) => (
             <swiper-slide key={i}>
               <div className="pt-6 px-2 pb-4 relative">
-                <ArticleCard_02 article={article} />
+                <ArticleCard article={article} />
               </div>
             </swiper-slide>
           ))}

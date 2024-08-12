@@ -7,7 +7,6 @@ export default {
 		"./node_modules/flowbite/**/*.js",
 		flowbite.content(),
 	],
-
   theme: {
 		container: {
 			center: true,
@@ -159,7 +158,11 @@ export default {
 				'700': '700',
 				'800': '800',
 				'900': '900',
-				'1000': '1000'
+				'1000': '1000',
+				'2000': '2000',
+				'3000': '3000',
+				'4000': '4000',
+				'5000': '5000'
 			}
 		}
 	},

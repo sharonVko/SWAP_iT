@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import ArticleCard_02 from "./ArticleCard_02";
+import ArticleCard from "./ArticleCard.jsx";
 import axios from "axios";
 import { categories } from "../utils/categories";
 import "../components/css/ArticleList.css";
@@ -269,7 +269,7 @@ const ArticleList = () => {
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
           {currentArticles.map((ad, index) => (
             <>
-              <ArticleCard_02 key={index} article={ad} media={media} />
+              <ArticleCard key={index} article={ad} media={media} />
             </>
           ))}
         </div>
