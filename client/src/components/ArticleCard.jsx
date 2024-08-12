@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { mdiHeartOutline, mdiHeart, mdiMapMarker } from "@mdi/js";
 import { Collapse } from "react-collapse";
+import { useAuth } from "../context/AuthProvider.jsx";
 import { truncateDescription } from "../utils/helpers";
 import { categories } from "../utils/categories";
 import { Link, useNavigate } from "react-router-dom";
 import "../components/css/ArticleCards.css";
 
 const ArticleCard = ({ article }) => {
+	const { isLoggedIn } = useAuth();
 	const navigate = useNavigate();
 	const [active, setActive] = useState(false);
 	const [liked, setLiked] = useState(false);
@@ -185,8 +187,7 @@ const ArticleCard = ({ article }) => {
 						</button>
 					</Collapse>
 				</div>
-
-				<div className="absolute -top-2 -right-1 p-0 cursor-pointer">
+				{isLoggedIn && <div className="absolute -top-2 -right-1 p-0 cursor-pointer">
 					<svg
 						className={`h-8 w-8 ${
 							liked
@@ -202,7 +203,7 @@ const ArticleCard = ({ article }) => {
 					>
 						<path d={liked ? mdiHeart : mdiHeartOutline} />
 					</svg>
-				</div>
+				</div>}
 			</div>
 		</div>
 	);
