@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
+import { FaSearch } from "react-icons/fa";
 import ArticleCard_02 from "./ArticleCard_02";
 import axios from "axios";
 import { categories } from "../utils/categories";
 import "../components/css/ArticleList.css";
-import { FaSearch } from "react-icons/fa";
-import { useAuth } from "../context/AuthProvider.jsx";
+//import { useAuth } from "../context/AuthProvider.jsx";
 
 const ArticleList = () => {
+
+	// Use useRef to detect clicks outside the search area
+	const searchRef = useRef(null);
+
   const [ads, setAds] = useState([]);
   const [media, setMedia] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,10 +21,10 @@ const ArticleList = () => {
   const [searchText, setSearchText] = useState("");
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
-  const { isLoggedIn, userData } = useAuth();
-
+  //const { isLoggedIn, userData } = useAuth();
   //console.log(userData);
 
+	// fetch article data
   useEffect(() => {
     const fetchArticleData = async () => {
       try {
@@ -32,17 +36,34 @@ const ArticleList = () => {
       }
     };
     fetchArticleData();
+
+		// Handle outside click to close the search form
+		const handleClickOutside = (event) => {
+			if (searchRef.current && !searchRef.current.contains(event.target)) {
+				// Clicked outside search area, close it
+				setIsActive(false);
+			}
+		};
+
+		// Execute outside click
+		document.addEventListener("mousedown", handleClickOutside);
+		// return () => {
+		// 	document.removeEventListener("mousedown", handleClickOutside);
+		// };
   }, []);
 
+	// Sort articles chronologically or alphabetically
   const sortedArticles = ads.slice().sort((a, b) => {
     if (sortOrder === "newest") {
       return new Date(b.timestamp) - new Date(a.timestamp);
-    } else if (sortOrder === "alphabetical") {
+    }
+		else if (sortOrder === "alphabetical") {
       return a.title.localeCompare(b.title);
     }
     return 0;
   });
 
+	// Filter articles by category & sub category
   const filterArticles = (articles, mainCategoryId, subCategoryId) => {
     return articles.filter((ad) => {
       if (mainCategoryId && subCategoryId) {
@@ -57,6 +78,7 @@ const ArticleList = () => {
     });
   };
 
+	// Filter articles by search term
   const searchFilter = (article) => {
     const lowerCasedSearchText = searchText.toLowerCase();
     const mainCategoryName = categories
@@ -65,7 +87,6 @@ const ArticleList = () => {
     const subCategoryName = categories
       .find((category) => category.cat_id === article.subCategory)
       ?.name.toLowerCase();
-
     return (
       mainCategoryName?.includes(lowerCasedSearchText) ||
       article.description.toLowerCase().includes(lowerCasedSearchText) ||
@@ -75,32 +96,33 @@ const ArticleList = () => {
     );
   };
 
+	// Create filtered articles (ads) array
   const filteredArticles = filterArticles(
     sortedArticles.filter(searchFilter),
     selectedMainCategory,
     selectedSubCategory
   );
 
+	/** Manage pagination ( x articles per view) **/
   const indexOfLastArticle = currentPage * articlesPerPage;
   const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-  const currentArticles = filteredArticles.slice(
-    indexOfFirstArticle,
-    indexOfLastArticle
-  );
-
+  const currentArticles = filteredArticles.slice(indexOfFirstArticle, indexOfLastArticle);
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
   const handlePerPageChange = (e) => {
     setArticlesPerPage(parseInt(e.target.value, 10)); // Update articles per page based on selected option
     setCurrentPage(1); // Reset to first page when changing articles per page
   };
+	const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
 
+	/** Manage filtered views **/
+	// Handle change sort order
   const handleSortOrderChange = (e) => {
     setSortOrder(e.target.value);
   };
 
+	// Handle change of main category
   const handleMainCategoryChange = (e) => {
     const mainCategoryId = e.target.value;
     setSelectedMainCategory(mainCategoryId);
@@ -108,12 +130,14 @@ const ArticleList = () => {
     setCurrentPage(1); // Reset to first page when changing main category
   };
 
+	// Handle change of sub category
   const handleSubCategoryChange = (e) => {
     const subCategoryId = e.target.value;
     setSelectedSubCategory(subCategoryId);
     setCurrentPage(1); // Reset to first page when changing sub category
   };
 
+	// get sub categories depending on selected main category
   const getSubCategories = () => {
     if (!selectedMainCategory) {
       return [];
@@ -123,40 +147,21 @@ const ArticleList = () => {
     );
   };
 
-  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
-
+	// message to print out if no articles found
   useEffect(() => {
-    if (filteredArticles.length === 0 && ads.length > 0) {
-      setMessage("Oops, leider keine passenden Artikel gefunden.");
-    } else {
-      setMessage("");
-    }
+    (filteredArticles.length === 0 && ads.length > 0) ? setMessage("Oops, leider keine passenden Artikel gefunden.") : setMessage("");
   }, [filteredArticles]);
 
-  // Use useRef to detect clicks outside the search area
-  const searchRef = useRef(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsActive(false); // Clicked outside search area, close it
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
+	// Search toggle
   const toggleSearch = () => {
     setIsActive(!isActive);
-    if (!isActive) {
-      // Clear search text when activating search
-      setSearchText("");
-    }
+		// Clear search text when closing the search field
+    if (!isActive) setSearchText("");
   };
 
+
+	/** Return block **/
   return (
     <div className="flex flex-col items-center bg-transparent">
       <div className="filters-wrapper flex flex-col sm:flex-row items-center mb-4 w-full">
@@ -266,13 +271,10 @@ const ArticleList = () => {
           )}
         </div>
       </div>
-
       <div className="flex flex-col items-center w-full">
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full">
           {currentArticles.map((ad, i) => (
-            <>
-              <ArticleCard_02 key={i} article={ad} media={media} />
-            </>
+            <ArticleCard_02 key={i} article={ad} media={media} />
           ))}
         </div>
         {message && <div className="text-red-500 text-sm mb-4">{message}</div>}
