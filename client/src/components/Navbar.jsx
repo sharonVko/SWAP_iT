@@ -202,7 +202,7 @@ function Navbar({ onToggleNav, onClose }) {
 							{isLoggedIn && (
 								<button className="navbar-profile">
 									<img
-										src={userData.profileImage || beispielfotoprofil}
+										src={userData.profileimage || beispielfotoprofil}
 										alt="Profilbild"
 										className="rounded-full h-10 w-10"
 										onClick={() => goTo("/profile/settings")}
