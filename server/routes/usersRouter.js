@@ -15,7 +15,10 @@ usersRouter.get("/", userController.getAllUsers); // get all users
 usersRouter.get("/:id", userController.getSingleUser); // get user by id
 usersRouter.get("/ads/:id", verifyToken, userController.getAllAdsByUser); // get all ads posted by specific user
 
-usersRouter.put("/:id", verifyToken, userController.updateUser); // update user settings
+// update user settings
+usersRouter
+	.route("/:id")
+	.put(verifyToken, upload.single('img'), userController.updateUser);
 
 usersRouter.post(
   "/toggle-favorite",

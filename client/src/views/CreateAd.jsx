@@ -9,7 +9,6 @@ import { tags } from "../utils/tags";
 
 const CreateAd = () => {
   const { isLoggedIn, userData } = useAuth();
-
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -109,6 +108,7 @@ const CreateAd = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formDataToSend = new FormData();
     formDataToSend.append("user_id", userData._id);
     formDataToSend.append("title", formData.title);
@@ -120,21 +120,11 @@ const CreateAd = () => {
     formDataToSend.append("condition", formData.condition);
     formDataToSend.append("material", formData.material);
     formDataToSend.append("color", formData.color);
-    formDataToSend.append(
-      "pickupaddress[street]",
-      formData.pickupaddress.street
-    );
-    formDataToSend.append(
-      "pickupaddress[housenumber]",
-      formData.pickupaddress.housenumber
-    );
+    formDataToSend.append("pickupaddress[street]", formData.pickupaddress.street);
+    formDataToSend.append("pickupaddress[housenumber]", formData.pickupaddress.housenumber);
     formDataToSend.append("pickupaddress[zip]", formData.pickupaddress.zip);
     formDataToSend.append("pickupaddress[city]", formData.pickupaddress.city);
-    formDataToSend.append(
-      "pickupaddress[country]",
-      formData.pickupaddress.country
-    );
-
+    formDataToSend.append("pickupaddress[country]", formData.pickupaddress.country);
     for (let i = 0; i < formData.media_files.length; i++) {
       formDataToSend.append("media_files", formData.media_files[i]);
     }
@@ -144,15 +134,14 @@ const CreateAd = () => {
         "http://localhost:8000/ads/createAd",
         formDataToSend,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: {"Content-Type": "multipart/form-data"},
           withCredentials: true,
         }
       );
 
       console.log("Ad created successfully:", response.data);
 
+			// reset data fields
       setFormData({
         title: "",
         description: "",
@@ -172,9 +161,10 @@ const CreateAd = () => {
         material: "",
         color: "",
       });
-
       setSelectedImages([]);
-    } catch (error) {
+    }
+
+		catch (error) {
       console.error("Error creating ad:", error);
     }
   };
