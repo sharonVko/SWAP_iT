@@ -86,8 +86,10 @@ export const updateUser = asyncHandler(async (req, res, next) => {
     uid
   } = req;
 
-	// re-assign profile image with resource of uploaded cloudinary image
-	body.profileimage = req.file.path;
+	// re-assign profile image with the resource of uploaded cloudinary image
+	if (req.file !== undefined) {
+		body.profileimage = req.file.path;
+	}
 
   const found = await User.findById(id);
   if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
