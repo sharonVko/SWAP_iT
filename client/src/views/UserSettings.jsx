@@ -1,46 +1,63 @@
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import beispielfotoprofil from "../assets/userlogo.png";
 import { Label } from "flowbite-react";
 
-import { suggestions_cats, suggestions_subcats, suggestions_tags } from "../components/Categories.jsx";
+import { suggestions_cats, suggestions_subcats } from "../components/Categories.jsx";
+import { suggestions_tags } from "../utils/tags.js"
 
 import TagSelect from "../components/TagSelect.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
 import axios from 'axios';
 
 const UserSettings = () => {
+
 	const { isLoggedIn, userData } = useAuth();
+	const [showPWChange, setShowPWChange] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [editableField, setEditableField] = useState(null);
+
+	const [preferredcats, setPreferredcats] = useState("");
+	const [preferredSubcats, setPreferredSubcats] = useState("");
+	const [preferredtags, setPreferredtags] = useState("");
+
+	const [previewImage, setPreviewImage] = useState(null);
 	const [profile, setProfile] = useState({
+		street: "",
+		number: "",
+		zip: "",
+		city: "",
+		country: "",
 		firstname: "",
 		lastname: "",
 		email: "",
 		phone: "",
-		street: "",
-		number: "",
-		zip: "",
-		country: "",
 		name: "",
-		imageUrl: "",
+		preferredcats: "",
+		preferredSubcats: "",
+		preferredtags: "",
+		profileimage: null,
 	});
-	const [isEditing, setIsEditing] = useState(false);
-	const [selectedFile, setSelectedFile] = useState(null);
-	const [editableField, setEditableField] = useState(null);
-	const [selected, setSelected] = useState([]);
+
 
 	useEffect(() => {
 		if (isLoggedIn && userData) {
 			setProfile((prevProfile) => ({
 				...prevProfile,
+				street: userData.address?.street || "",
+				housenumber: userData.address?.housenumber || "",
+				zip: userData.address?.zip || "",
+				city: userData.address?.city || "",
+				country: userData.address?.country || "",
 				firstname: userData.firstname || "",
 				lastname: userData.lastname || "",
 				email: userData.email || "",
 				phone: userData.phone || "",
-				street: userData.address?.street || "",
-				number: userData.address?.housenumber || "",
-				zip: userData.address?.zip || "",
-				country: userData.address?.city || "",
 				name: userData.username || "",
-				imageUrl: userData.profileimage || beispielfotoprofil,
+				preferredcats: userData.preferredcats || "",
+				preferredSubcats: userData.preferredSubcats || "",
+				preferredtags: userData.preferredtags || "",
+				profileimage: userData.profileimage || beispielfotoprofil,
 			}));
 		}
 	}, [isLoggedIn, userData]);
@@ -52,35 +69,53 @@ const UserSettings = () => {
 			[name]: value,
 		}));
 	};
-	const handleImageChange = (event) => {
-		const file = event.target.files[0];
+
+	const handleImageChange = (e) => {
+		const file = e.target.files[0]
 		if (file) {
 			setSelectedFile(file);
 			const reader = new FileReader();
 			reader.onloadend = () => {
-				setProfile((prevProfile) => ({
-					...prevProfile,
-					imageUrl: reader.result,
-				}));
+				setPreviewImage(reader.result);
 			};
 			reader.readAsDataURL(file);
 		}
 	};
+
+	const openPasswordChange = (e) => {
+		e.preventDefault();
+		setShowPWChange(true);
+		console.log('change password');
+	}
+
 	const handleSave = async (e) => {
 		e.preventDefault();
-
 		setIsEditing(false);
 		setEditableField(null);
-		console.log('-->', profile);
+
+		const formData = new FormData();
+		formData.append('img', selectedFile);
+		formData.append('firstname', profile.firstname);
+		formData.append('lastname', profile.lastname);
+		formData.append('email', profile.email);
+		formData.append('phone', profile.phone);
+		formData.append('name', profile.name);
+		formData.append('address[street]', profile.street);
+		formData.append('address[housenumber]', profile.housenumber);
+		formData.append('address[zip]', profile.zip);
+		formData.append('address[city]', profile.city);
+		formData.append('address[country]', profile.country);
+		formData.append('preferredcats', profile.preferredcats);
+		formData.append('preferredSubcats', profile.preferredSubcats);
+		formData.append('preferredtags', profile.preferredtags);
 
 		try {
 			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
-				profile,
+				formData,
 				{
 					headers: {"Content-Type": "multipart/form-data"},
 					withCredentials: true,
 				});
-
 			console.log("User updated successfully:", response.data);
 		}
 		catch (error) {
@@ -89,9 +124,16 @@ const UserSettings = () => {
 		// console.log("Saved profile:", profile);
 	};
 
+	const handlePasswordSave = async (e) => {
+		e.preventDefault();
+	}
+
 	if (!isLoggedIn) {
 		return <div>Please log in to access your profile.</div>;
 	}
+
+	console.log(suggestions_tags);
+
 
 	return (
 		<form onSubmit={handleSave}>
@@ -99,11 +141,11 @@ const UserSettings = () => {
 			<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-xl p-4 sm:p-8 md:p-12 mb-12 gap-8 md:gap-16">
 				<div className="mx-auto text-center w-full">
 					<div>
-						<img
-							src={profile.imageUrl}
-							alt="Profilbild"
-							className="rounded-full max-w-sm mx-auto h-29 w-40 ring-8 ring-white/50 mb-6"
-						/>
+
+						<div className="mx-auto mb-6 w-40 h-40 aspect-square ring-8 ring-white/50 rounded-full relative overflow-hidden">
+							<img src={previewImage ? previewImage : profile.profileimage} alt="Profilbild" className="absolute top-0 left-0 w-full h-full object-cover"/>
+						</div>
+
 						<h2 className="h2 text-peach-300 text-center text-3xl my-8">
 							{profile.firstname} {profile.lastname}
 						</h2>
@@ -113,16 +155,38 @@ const UserSettings = () => {
 						>
 							Profilbild ändern
 						</label>
+
 						<input
+							name="profileimg"
 							type="file"
 							accept="image/*"
 							onChange={handleImageChange}
-							className="hidden"
 							id="profile-image-upload"
+							className="hidden"
 						/>
-						<button className="w-[200px] btn-sm btn-red py-2 block mx-auto">
+
+						<button className="w-[200px] btn-sm btn-red py-2 block mx-auto" onClick={openPasswordChange}>
 							Passwort ändern
 						</button>
+						{showPWChange &&
+							<div className="mb-6 text-left">
+								{isEditing && editableField === "current_pw" ? (
+									<input
+										type="password"
+										name="current_pw"
+										className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
+										onBlur={() => setEditableField(null)}
+										autoFocus
+									/>
+								) : (
+									<div
+										className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
+										onClick={() => { setIsEditing(true); setEditableField("current_pw") }}>
+										Type in your current password
+									</div>
+								)}
+							</div>
+						}
 					</div>
 
 					<h2 className="h1 mt-12 text-peach-300 ">Sucheinstellungen</h2>
@@ -130,63 +194,73 @@ const UserSettings = () => {
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Bitte wähle mindestens 3 Kategorien
 						</p>
+
 						<TagSelect suggestions={suggestions_cats} />
+
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Sub-Kategorien
 						</p>
+
+
 						<TagSelect suggestions={suggestions_subcats} />
+
+
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Tags
 						</p>
+
+
+
 						<TagSelect suggestions={suggestions_tags} />
+
 					</div>
 				</div>
+
 				<div className=" w-full">
-					<div>
-						{[
-							"firstname",
-							"lastname",
-							"email",
-							"phone",
-							"street",
-							"number",
-							"zip",
-							"country",
-						].map((field) => (
-							<div key={field} className="mb-6">
-								<div className="text-2xl text-green-200">
-									{field.charAt(0).toUpperCase() + field.slice(1)}
-								</div>
-								<div>
-									{isEditing && editableField === field ? (
-										<input
-											type="text"
-											name={field}
-											value={profile[field]}
-											className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
-											onChange={handleInputChange}
-											onBlur={() => setEditableField(null)}
-											autoFocus
-										/>
-									) : (
-										<div
-											className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
-											onClick={() => {
-												setIsEditing(true);
-												setEditableField(field);
-											}}
-										>
-											{profile[field] || `Edit your ${field}`}
-										</div>
-									)}
-								</div>
+					{[
+						"firstname",
+						"lastname",
+						"email",
+						"phone",
+						"street",
+						"housenumber",
+						"city",
+						"zip",
+						"country",
+					].map((field) => (
+						<div key={field} className="mb-6">
+							<div className="text-2xl text-green-200">
+								{field.charAt(0).toUpperCase() + field.slice(1)}
 							</div>
-						))}
-					</div>
+							<div>
+								{isEditing && editableField === field ? (
+									<input
+										type="text"
+										name={field}
+										value={profile[field]}
+										className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
+										onChange={handleInputChange}
+										onBlur={() => setEditableField(null)}
+										autoFocus
+									/>
+								) : (
+									<div
+										className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
+										onClick={() => {
+											setIsEditing(true);
+											setEditableField(field);
+										}}
+									>
+										{profile[field] || `Edit your ${field}`}
+									</div>
+								)}
+							</div>
+						</div>
+					))}
 				</div>
 
 				<div className="md:col-span-2">

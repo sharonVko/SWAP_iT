@@ -5,13 +5,21 @@ import "../components/css/ReactTags.css";
 const MIN_SELECTED_LENGTH = 3;
 
 function TagSelect({ suggestions }) {
+
+
+
+	//const selectedTags = preselected ? preselected.split(',') : [];
+
 	const [selected, setSelected] = useState([]);
+
 	const onAdd = useCallback((newTag) => {
 		setSelected((prevSelected) => [...prevSelected, newTag]);
 	}, [selected]);
+
 	const onDelete = useCallback((index) => {
 		setSelected((prevSelected) => prevSelected.filter((_, i) => i !== index));
 	}, [selected]);
+
 	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
 
 	return (

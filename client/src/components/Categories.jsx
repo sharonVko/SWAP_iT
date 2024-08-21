@@ -20,7 +20,6 @@ const cats = [
   'Beauty und Gesundheit',
   'Bürobedarf',
 ];
-
 const tags = [
 	"Neu",
 	"So gut wie neu",
@@ -74,10 +73,9 @@ const tags = [
 	"Standard",
 	"gemustert",
 	"unvollständig",
-	"fürBastler",
+	"für Bastler",
 	"hochwertig"
 ]
-
 const subcats = [
 	"Smartphones",
 	"Tablets",

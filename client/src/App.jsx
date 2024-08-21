@@ -18,7 +18,7 @@ import Chats from './views/Chats.jsx';
 
 import UserLogout from "./views/UserLogout.jsx";
 import UserProfile from "./views/UserProfile.jsx";
-import UserSettings from "./views/UserSettingsTemp.jsx";   // --> change back to default
+import UserSettings from "./views/UserSettings.jsx";
 import ChangePassword from "./views/ChangePassword.jsx";
 import FilteredAds from "./views/FilteredAds.jsx";
 import MyAds from "./views/MyAds.jsx";
