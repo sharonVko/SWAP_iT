@@ -204,7 +204,7 @@ function Navbar({ onToggleNav, onClose }) {
                   <img
                     src={userData.profileimage || beispielfotoprofil}
                     alt="Profilbild"
-                    className="rounded-full h-10 w-10"
+                    className="rounded-full h-10 w-10 hover:scale-110"
                     onClick={() => goTo("/profile/settings")}
                   />
                 </button>
