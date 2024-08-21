@@ -1,11 +1,13 @@
 //tags to use for creating an ad
-export const tags = [
+const tags = [
+
   //condition tag (required!)
   { tag_id: 1, name: "Zustand", parent: 0 },
   { tag_id: 2, name: "Neu", parent: 1 },
   { tag_id: 3, name: "So gut wie neu", parent: 1 },
   { tag_id: 4, name: "Gebrauchsspuren", parent: 1 },
   { tag_id: 5, name: "Defekt", parent: 1 },
+
   //material tag
   { tag_id: 9, name: "Material", parent: 0 },
   { tag_id: 10, name: "Holz", parent: 9 },
@@ -22,6 +24,7 @@ export const tags = [
   { tag_id: 21, name: "Wolle", parent: 9 },
   { tag_id: 22, name: "Synthetik", parent: 9 },
   { tag_id: 23, name: "Leder", parent: 9 },
+
   //color tag
   { tag_id: 25, name: "Farbe", parent: 0 },
   { tag_id: 26, name: "schwarz", parent: 25 },
@@ -37,6 +40,7 @@ export const tags = [
   { tag_id: 36, name: "lila", parent: 25 },
   { tag_id: 37, name: "silber", parent: 25 },
   { tag_id: 38, name: "gold", parent: 25 },
+
   //random description tags (not usable for description field)
   { tag_id: 39, name: "Diverse", parent: 0 },
   { tag_id: 40, name: "Klassiker", parent: 39 },
@@ -63,3 +67,11 @@ export const tags = [
   { tag_id: 61, name: "für Bastler", parent: 39 },
   { tag_id: 62, name: "hochwertig", parent: 39 },
 ];
+
+const suggestions_tags = tags.filter(item => item.parent !== 0).map(itm => ({
+	value: itm.tag_id,
+  label: itm.name,
+}));
+
+
+export { tags, suggestions_tags };
