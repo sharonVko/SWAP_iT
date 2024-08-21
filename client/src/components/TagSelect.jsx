@@ -1,14 +1,17 @@
-import { useState, useCallback } from "react";
-import {ReactTags} from "react-tag-autocomplete";
+import { useState, useCallback, useEffect } from "react";
+import { ReactTags } from "react-tag-autocomplete";
+import { UseContextStore } from "../context/ContextProvider.jsx";
 import "../components/css/ReactTags.css";
 
 const MIN_SELECTED_LENGTH = 3;
 
-function TagSelect({ suggestions }) {
+function TagSelect({ suggestions, type }) {
 
-
-
-	//const selectedTags = preselected ? preselected.split(',') : [];
+	const {
+		setSelectedCats,
+		setSelectedSubCats,
+		setSelectedTags
+	} = UseContextStore();
 
 	const [selected, setSelected] = useState([]);
 
@@ -21,6 +24,12 @@ function TagSelect({ suggestions }) {
 	}, [selected]);
 
 	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
+
+	useEffect(() => {
+		if (type === "cats") setSelectedCats(selected);
+		if (type === "subcats") setSelectedSubCats(selected);
+		if (type === "tags") setSelectedTags(selected);
+	}, [selected])
 
 	return (
 		<ReactTags

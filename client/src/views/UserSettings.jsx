@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
+import { UseContextStore } from "../context/ContextProvider.jsx";
 import beispielfotoprofil from "../assets/userlogo.png";
 import { Label } from "flowbite-react";
 
@@ -10,6 +11,12 @@ import { useAuth } from "../context/AuthProvider.jsx";
 import axios from 'axios';
 
 const UserSettings = () => {
+
+	const {
+		selectedCats,
+		selectedSubCats,
+		selectedTags
+	} = UseContextStore();
 
 	const { isLoggedIn, userData } = useAuth();
 	const [showPWChange, setShowPWChange] = useState(false);
@@ -38,7 +45,6 @@ const UserSettings = () => {
 		preferredtags: "",
 		profileimage: null,
 	});
-
 
 	useEffect(() => {
 		if (isLoggedIn && userData) {
@@ -69,7 +75,6 @@ const UserSettings = () => {
 			[name]: value,
 		}));
 	};
-
 	const handleImageChange = (e) => {
 		const file = e.target.files[0]
 		if (file) {
@@ -81,13 +86,11 @@ const UserSettings = () => {
 			reader.readAsDataURL(file);
 		}
 	};
-
 	const openPasswordChange = (e) => {
 		e.preventDefault();
 		setShowPWChange(true);
 		console.log('change password');
 	}
-
 	const handleSave = async (e) => {
 		e.preventDefault();
 		setIsEditing(false);
@@ -124,6 +127,10 @@ const UserSettings = () => {
 		// console.log("Saved profile:", profile);
 	};
 
+	console.log("Cats: ", selectedCats);
+	console.log("SubCats: ", selectedSubCats);
+	console.log("Tags: ", selectedTags);
+
 	const handlePasswordSave = async (e) => {
 		e.preventDefault();
 	}
@@ -131,9 +138,6 @@ const UserSettings = () => {
 	if (!isLoggedIn) {
 		return <div>Please log in to access your profile.</div>;
 	}
-
-	console.log(suggestions_tags);
-
 
 	return (
 		<form onSubmit={handleSave}>
@@ -195,7 +199,7 @@ const UserSettings = () => {
 							Bitte wähle mindestens 3 Kategorien
 						</p>
 
-						<TagSelect suggestions={suggestions_cats} />
+						<TagSelect suggestions={suggestions_cats} type="cats" />
 
 					</div>
 					<div className="w-full text-left">
@@ -203,9 +207,7 @@ const UserSettings = () => {
 							Wähle mindestens 3 Sub-Kategorien
 						</p>
 
-
-						<TagSelect suggestions={suggestions_subcats} />
-
+						<TagSelect suggestions={suggestions_subcats} type="subcats"/>
 
 					</div>
 					<div className="w-full text-left">
@@ -213,9 +215,7 @@ const UserSettings = () => {
 							Wähle mindestens 3 Tags
 						</p>
 
-
-
-						<TagSelect suggestions={suggestions_tags} />
+						<TagSelect suggestions={suggestions_tags} type="tags"/>
 
 					</div>
 				</div>
