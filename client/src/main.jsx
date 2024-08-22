@@ -8,13 +8,13 @@ import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-	<ContextProvider>
-		<AuthProvider>
+	<AuthProvider>
+		<ContextProvider>
 			<ChatContext>
 				<BrowserRouter>
 					<App />
 				</BrowserRouter>
 			</ChatContext>
-		</AuthProvider>
-	</ContextProvider>
+		</ContextProvider>
+	</AuthProvider>
 )

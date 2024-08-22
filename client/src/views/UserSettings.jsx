@@ -1,49 +1,49 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthProvider.jsx";
 import { UseContextStore } from "../context/ContextProvider.jsx";
+import TagSelect from "../components/TagSelect.jsx";
 import beispielfotoprofil from "../assets/userlogo.png";
-import { Label } from "flowbite-react";
-
-import { suggestions_cats, suggestions_subcats } from "../components/Categories.jsx";
+import axios from 'axios';
+import { suggestions_cats, suggestions_subcats } from "../utils/categories.js"
 import { suggestions_tags } from "../utils/tags.js"
 
-import TagSelect from "../components/TagSelect.jsx";
-import { useAuth } from "../context/AuthProvider.jsx";
-import axios from 'axios';
 
 const UserSettings = () => {
 
-	const {
-		selectedCats,
-		selectedSubCats,
-		selectedTags
-	} = UseContextStore();
-
+	//const isEmpty = (obj) => Object.keys(obj).length === 0;
 	const { isLoggedIn, userData } = useAuth();
+	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
+
+	//console.log("Cats: ", selectedCats.map(i => i.value).join(','));
+	//console.log("SubCats: ", selectedSubCats.map(i => i.value).join(','));
+	//console.log("Tags: ", selectedTags.map(i => i.value).join(','));
+
 	const [showPWChange, setShowPWChange] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [editableField, setEditableField] = useState(null);
 
-	const [preferredcats, setPreferredcats] = useState("");
-	const [preferredSubcats, setPreferredSubcats] = useState("");
-	const [preferredtags, setPreferredtags] = useState("");
+	//const [preferredcats, setPreferredcats] = useState("");
+	//const [preferredSubcats, setPreferredSubcats] = useState("");
+	//const [preferredtags, setPreferredtags] = useState("");
 
 	const [previewImage, setPreviewImage] = useState(null);
+
 	const [profile, setProfile] = useState({
-		street: "",
-		number: "",
-		zip: "",
-		city: "",
-		country: "",
-		firstname: "",
-		lastname: "",
-		email: "",
-		phone: "",
-		name: "",
-		preferredcats: "",
-		preferredSubcats: "",
-		preferredtags: "",
-		profileimage: null,
+		street: userData.address?.street || "",
+		housenumber: userData.address?.housenumber || "",
+		zip: userData.address?.zip || "",
+		city: userData.address?.city || "",
+		country: userData.address?.country || "",
+		firstname: userData.firstname || "",
+		lastname: userData.lastname || "",
+		email: userData.email || "",
+		phone: userData.phone || "",
+		name: userData.username || "",
+		preferredcats: userData.preferredcats || "",
+		preferredSubcats: userData.preferredSubcats || "",
+		preferredtags: userData.preferredtags || "",
+		profileimage: userData.profileimage || beispielfotoprofil
 	});
 
 	useEffect(() => {
@@ -63,10 +63,11 @@ const UserSettings = () => {
 				preferredcats: userData.preferredcats || "",
 				preferredSubcats: userData.preferredSubcats || "",
 				preferredtags: userData.preferredtags || "",
-				profileimage: userData.profileimage || beispielfotoprofil,
+				profileimage: userData.profileimage || beispielfotoprofil
 			}));
 		}
 	}, [isLoggedIn, userData]);
+
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -96,6 +97,7 @@ const UserSettings = () => {
 		setIsEditing(false);
 		setEditableField(null);
 
+
 		const formData = new FormData();
 		formData.append('img', selectedFile);
 		formData.append('firstname', profile.firstname);
@@ -112,6 +114,7 @@ const UserSettings = () => {
 		formData.append('preferredSubcats', profile.preferredSubcats);
 		formData.append('preferredtags', profile.preferredtags);
 
+
 		try {
 			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
 				formData,
@@ -126,11 +129,6 @@ const UserSettings = () => {
 		}
 		// console.log("Saved profile:", profile);
 	};
-
-	console.log("Cats: ", selectedCats);
-	console.log("SubCats: ", selectedSubCats);
-	console.log("Tags: ", selectedTags);
-
 	const handlePasswordSave = async (e) => {
 		e.preventDefault();
 	}
@@ -172,6 +170,7 @@ const UserSettings = () => {
 						<button className="w-[200px] btn-sm btn-red py-2 block mx-auto" onClick={openPasswordChange}>
 							Passwort ändern
 						</button>
+
 						{showPWChange &&
 							<div className="mb-6 text-left">
 								{isEditing && editableField === "current_pw" ? (
@@ -199,7 +198,7 @@ const UserSettings = () => {
 							Bitte wähle mindestens 3 Kategorien
 						</p>
 
-						<TagSelect suggestions={suggestions_cats} type="cats" />
+						<TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats}/>
 
 					</div>
 					<div className="w-full text-left">
@@ -207,7 +206,7 @@ const UserSettings = () => {
 							Wähle mindestens 3 Sub-Kategorien
 						</p>
 
-						<TagSelect suggestions={suggestions_subcats} type="subcats"/>
+						<TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats}/>
 
 					</div>
 					<div className="w-full text-left">
@@ -215,7 +214,7 @@ const UserSettings = () => {
 							Wähle mindestens 3 Tags
 						</p>
 
-						<TagSelect suggestions={suggestions_tags} type="tags"/>
+						<TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags}/>
 
 					</div>
 				</div>
@@ -276,6 +275,7 @@ const UserSettings = () => {
 			</div>
 		</form>
 	);
+
 };
 
 export default UserSettings;

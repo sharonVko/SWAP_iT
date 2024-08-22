@@ -1,4 +1,4 @@
-export const categories = [
+const categories = [
   { cat_id: 1, name: "Elektronik", parent: 0 },
   { cat_id: 2, name: "Smartphones", parent: 1 },
   { cat_id: 3, name: "Tablets", parent: 1 },
@@ -95,3 +95,15 @@ export const categories = [
   { cat_id: 94, name: "Selbstgefertigtes", parent: 93 },
   { cat_id: 95, name: "Utensilien", parent: 93 },
 ];
+
+const suggestions_cats = categories.filter(item => item.parent === 0).map(itm => ({
+	value: itm.cat_id,
+	label: itm.name,
+}));
+
+const suggestions_subcats = categories.filter(item => item.parent !== 0).map(itm => ({
+	value: itm.cat_id,
+	label: itm.name,
+}));
+
+export { categories, suggestions_cats, suggestions_subcats };

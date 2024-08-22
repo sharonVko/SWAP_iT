@@ -5,7 +5,7 @@ import "../components/css/ReactTags.css";
 
 const MIN_SELECTED_LENGTH = 3;
 
-function TagSelect({ suggestions, type }) {
+function TagSelect({ suggestions, type, preferred }) {
 
 	const {
 		setSelectedCats,
@@ -13,23 +13,32 @@ function TagSelect({ suggestions, type }) {
 		setSelectedTags
 	} = UseContextStore();
 
-	const [selected, setSelected] = useState([]);
+	const managePreferred = () => {
+		let arr = [];
+		if (preferred !== '') {
+			arr = preferred.split(',').map(item => {
+				let id= parseInt(item);
+				return suggestions.filter(i => i.value === id)[0];
+			});
+		}
+		return arr;
+	}
 
-	const onAdd = useCallback((newTag) => {
-		setSelected((prevSelected) => [...prevSelected, newTag]);
-	}, [selected]);
-
-	const onDelete = useCallback((index) => {
-		setSelected((prevSelected) => prevSelected.filter((_, i) => i !== index));
-	}, [selected]);
-
-	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
+	const [selected, setSelected] = useState(managePreferred());
 
 	useEffect(() => {
 		if (type === "cats") setSelectedCats(selected);
 		if (type === "subcats") setSelectedSubCats(selected);
 		if (type === "tags") setSelectedTags(selected);
 	}, [selected])
+
+	const onAdd = useCallback((newTag) => {
+		setSelected((prevSelected) => [...prevSelected, newTag]);
+	}, [selected]);
+	const onDelete = useCallback((index) => {
+		setSelected((prevSelected) => prevSelected.filter((_, i) => i !== index));
+	}, [selected]);
+	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
 
 	return (
 		<ReactTags
