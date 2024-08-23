@@ -12,19 +12,10 @@ const UserSettings = () => {
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
 
-	//console.log("Cats: ", selectedCats.map(i => i.value).join(','));
-	//console.log("SubCats: ", selectedSubCats.map(i => i.value).join(','));
-	//console.log("Tags: ", selectedTags.map(i => i.value).join(','));
-
 	const [showPWChange, setShowPWChange] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [editableField, setEditableField] = useState(null);
-
-	//const [preferredcats, setPreferredcats] = useState("");
-	//const [preferredSubcats, setPreferredSubcats] = useState("");
-	//const [preferredtags, setPreferredtags] = useState("");
-
 	const [previewImage, setPreviewImage] = useState(null);
 
 	const [profile, setProfile] = useState({
@@ -95,7 +86,6 @@ const UserSettings = () => {
 		setIsEditing(false);
 		setEditableField(null);
 
-
 		const formData = new FormData();
 		formData.append('img', selectedFile);
 		formData.append('firstname', profile.firstname);
@@ -108,9 +98,9 @@ const UserSettings = () => {
 		formData.append('address[zip]', profile.zip);
 		formData.append('address[city]', profile.city);
 		formData.append('address[country]', profile.country);
-		formData.append('preferredcats', profile.preferredcats);
-		formData.append('preferredSubcats', profile.preferredSubcats);
-		formData.append('preferredtags', profile.preferredtags);
+		formData.append('preferredcats', selectedCats);
+		formData.append('preferredSubcats', selectedSubCats);
+		formData.append('preferredtags', selectedTags);
 
 		try {
 			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,

@@ -13,7 +13,6 @@ function TagSelect({ suggestions, type, preferred }) {
 		setSelectedTags
 	} = UseContextStore();
 
-
 	const preferredArr = () => {
 		let arr = preferred.split(',').map(item => {
 			let id= parseInt(item);
@@ -22,14 +21,15 @@ function TagSelect({ suggestions, type, preferred }) {
 		return (arr.length !== 0) ? arr : [];
 	};
 
-
 	const [selected, setSelected] = useState(preferredArr);
 
+	// save selected items in context store
 	useEffect(() => {
-		if (type === "cats") setSelectedCats(selected);
-		if (type === "subcats") setSelectedSubCats(selected);
-		if (type === "tags") setSelectedTags(selected);
+		if (type === "cats") setSelectedCats(selected.map(i => i.value).join(','));
+		if (type === "subcats") setSelectedSubCats(selected.map(i => i.value).join(','));
+		if (type === "tags") setSelectedTags(selected.map(i => i.value).join(','));
 	}, [selected])
+
 
 	const onAdd = useCallback((newTag) => {
 		setSelected((prevSelected) => [...prevSelected, newTag]);

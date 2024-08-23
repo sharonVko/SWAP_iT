@@ -4,9 +4,9 @@ export const UseContextStore = () => useContext(Context);
 
 export const ContextProvider = ({children}) => {
 
-	const [selectedCats, setSelectedCats] = useState([]);
-	const [selectedSubCats, setSelectedSubCats] = useState([]);
-	const [selectedTags, setSelectedTags] = useState([]);
+	const [selectedCats, setSelectedCats] = useState("");
+	const [selectedSubCats, setSelectedSubCats] = useState("");
+	const [selectedTags, setSelectedTags] = useState("");
 
 	const [pref, setPref] = useState([]);
 
