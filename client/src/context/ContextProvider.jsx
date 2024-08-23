@@ -7,6 +7,9 @@ export const ContextProvider = ({children}) => {
 	const [selectedCats, setSelectedCats] = useState([]);
 	const [selectedSubCats, setSelectedSubCats] = useState([]);
 	const [selectedTags, setSelectedTags] = useState([]);
+
+	const [pref, setPref] = useState([]);
+
 	useEffect(() => {}, []);
 
 	const values = {
@@ -16,6 +19,8 @@ export const ContextProvider = ({children}) => {
 		setSelectedCats,
 		setSelectedSubCats,
 		setSelectedTags,
+		pref,
+		setPref
 	};
 
 	return <Context.Provider value={values}>{children}</Context.Provider>;

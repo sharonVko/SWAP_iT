@@ -13,18 +13,17 @@ function TagSelect({ suggestions, type, preferred }) {
 		setSelectedTags
 	} = UseContextStore();
 
-	const managePreferred = () => {
-		let arr = [];
-		if (preferred !== '') {
-			arr = preferred.split(',').map(item => {
-				let id= parseInt(item);
-				return suggestions.filter(i => i.value === id)[0];
-			});
-		}
-		return arr;
-	}
 
-	const [selected, setSelected] = useState(managePreferred());
+	const preferredArr = () => {
+		let arr = preferred.split(',').map(item => {
+			let id= parseInt(item);
+			return suggestions.filter(i => i.value === id)[0];
+		});
+		return (arr.length !== 0) ? arr : [];
+	};
+
+
+	const [selected, setSelected] = useState(preferredArr);
 
 	useEffect(() => {
 		if (type === "cats") setSelectedCats(selected);
@@ -35,9 +34,11 @@ function TagSelect({ suggestions, type, preferred }) {
 	const onAdd = useCallback((newTag) => {
 		setSelected((prevSelected) => [...prevSelected, newTag]);
 	}, [selected]);
+
 	const onDelete = useCallback((index) => {
 		setSelected((prevSelected) => prevSelected.filter((_, i) => i !== index));
 	}, [selected]);
+
 	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
 
 	return (

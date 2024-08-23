@@ -7,10 +7,8 @@ import axios from 'axios';
 import { suggestions_cats, suggestions_subcats } from "../utils/categories.js"
 import { suggestions_tags } from "../utils/tags.js"
 
-
 const UserSettings = () => {
 
-	//const isEmpty = (obj) => Object.keys(obj).length === 0;
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
 
@@ -114,7 +112,6 @@ const UserSettings = () => {
 		formData.append('preferredSubcats', profile.preferredSubcats);
 		formData.append('preferredtags', profile.preferredtags);
 
-
 		try {
 			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
 				formData,
@@ -197,25 +194,20 @@ const UserSettings = () => {
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Bitte wähle mindestens 3 Kategorien
 						</p>
-
-						<TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats}/>
+						{profile.preferredcats && <TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats}/>}
 
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Sub-Kategorien
 						</p>
-
-						<TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats}/>
-
+						{profile.preferredSubcats && <TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats}/>}
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Tags
 						</p>
-
-						<TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags}/>
-
+						{profile.preferredtags && <TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags}/>}
 					</div>
 				</div>
 

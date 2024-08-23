@@ -2,7 +2,7 @@ import { useContext, createContext, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
 
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+		const token = Cookies.get("token");
     if (token) {
       checkUser();
     }
