@@ -11,7 +11,6 @@ const UserSettings = () => {
 
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
-
 	const [showPWChange, setShowPWChange] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -85,6 +84,7 @@ const UserSettings = () => {
 		e.preventDefault();
 		setIsEditing(false);
 		setEditableField(null);
+
 
 		const formData = new FormData();
 		formData.append('img', selectedFile);
