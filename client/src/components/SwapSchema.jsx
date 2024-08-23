@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider.jsx";
+import { tags } from "../utils/tags.js"
 
 function SwapSchema({ setInterestAds, setSwapAds }) {
   const { userData } = useAuth(); // Accessing user data from AuthProvider
@@ -65,9 +66,13 @@ function SwapSchema({ setInterestAds, setSwapAds }) {
         const preferredSubcatsArray = user.preferredSubcats
           .split(",")
           .map((subcat) => subcat.trim());
-        const preferredTagsArray = user.preferredtags
-          .split(",")
-          .map((tag) => tag.trim());
+
+        // const preferredTagsArray = user.preferredtags
+        //   .split(",")
+        //   .map((tag) => tag.trim());
+				const preferredTagsArray = user.preferredtags
+					.split(",")
+					.map((tagId) => tags.filter(item => item.tag_id === parseInt(tagId))[0].name);
 
         console.log("Preferred categories:", preferredCatsArray);
         console.log("Preferred subcategories:", preferredSubcatsArray);
