@@ -72,3 +72,9 @@
   }
 }
 
+.react-tags__combobox {
+  display: block;
+  padding: 0;
+  margin-bottom: 0;
+  height: 0;
+}
