@@ -40,6 +40,7 @@ const tags = [
   { tag_id: 36, name: "lila", parent: 25 },
   { tag_id: 37, name: "silber", parent: 25 },
   { tag_id: 38, name: "gold", parent: 25 },
+	{ tag_id: 381, name: "orange", parent: 25 },
 
   //random description tags (not usable for description field)
   { tag_id: 39, name: "Diverse", parent: 0 },
