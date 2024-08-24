@@ -85,18 +85,20 @@ const SingleViewAd = () => {
           <div className="mb-8 text-teal-700 text-center">
             <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
           </div>
-          <div className="mx-auto max-w-2xl h-96 rounded-lg overflow-hidden shadow-lg mb-8">
-            <Carousel slide={false}>
-              {article.media[0].map((image, index) => (
-                <img
-                  className="h-full w-full object-contain"
-                  src={image}
-                  alt="..."
-                  key={index}
-                />
-              ))}
-            </Carousel>
-          </div>
+					{article.media.length > 0 &&
+						<div className="mx-auto max-w-2xl h-96 rounded-lg overflow-hidden shadow-lg mb-8">
+							<Carousel slide={false}>
+								{article.media[0].map((image, index) => (
+									<img
+										className="h-full w-full object-contain"
+										src={image}
+										alt="..."
+										key={index}
+									/>
+								))}
+							</Carousel>
+						</div>
+					}
           <div className="w-96 mt-8 mb-14 mx-auto">
             <p className="text-teal-700 text-lg leading-relaxed">
               {article.description}
