@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Drawer } from "./components/Drawer.jsx";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 
@@ -28,6 +28,7 @@ import DeleteAd from "./views/DeleteAd.jsx";
 import ArticleList from "./components/ArticleList.jsx";
 
 function App() {
+
   const [open, setOpen] = useState(false);
 
 	const handleClose = () => setOpen(false);
@@ -53,9 +54,6 @@ function App() {
 						<Route path="/profile" element={<UserProfile />} />
             <Route path="/profile/settings" element={<UserSettings />} />
             <Route path="/profile/password" element={<ChangePassword />} />
-            {/*<Route path="/profile/photo" element={<ChangePhoto />} />*/}
-
-            <Route path="/profile/ads" element={<MyAds />} />
             <Route path="/profile/ads/new" element={<CreateAd />} />
             <Route path="/profile/ads/edit/:adid" element={<EditAd />} />
             <Route path="/profile/ads/delete/:adid" element={<DeleteAd />} />
