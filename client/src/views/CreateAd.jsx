@@ -388,7 +388,7 @@ const CreateAd = () => {
                       }}
                       className="form-select"
                     >
-                      <option value="">Wähle einen Zustand</option>
+                      <option>Wähle einen Zustand</option>
                       {conditionTags.map((tag) => (
                         <option key={tag.id} value={tag.id}>
                           {tag.name}
