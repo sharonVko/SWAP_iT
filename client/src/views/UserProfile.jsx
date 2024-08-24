@@ -5,6 +5,7 @@ import HomeSwiper from "../components/HomeSwiper.jsx";
 import trashbin from "../assets/trashbinlogo.png";
 import pencil from "../assets/pencillogo.png";
 import topswap2 from "../assets/topswapsnew1.png";
+import defaultImg from "../assets/default.png";
 import { truncateDescription } from "../utils/helpers";
 import SwapSchema from "../components/SwapSchema.jsx";
 import { useNavigate } from "react-router-dom";
@@ -47,9 +48,13 @@ const UserProfile = () => {
 
   const deleteAd = async (adId) => {
     try {
-      await axios.delete(`http://localhost:8000/ads/${adId}`);
+      await axios.delete(`http://localhost:8000/ads/${adId}`, {
+				withCredentials: true
+			});
+
       setUserAds(userAds.filter((ad) => ad._id !== adId));
-    } catch (error) {
+    }
+		catch (error) {
       console.error("Error deleting ad:", error);
     }
   };
@@ -60,15 +65,20 @@ const UserProfile = () => {
   };
 
   const confirmDelete = () => {
-    console.log(`Anzeige mit ID ${selectedAd._id} gelöscht`);
+		deleteAd(selectedAd._id);
     setShowModal(false);
+		console.log(`Anzeige mit ID ${selectedAd._id} gelöscht`);
   };
 
   const gotoSingle = (adId) => {
     navigate("/ads/" + adId);
   };
 
-  return (
+
+	if (selectedAd) console.log("-->", selectedAd._id);
+
+
+	return (
     <>
       <SwapSchema setInterestAds={setInterestAds} setSwapAds={setSwapAds} />
 
@@ -89,23 +99,23 @@ const UserProfile = () => {
           className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
           key={i}
         >
-          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md">
+          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md hover:cursor-pointer">
             <div onClick={() => gotoSingle(ad._id)}>
               <img
                 src={
                   ad.media && ad.media[0] && ad.media[0][0]
                     ? ad.media[0][0]
-                    : "/Images/default.png"
+                    : defaultImg
                 }
                 className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
                 alt={ad.title}
               />
             </div>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 hover:cursor-pointer" onClick={() => gotoSingle(ad._id)}>
             <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
             <p className="m-0 text-sm">
-              {ad.description ? truncateDescription(ad.description) : ""}
+							{ad._id} - {ad.description ? truncateDescription(ad.description) : ""}
             </p>
           </div>
           <div className="flex gap-x-7">

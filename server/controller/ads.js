@@ -71,7 +71,6 @@ export const createAd = asyncHandler(async (req, res, next) => {
   res.status(201).json(populatedAd);
 });
 
-
 // Update the ad
 export const updateAd = asyncHandler(async (req, res, next) => {
   const {
@@ -105,24 +104,29 @@ export const updateAd = asyncHandler(async (req, res, next) => {
   res.json(updatedAd);
 });
 
-
 //delete ad by id
 export const deleteAd = asyncHandler(async (req, res, next) => {
+
   const {
     params: { id },
     uid,
   } = req;
+
   // Find the ad by ID
   const found = await Ads.findById(id);
   if (!found) throw new ErrorResponse(`Ad ${id} does not exist`, 404);
+
   // Check if the logged-in user is the owner of the ad
   if (uid !== found.user_id.toString())
     throw new ErrorResponse("You have no permission to delete this post", 401);
-  // Delete the ad
+
+	// Delete the ad
   await Ads.findByIdAndDelete(id);
+
   // Remove the reference to this ad from the user's ads array
   await User.findByIdAndUpdate(uid, {
     $pull: { ads: id },
   });
   res.json({ success: `Ad ${id} was deleted` });
+
 });
