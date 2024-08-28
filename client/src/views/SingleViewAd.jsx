@@ -88,7 +88,7 @@ const SingleViewAd = () => {
 					{article.media.length > 0 &&
 						<div className="mx-auto max-w-2xl h-96 rounded-lg overflow-hidden shadow-lg mb-8">
 							<Carousel slide={false}>
-								{article.media[0].map((image, index) => (
+								{article.media.map((image, index) => (
 									<img
 										className="h-full w-full object-contain"
 										src={image}
