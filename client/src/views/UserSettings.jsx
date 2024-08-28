@@ -7,7 +7,8 @@ import axios from 'axios';
 import { suggestions_cats, suggestions_subcats } from "../utils/categories.js"
 import { suggestions_tags } from "../utils/tags.js"
 
-const UserSettings = () => {
+const UserSettings = () =>
+{
 
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
@@ -16,6 +17,13 @@ const UserSettings = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [editableField, setEditableField] = useState(null);
 	const [previewImage, setPreviewImage] = useState(null);
+
+	// Password change states
+	const [oldPassword, setOldPassword] = useState("");
+	const [newPassword, setNewPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+	const [passwordError, setPasswordError] = useState("");
+	const [passwordSuccess, setPasswordSuccess] = useState("");
 
 	const [profile, setProfile] = useState({
 		street: userData.address?.street || "",
@@ -34,8 +42,10 @@ const UserSettings = () => {
 		profileimage: userData.profileimage || beispielfotoprofil
 	});
 
-	useEffect(() => {
-		if (isLoggedIn && userData) {
+	useEffect(() =>
+	{
+		if (isLoggedIn && userData)
+		{
 			setProfile((prevProfile) => ({
 				...prevProfile,
 				street: userData.address?.street || "",
@@ -56,35 +66,41 @@ const UserSettings = () => {
 		}
 	}, [isLoggedIn, userData]);
 
-
-	const handleInputChange = (e) => {
+	const handleInputChange = (e) =>
+	{
 		const { name, value } = e.target;
 		setProfile((prevProfile) => ({
 			...prevProfile,
 			[name]: value,
 		}));
 	};
-	const handleImageChange = (e) => {
+
+	const handleImageChange = (e) =>
+	{
 		const file = e.target.files[0]
-		if (file) {
+		if (file)
+		{
 			setSelectedFile(file);
 			const reader = new FileReader();
-			reader.onloadend = () => {
+			reader.onloadend = () =>
+			{
 				setPreviewImage(reader.result);
 			};
 			reader.readAsDataURL(file);
 		}
 	};
-	const openPasswordChange = (e) => {
+
+	const openPasswordChange = (e) =>
+	{
 		e.preventDefault();
 		setShowPWChange(true);
-		console.log('change password');
-	}
-	const handleSave = async (e) => {
+	};
+
+	const handleSave = async (e) =>
+	{
 		e.preventDefault();
 		setIsEditing(false);
 		setEditableField(null);
-
 
 		const formData = new FormData();
 		formData.append('img', selectedFile);
@@ -102,25 +118,65 @@ const UserSettings = () => {
 		formData.append('preferredSubcats', selectedSubCats);
 		formData.append('preferredtags', selectedTags);
 
-		try {
+		try
+		{
 			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
 				formData,
 				{
-					headers: {"Content-Type": "multipart/form-data"},
+					headers: { "Content-Type": "multipart/form-data" },
 					withCredentials: true,
 				});
 			console.log("User updated successfully:", response.data);
-		}
-		catch (error) {
+		} catch (error)
+		{
 			console.error("Error updating user:", error);
 		}
-		// console.log("Saved profile:", profile);
 	};
-	const handlePasswordSave = async (e) => {
-		e.preventDefault();
-	}
 
-	if (!isLoggedIn) {
+
+
+	const handlePasswordChange = async (e) =>
+	{
+		e.preventDefault();
+		setPasswordError("");
+		setPasswordSuccess("");
+
+		if (newPassword !== confirmPassword)
+		{
+			setPasswordError("New password and confirm password do not match.");
+			return;
+		}
+
+		try
+		{
+			const response = await axios.put(
+				"http://localhost:8000/users/change-password",
+				{
+					oldPassword,
+					newPassword,
+					confirmPassword, // Ensure this is being sent to match backend validation
+				},
+				{
+					withCredentials: true,
+				}
+			);
+			setPasswordSuccess("Password changed successfully.");
+			setOldPassword("");
+			setNewPassword("");
+			setConfirmPassword("");
+			setShowPWChange(false);
+		} catch (error)
+		{
+			setPasswordError(
+				error.response?.data?.message || "Error changing password."
+			);
+		}
+	};
+
+
+
+	if (!isLoggedIn)
+	{
 		return <div>Please log in to access your profile.</div>;
 	}
 
@@ -132,7 +188,7 @@ const UserSettings = () => {
 					<div>
 
 						<div className="mx-auto mb-6 w-40 h-40 aspect-square ring-8 ring-white/50 rounded-full relative overflow-hidden">
-							<img src={previewImage ? previewImage : profile.profileimage} alt="Profilbild" className="absolute top-0 left-0 w-full h-full object-cover"/>
+							<img src={previewImage ? previewImage : profile.profileimage} alt="Profilbild" className="absolute top-0 left-0 w-full h-full object-cover" />
 						</div>
 
 						<h2 className="h2 text-peach-300 text-center text-3xl my-8">
@@ -158,25 +214,51 @@ const UserSettings = () => {
 							Passwort ändern
 						</button>
 
-						{showPWChange &&
-							<div className="mb-6 text-left">
-								{isEditing && editableField === "current_pw" ? (
-									<input
-										type="password"
-										name="current_pw"
-										className="bg-peach-300 text-black text-lg rounded-lg p-4 w-full"
-										onBlur={() => setEditableField(null)}
-										autoFocus
-									/>
-								) : (
-									<div
-										className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
-										onClick={() => { setIsEditing(true); setEditableField("current_pw") }}>
-										Type in your current password
+						{showPWChange && (
+							<div className="mt-6">
+								<h3 className="text-xl text-green-200 mb-4">Passwort ändern</h3>
+								{passwordError && <div className="text-red-500 mb-4">{passwordError}</div>}
+								{passwordSuccess && <div className="text-green-500 mb-4">{passwordSuccess}</div>}
+								<form onSubmit={handlePasswordChange}>
+									<div className="mb-4">
+										<label className="block text-lg mb-2">Altes Passwort</label>
+										<input
+											type="password"
+											className="p-2 border rounded w-full text-black"
+											value={oldPassword}
+											onChange={(e) => setOldPassword(e.target.value)}
+											required
+										/>
 									</div>
-								)}
+									<div className="mb-4">
+										<label className="block text-lg mb-2">Neues Passwort</label>
+										<input
+											type="password"
+											className="p-2 border rounded w-full text-black"
+											value={newPassword}
+											onChange={(e) => setNewPassword(e.target.value)}
+											required
+										/>
+									</div>
+									<div className="mb-4">
+										<label className="block text-lg mb-2">Neues Passwort bestätigen</label>
+										<input
+											type="password"
+											className="p-2 border rounded w-full text-black"
+											value={confirmPassword}
+											onChange={(e) => setConfirmPassword(e.target.value)}
+											required
+										/>
+									</div>
+									<button
+										type="submit"
+										className="w-full btn-sm btn-red py-2"
+									>
+										Passwort speichern
+									</button>
+								</form>
 							</div>
-						}
+						)}
 					</div>
 
 					<h2 className="h1 mt-12 text-peach-300 ">Sucheinstellungen</h2>
@@ -184,20 +266,20 @@ const UserSettings = () => {
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Bitte wähle mindestens 3 Kategorien
 						</p>
-						{profile.preferredcats && <TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats}/>}
+						{profile.preferredcats && <TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats} />}
 
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Sub-Kategorien
 						</p>
-						{profile.preferredSubcats && <TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats}/>}
+						{profile.preferredSubcats && <TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats} />}
 					</div>
 					<div className="w-full text-left">
 						<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 							Wähle mindestens 3 Tags
 						</p>
-						{profile.preferredtags && <TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags}/>}
+						{profile.preferredtags && <TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags} />}
 					</div>
 				</div>
 
@@ -231,7 +313,8 @@ const UserSettings = () => {
 								) : (
 									<div
 										className="field text-black-300 border-green-200 p-4 border rounded-lg whitespace-pre-wrap cursor-pointer bg-peach-400"
-										onClick={() => {
+										onClick={() =>
+										{
 											setIsEditing(true);
 											setEditableField(field);
 										}}
@@ -245,19 +328,16 @@ const UserSettings = () => {
 				</div>
 
 				<div className="md:col-span-2">
-					{/*{isEditing && (*/}
 					<button
 						type="submit"
 						className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6"
 					>
 						Einstellungen speichern
 					</button>
-					{/*)}*/}
 				</div>
 			</div>
 		</form>
 	);
-
 };
 
 export default UserSettings;
