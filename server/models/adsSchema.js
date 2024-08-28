@@ -60,7 +60,7 @@ const adSchema = new mongoose.Schema({
   },
   media: [
     {
-      type: [String],
+      type: String,
     },
   ],
   timestamp: {
