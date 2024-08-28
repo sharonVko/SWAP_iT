@@ -7,12 +7,15 @@ export const ContextProvider = ({children}) => {
 	const [selectedCats, setSelectedCats] = useState("");
 	const [selectedSubCats, setSelectedSubCats] = useState("");
 	const [selectedTags, setSelectedTags] = useState("");
+	const [reorderedImages, setReorderedImages] = useState([]);
 
 	const [pref, setPref] = useState([]);
 
 	useEffect(() => {}, []);
 
 	const values = {
+		reorderedImages,
+		setReorderedImages,
 		selectedCats,
 		selectedSubCats,
 		selectedTags,
