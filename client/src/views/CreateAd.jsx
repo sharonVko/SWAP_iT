@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 import LoginForm from "../components/LoginForm.jsx";
-import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import Switch from "react-switch";
+import axios from "axios";
 import { categories } from "../utils/categories.js";
 import { tags } from "../utils/tags";
 
@@ -129,6 +129,12 @@ const CreateAd = () => {
       formDataToSend.append("media_files", formData.media_files[i]);
     }
 
+		for (let item of formDataToSend.entries()) {
+			console.log(item[0]+ ', ' + item[1]);
+		}
+
+
+
     try {
       const response = await axios.post(
         "http://localhost:8000/ads/createAd",
@@ -167,6 +173,7 @@ const CreateAd = () => {
 		catch (error) {
       console.error("Error creating ad:", error);
     }
+
   };
 
   const toggleAddressSection = () => {
