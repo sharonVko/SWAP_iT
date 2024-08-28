@@ -99,23 +99,17 @@ const UserProfile = () => {
           className="max-w-[700px] mx-auto flex gap-4 mb-2 items-start bg-white/30 p-2 rounded-lg"
           key={i}
         >
-          <div className="w-24 aspect-[3/2] relative overflow-hidden rounded-md hover:cursor-pointer">
-            <div onClick={() => gotoSingle(ad._id)}>
-              <img
-                src={
-                  ad.media && ad.media[0] && ad.media[0]
-                    ? ad.media[0]
-                    : defaultImg
-                }
-                className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
-                alt={ad.title}
-              />
-            </div>
+          <div className="w-24 aspect-[3/2] relative hover:cursor-pointer p-2 border-2 border-teal-400 overflow-hidden rounded-md" onClick={() => gotoSingle(ad._id)}>
+						<img
+							src={ad.media ? ad.media[0] : defaultImg}
+							className="absolute top-0 left-0 w-full h-full object-cover rounded"
+							alt={ad.title}
+						/>
           </div>
           <div className="flex-1 hover:cursor-pointer" onClick={() => gotoSingle(ad._id)}>
             <p className="mt-0 mb-0 font-bold font-display">{ad.title}</p>
             <p className="m-0 text-sm">
-							{ad._id} - {ad.description ? truncateDescription(ad.description) : ""}
+							{ad.description ? truncateDescription(ad.description) : ""}
             </p>
           </div>
           <div className="flex gap-x-7">
