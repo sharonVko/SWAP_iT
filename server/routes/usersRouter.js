@@ -16,8 +16,8 @@ usersRouter.get("/:id", userController.getSingleUser); // get user by id
 usersRouter.get("/ads/:id", verifyToken, userController.getAllAdsByUser); // get all ads posted by specific user
 
 // update user settings
-usersRouter.put("/:id", verifyToken, upload.single('img'), userController.updateUser);
 usersRouter.put("/change-password", verifyToken, userController.changePassword); // change password
+usersRouter.put("/:id", verifyToken, upload.single('img'), userController.updateUser);
 
 // route for toggling favorites
 usersRouter.post("/toggle-favorite", verifyToken, userController.toggleFavorite);
