@@ -28,9 +28,6 @@ function Gallery({ adid, setOpenDropzone }) {
 	}, [adid]);
 
 
-	if (!loading) console.log(images);
-
-
 	//const handle drag sorting
 	const handleSort = () => {
 
