@@ -74,9 +74,9 @@ const UserProfile = () => {
     navigate("/ads/" + adId);
   };
 
-
-	if (selectedAd) console.log("-->", selectedAd._id);
-
+	const gotoEditAd = (adId) => {
+		navigate("/profile/ads/edit/" + adId);
+	};
 
 	return (
     <>
@@ -103,8 +103,8 @@ const UserProfile = () => {
             <div onClick={() => gotoSingle(ad._id)}>
               <img
                 src={
-                  ad.media && ad.media[0] && ad.media[0][0]
-                    ? ad.media[0][0]
+                  ad.media && ad.media[0] && ad.media[0]
+                    ? ad.media[0]
                     : defaultImg
                 }
                 className="absolute top-0 left-0 w-full h-full object-cover border-2 border-teal-500 rounded"
@@ -119,7 +119,7 @@ const UserProfile = () => {
             </p>
           </div>
           <div className="flex gap-x-7">
-            <button>
+            <button onClick={() => gotoEditAd(ad._id)}>
               <img className="h-7 w-6" src={pencil} alt="Edit" />
             </button>
             <button onClick={() => handleDelete(ad)}>
