@@ -13,8 +13,8 @@ adsRouter
 	.post(verifyToken, upload.array("media_files", 6), adsController.createAd);
 
 adsRouter.route("/:id")
-	.get(adsController.getSingleAd) 							 // get AD
-	.put(verifyToken, adsController.updateAd)     // update AD
+	.get(adsController.getSingleAd) 							  // get AD
+	.put(verifyToken, upload.array("media_files", 6), adsController.updateAd)     // update AD
   .delete(verifyToken, adsController.deleteAd); // delete AD
 
 export default adsRouter;
