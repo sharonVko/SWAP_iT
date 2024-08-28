@@ -62,12 +62,8 @@ const ArticleCard = ({ article }) => {
 	}
 	// Get the first media file URL
 	let imageUrl = "/Images/default.png"; // Default image path
-	if (
-		article.media &&
-		article.media.length > 0 &&
-		article.media[0].length > 0
-	) {
-		imageUrl = article.media[0][0];
+	if (article.media && article.media.length > 0) {
+		imageUrl = article.media[0];
 	}
 	return (
 		<div className="article-card" onClick={toggleCard}>
