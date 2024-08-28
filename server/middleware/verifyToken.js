@@ -5,7 +5,6 @@ import ErrorResponse from "../utils/ErrorResponse.js";
 const verifyToken = asyncHandler(async (req, res, next) => {
   // Get token from headers or cookies
   const token = req.cookies.token || req.headers["authorization"];
-	console.log('-->>', token);
 
 	if (!token) throw new ErrorResponse("Please login", 401);
 
