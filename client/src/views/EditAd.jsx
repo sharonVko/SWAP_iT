@@ -10,7 +10,7 @@ import axios from 'axios';
 const EditAd = () => {
 	const { isLoggedIn, userData } = useAuth();
 	const { adid } = useParams();
-	const { reorderedImages } = UseContextStore();
+	const { updatedImages } = UseContextStore();
 	const [adData, setAdData] = useState({
 			title: "",
 			description: "",
@@ -78,15 +78,15 @@ const EditAd = () => {
 	// update adData depending on context var 'reorderedImages'
 	useEffect(() => {
 		if (isLoggedIn && !loading) {
-			if (reorderedImages.length !== 0) {
-				setImgArr(reorderedImages);
+			if (updatedImages.length !== 0) {
+				setImgArr(updatedImages);
 				setAdData((prev) => ({
 					...prev,
-					media: [...reorderedImages],
+					media: [...updatedImages],
 				}));
 			}
 		}
-	}, [reorderedImages]);
+	}, [updatedImages]);
 
 	useEffect(() => {
 		if (dropImages) {

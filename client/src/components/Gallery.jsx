@@ -3,7 +3,7 @@ import { UseContextStore } from "../context/ContextProvider.jsx";
 
 function Gallery({imgArr, setOpenDropzone }) {
 
-	const { setReorderedImages } = UseContextStore();
+	const { setUpdatedImages } = UseContextStore();
 	const [images, setImages] = useState(imgArr);
 	const dragItem= useRef(null);
 	const dragOverItem= useRef(null);
@@ -29,20 +29,15 @@ function Gallery({imgArr, setOpenDropzone }) {
 		setImages(_images);
 
 		//pass reordered array to context store
-		setReorderedImages(_images);
+		setUpdatedImages(_images);
 	};
 
 	const removeImage = (index) => {
-
-		console.log(index);
-
-		if (index > -1) images.splice(index, 1);
-
-		console.log(images);
-
-
+		let _images = [...images];
+		if (index > -1) _images.splice(index, 1);
+		setImages(_images);
+		setUpdatedImages(_images);
 	}
-
 
 	return (
 		<div className="gallery flex gap-2">
