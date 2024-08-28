@@ -100,9 +100,8 @@ const EditAd = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		console.log('adData.media: ', adData.media);
-
 		const formDataToSend = new FormData();
+
 		formDataToSend.append("user_id", userData._id);
 		formDataToSend.append("title", adData.title);
 		formDataToSend.append("description", adData.description);
@@ -119,17 +118,15 @@ const EditAd = () => {
 		formDataToSend.append("pickupaddress[city]", adData.pickupaddress.city);
 		formDataToSend.append("pickupaddress[country]", adData.pickupaddress.country);
 
+		// append files (file objects of files to be uploaded)
 		for (let i = 0; i < adData.media_files.length; i++) {
 			formDataToSend.append("media_files", adData.media_files[i]);
 		}
 
+		// append existing file urls
 		adData.media.forEach(mediaItem => {
 			formDataToSend.append("media", mediaItem);
 		});
-
-		for (let item of formDataToSend.entries()) {
-			console.log(item);
-		}
 
 		try {
 			const response = await axios.put(
@@ -146,6 +143,7 @@ const EditAd = () => {
 		catch (error) {
 			console.error("Error updating ad:", error);
 		}
+		setOpenDropzone(false);
 
 	};
 

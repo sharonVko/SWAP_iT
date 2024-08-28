@@ -9,6 +9,7 @@ function Gallery({imgArr, setOpenDropzone }) {
 	const dragOverItem= useRef(null);
 
 
+
 	//const handle drag sorting
 	const handleSort = () => {
 
