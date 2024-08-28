@@ -1,13 +1,34 @@
-import { useState, useRef } from "react";
+import axios from "axios";
+import {useState, useRef, useEffect} from "react";
 import { UseContextStore } from "../context/ContextProvider.jsx";
 
-function Gallery({imgArr, setOpenDropzone }) {
+function Gallery({ adid, setOpenDropzone }) {
 
 	const { setUpdatedImages } = UseContextStore();
-	const [images, setImages] = useState(imgArr);
+	const [loading, setLoading] = useState(true);
+	const [images, setImages] = useState([]);
 	const dragItem= useRef(null);
 	const dragOverItem= useRef(null);
 
+	useEffect(() => {
+		const fetchImages = async () => {
+			try {
+				const response = await axios.get(`http://localhost:8000/ads/${adid}`);
+				const data = response.data;
+				setImages(data.media || []);
+				setLoading(false);
+			}
+			catch (error) {
+				console.error("Error fetching images:", error);
+				setLoading(false);
+			}
+		};
+
+		fetchImages();
+	}, [adid]);
+
+
+	if (!loading) console.log(images);
 
 
 	//const handle drag sorting
@@ -41,8 +62,9 @@ function Gallery({imgArr, setOpenDropzone }) {
 	}
 
 	return (
+		<>
+		{!loading && (
 		<div className="gallery flex gap-2">
-
 			{images && images.map((fileUrl, index) => (
 				<div key={index}
 						 className="w-[150px] aspect-[3/2] relative overflow-hidden rounded-md cursor-move bg-white/60 drop-shadow-lg"
@@ -67,6 +89,8 @@ function Gallery({imgArr, setOpenDropzone }) {
 			</button>
 
 		</div>
+		)}
+		</>
 	)
 }
 

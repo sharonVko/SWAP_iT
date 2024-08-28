@@ -32,7 +32,6 @@ const EditAd = () => {
 			color: "",
 			diverse: "",
 		});
-	const [imgArr, setImgArr] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [openDropzone, setOpenDropzone] = useState(false);
 	const [dropImages, setDropImages] = useState([]);
@@ -64,7 +63,7 @@ const EditAd = () => {
 					color: data.color || "",
 					diverse: data.diverse || ""
 				});
-				setImgArr(data.media);
+				//setImgArr(data.media);
 				setLoading(false);
 			}
 			catch (error) {
@@ -79,7 +78,6 @@ const EditAd = () => {
 	useEffect(() => {
 		if (isLoggedIn && !loading) {
 			if (updatedImages.length !== 0) {
-				setImgArr(updatedImages);
 				setAdData((prev) => ({
 					...prev,
 					media: [...updatedImages],
@@ -144,10 +142,7 @@ const EditAd = () => {
 			console.error("Error updating ad:", error);
 		}
 		setOpenDropzone(false);
-
 	};
-
-
 
 	return (
 		<div className="container mx-auto py-4">
@@ -159,7 +154,7 @@ const EditAd = () => {
 							setOpenDropzone={setOpenDropzone}
 						/> :
 						<Gallery
-							imgArr={imgArr}
+							adid={adid}
 							setOpenDropzone={setOpenDropzone}
 						/>
 					}
@@ -168,9 +163,7 @@ const EditAd = () => {
 							Anzeige aktualisieren
 						</button>
 					</form>
-
 				</>
-
 			) : (
 				<LoginForm/>
 			)}
