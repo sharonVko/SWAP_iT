@@ -8,7 +8,7 @@ const usersRouter = Router();
 usersRouter.post("/register", userController.register); // register
 usersRouter.post("/login", userController.login); // login
 usersRouter.post("/logout", verifyToken, userController.logout); // logout
-usersRouter.post("/change-password", verifyToken, userController.changePassword); // change password
+
 
 usersRouter.get("/me", verifyToken, userController.getUser); // get your profile
 usersRouter.get("/", userController.getAllUsers); // get all users
@@ -17,6 +17,7 @@ usersRouter.get("/ads/:id", verifyToken, userController.getAllAdsByUser); // get
 
 // update user settings
 usersRouter.put("/:id", verifyToken, upload.single('img'), userController.updateUser);
+usersRouter.put("/change-password", verifyToken, userController.changePassword); // change password
 
 // route for toggling favorites
 usersRouter.post("/toggle-favorite", verifyToken, userController.toggleFavorite);

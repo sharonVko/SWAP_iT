@@ -120,18 +120,18 @@ const UserSettings = () =>
 
 		try
 		{
-			const response = await axios.put(`http://localhost:8000/users/${userData._id}`,
-				formData,
-				{
-					headers: { "Content-Type": "multipart/form-data" },
-					withCredentials: true,
-				});
+			const response = await axios.put(`http://localhost:8000/users/${userData._id}`, formData, {
+				headers: { "Content-Type": "multipart/form-data" },
+				withCredentials: true,
+			});
 			console.log("User updated successfully:", response.data);
 		} catch (error)
 		{
 			console.error("Error updating user:", error);
+			alert("Error updating user. Check console for details.");
 		}
 	};
+
 
 
 
@@ -154,7 +154,7 @@ const UserSettings = () =>
 				{
 					oldPassword,
 					newPassword,
-					confirmPassword, // Ensure this is being sent to match backend validation
+					confirmPassword,
 				},
 				{
 					withCredentials: true,
@@ -167,11 +167,13 @@ const UserSettings = () =>
 			setShowPWChange(false);
 		} catch (error)
 		{
+			console.error("Password change error:", error);
 			setPasswordError(
 				error.response?.data?.message || "Error changing password."
 			);
 		}
 	};
+
 
 
 

@@ -6,7 +6,8 @@ import jwt from "jsonwebtoken";
 import Ads from "../models/adsSchema.js";
 
 // Register according to frontend address zip field
-export const register = asyncHandler(async (req, res, next) => {
+export const register = asyncHandler(async (req, res, next) =>
+{
   const { firstname, lastname, username, email, password, address } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -34,7 +35,8 @@ export const register = asyncHandler(async (req, res, next) => {
 });
 
 // LOGIN
-export const login = asyncHandler(async (req, res, next) => {
+export const login = asyncHandler(async (req, res, next) =>
+{
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email }).select("+password");
@@ -53,25 +55,29 @@ export const login = asyncHandler(async (req, res, next) => {
 });
 
 // Verify User
-export const getUser = asyncHandler(async (req, res, next) => {
+export const getUser = asyncHandler(async (req, res, next) =>
+{
   const user = await User.findById(req.uid);
   res.json(user);
 });
 
 // Logout....
-export const logout = asyncHandler(async (req, res, next) => {
+export const logout = asyncHandler(async (req, res, next) =>
+{
   res.clearCookie("token");
   res.send({ status: "success" });
 });
 
 //getAllUsers
-export const getAllUsers = asyncHandler(async (req, res, next) => {
+export const getAllUsers = asyncHandler(async (req, res, next) =>
+{
   const users = await User.find();
   res.json(users);
 });
 
 //get user by id
-export const getSingleUser = asyncHandler(async (req, res, next) => {
+export const getSingleUser = asyncHandler(async (req, res, next) =>
+{
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
@@ -79,21 +85,22 @@ export const getSingleUser = asyncHandler(async (req, res, next) => {
 });
 
 // update user
-export const updateUser = asyncHandler(async (req, res, next) => {
+export const updateUser = asyncHandler(async (req, res, next) =>
+{
   const {
     body,
     params: { id },
     uid
   } = req;
 
-	// re-assign profile image with the resource of uploaded cloudinary image
-	if (req.file !== undefined) {
-		body.profileimage = req.file.path;
-	}
+  console.log("Update request body:", body);
+  console.log("User ID:", id);
+  console.log("User token ID:", uid);
 
-	console.log("-->", body)
-
-
+  if (req.file !== undefined)
+  {
+    body.profileimage = req.file.path;
+  }
 
   const found = await User.findById(id);
   if (!found) throw new ErrorResponse(`User ${id} does not exist`, 404);
@@ -109,8 +116,10 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   res.json(updatedUser);
 });
 
+
 //update password not for forgate pass
-export const changePassword = asyncHandler(async (req, res, next) => {
+export const changePassword = asyncHandler(async (req, res, next) =>
+{
   const userId = req.uid;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
@@ -129,12 +138,13 @@ export const changePassword = asyncHandler(async (req, res, next) => {
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
 
-  // Send a success response
   res.send({ status: "Password updated successfully" });
 });
 
+
 //get all ads by user
-export const getAllAdsByUser = asyncHandler(async (req, res, next) => {
+export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
+{
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
@@ -143,15 +153,18 @@ export const getAllAdsByUser = asyncHandler(async (req, res, next) => {
 });
 
 // Toggle favorite
-export const toggleFavorite = asyncHandler(async (req, res, next) => {
+export const toggleFavorite = asyncHandler(async (req, res, next) =>
+{
   const { userId, adId } = req.body;
   const user = await User.findById(userId);
   if (!user) throw new ErrorResponse(`User ${userId} does not exist`, 404);
 
   const index = user.favorites.indexOf(adId);
-  if (index > -1) {
+  if (index > -1)
+  {
     user.favorites.splice(index, 1); // Remove adId from favorites
-  } else {
+  } else
+  {
     user.favorites.push(adId); // Add adId to favorites
   }
 

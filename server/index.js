@@ -32,27 +32,32 @@ const io = new Server(server, {
 io.use(authMiddleware); // Middleware to authenticate Socket.IO connections.
 
 // Event listener for new socket connections
-io.on('connection', (socket) => {
+io.on('connection', (socket) =>
+{
   console.log('a user connected');
 
   // 'joinConversation': Joins the user to a specific conversation room.
-  socket.on('joinConversation', (conversationId) => {
+  socket.on('joinConversation', (conversationId) =>
+  {
     socket.join(conversationId);
   });
 
   // 'sendMessage': Broadcasts a new message to all users in the conversation room.
-  socket.on('sendMessage', (message) => {
+  socket.on('sendMessage', (message) =>
+  {
     io.to(message.chatId).emit('newMessage', message);
   });
 
   // 'disconnect': Logs when a user disconnects.
-  socket.on('disconnect', () => {
+  socket.on('disconnect', () =>
+  {
     console.log('user disconnected');
   });
 });
 
 // Middleware to pass the io instance to the request object
-app.use((req, res, next) => {
+app.use((req, res, next) =>
+{
   req.io = io;
   next();
 });
@@ -60,6 +65,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(cookieParser()); // Add cookie-parser middleware
+app.use(errorHandler);
+
 
 // ROUTES
 app.use('/users', usersRouter);
