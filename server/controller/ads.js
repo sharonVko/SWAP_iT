@@ -43,6 +43,9 @@ export const getSingleAd = asyncHandler(async (req, res, next) => {
 export const createAd = asyncHandler(async (req, res, next) => {
   const { body, uid, files } = req;
 
+	//console.log(body);
+	//console.log(files);
+
 	// Validate that the user ID (uid) matches the user associated with the ad being created
   if (body.user_id !== uid)
     throw new ErrorResponse("Unauthorized - User ID does not match", 401);
@@ -71,15 +74,35 @@ export const createAd = asyncHandler(async (req, res, next) => {
   res.status(201).json(populatedAd);
 });
 
+
 // Update the ad
 export const updateAd = asyncHandler(async (req, res, next) => {
   const {
+		params: { id },
     body,
-    params: { id },
     uid,
+		files
   } = req;
-  console.log("Request body:", body);
-  console.log("User ID:", uid);
+
+	// make sure that media urls is always an array
+	const handlePreviousMediaUrls = () => {
+		if (body.media === undefined) return [];
+		if (typeof body.media === "string") {
+			return body.media.split(',');
+		}
+		else {
+			return body.media;
+		}
+	}
+
+	// get existing media urls
+	const previousMediaUrls = handlePreviousMediaUrls();
+
+	// process the uploaded files and extract URLs
+	const mediaUrls = files.map((file) => file.path);
+
+	// create new array of media urls (merge arrays)
+	const updateMediaUrls = previousMediaUrls.concat(mediaUrls);
 
 	// Check if the ad exists
   const found = await Ads.findById(id);
@@ -93,15 +116,18 @@ export const updateAd = asyncHandler(async (req, res, next) => {
     );
 
 	// Update the ad
-  const updatedAd = await Ads.findByIdAndUpdate(id, body, {
-    new: true,
-  }).populate("user_id");
+  const updatedAd = await Ads.findByIdAndUpdate(
+		id,
+		{ ...body, media: updateMediaUrls },
+		{ new: true }
+	).populate("user_id");
 
 	// Ensure the ad update was successful
   if (!updatedAd) throw new ErrorResponse("Error updating ad", 500);
 
 	// Return the updated ad
   res.json(updatedAd);
+
 });
 
 //delete ad by id
