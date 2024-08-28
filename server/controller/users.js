@@ -94,8 +94,8 @@ export const updateUser = asyncHandler(async (req, res, next) =>
   } = req;
 
   console.log("Update request body:", body);
-  console.log("User ID:", id);
-  console.log("User token ID:", uid);
+  console.log("User ID ---:", id);
+  console.log("User token ID ---:", uid);
 
   if (req.file !== undefined)
   {
@@ -115,6 +115,7 @@ export const updateUser = asyncHandler(async (req, res, next) =>
   });
   res.json(updatedUser);
 });
+
 
 
 //update password not for forgate pass
@@ -139,6 +140,8 @@ export const changePassword = asyncHandler(async (req, res, next) =>
   await user.save();
 
   res.send({ status: "Password updated successfully" });
+
+
 });
 
 
