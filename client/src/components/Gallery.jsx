@@ -73,8 +73,25 @@ function Gallery({ adid, setOpenDropzone }) {
 				>
 					<img src={fileUrl} alt="#" className="absolute top-0 left-0 w-full h-full object-cover" />
 
-					<button className="absolute top-1 right-1 bg-teal-500 text-white rounded-full p-1 drop-shadow" onClick={() => removeImage(index)}>
-						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="m13.41 12l6.3-6.29a1 1 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1 1 0 0 0-1.42 1.42l6.3 6.29l-6.3 6.29a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0l6.29-6.3l6.29 6.3a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.42Z"/></svg>
+					<button
+						className="absolute top-1 right-1 text-white bg-teal-600 hover:bg-white hover:text-gray-900 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
+						onClick={() => removeImage(index)}
+					>
+						<svg
+							className="w-3 h-3"
+							aria-hidden="true"
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 14 14"
+						>
+							<path
+								stroke="currentColor"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								strokeWidth="2"
+								d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+							/>
+						</svg>
 					</button>
 
 				</div>
