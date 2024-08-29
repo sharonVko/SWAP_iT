@@ -41,23 +41,28 @@ const adSchema = new mongoose.Schema({
   },
   subCategory: {
     type: String,
-    required: [true, "subCategory are required"],
+    required: [true, "subCategory is required"],
   },
   tags: {
     type: String,
     required: [true, "3 tags are required"],
     // minimum 3 tags required
   },
-  preferredcats: {
-    type: String, // if we want to keep it as a category_id as string or reference to taxonomies
-    // ex: "1,2,3"  cat_ids
-  },
-  preferredSubcats: {
-    type: String,
-  },
-  preferredtags: {
-    type: String,
-  },
+	condition: {
+		type: String,
+		required: [true, "condition is required"],
+	},
+	material: {
+		type: String,
+		required: [true, "material is required"],
+	},
+	color: {
+		type: String,
+		required: [true, "color is required"],
+	},
+	diverse: {
+		type: String,
+	},
   media: [
     {
       type: String,
