@@ -133,6 +133,9 @@ export default {
 			},
 		},
 		extend: {
+			screens: {
+				'xs': '420px',
+			},
 			fontFamily: {
 				'display': ['Merriweather'],
 			},

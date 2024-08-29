@@ -61,10 +61,10 @@ function Gallery({ adid, setOpenDropzone }) {
 	return (
 		<>
 		{!loading && (
-		<div className="gallery flex gap-2">
+		<div className="gallery grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
 			{images && images.map((fileUrl, index) => (
 				<div key={index}
-						 className="w-[150px] aspect-[3/2] relative overflow-hidden rounded-md cursor-move bg-white/60 drop-shadow-lg"
+						 className="w-full aspect-[3/2] relative overflow-hidden rounded-md cursor-move bg-white/60 drop-shadow-lg"
 						 draggable
 						 onDragStart={(e) => (dragItem.current = index)}
 						 onDragEnter={(e) => (dragOverItem.current = index)}
@@ -97,7 +97,7 @@ function Gallery({ adid, setOpenDropzone }) {
 				</div>
 			))}
 
-			<button onClick={() => setOpenDropzone(true)} className="w-[150px] aspect-[3/2] relative overflow-hidden rounded-md bg-white/60 drop-shadow-lg flex justify-center items-center text-4xl text-teal-700/50">
+			<button onClick={() => setOpenDropzone(true)} className="w-full aspect-[3/2] relative overflow-hidden rounded-md bg-white/60 drop-shadow-lg flex justify-center items-center text-4xl text-teal-700/50">
 				<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 11h-6V5a1 1 0 0 0-2 0v6H5a1 1 0 0 0 0 2h6v6a1 1 0 0 0 2 0v-6h6a1 1 0 0 0 0-2"/></svg>
 				<span className="sr-only">Bild hinzufügen</span>
 			</button>
