@@ -72,6 +72,10 @@
   }
 }
 
+.react-tags {
+  @apply min-h-10;
+}
+
 .react-tags__combobox {
   display: block;
   padding: 0;

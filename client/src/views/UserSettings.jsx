@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { UseContextStore } from "../context/ContextProvider.jsx";
 import TagSelect from "../components/TagSelect.jsx";
@@ -9,8 +9,7 @@ import axios from 'axios';
 import { suggestions_cats, suggestions_subcats } from "../utils/categories.js"
 import { suggestions_tags } from "../utils/tags.js"
 
-const UserSettings = () =>
-{
+const UserSettings = () => {
 
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
@@ -19,14 +18,6 @@ const UserSettings = () =>
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [editableField, setEditableField] = useState(null);
 	const [previewImage, setPreviewImage] = useState(null);
-
-	// Password change states
-	// const [oldPassword, setOldPassword] = useState("");
-	// const [newPassword, setNewPassword] = useState("");
-	// const [confirmPassword, setConfirmPassword] = useState("");
-	// const [passwordError, setPasswordError] = useState("");
-	// const [passwordSuccess, setPasswordSuccess] = useState("");
-
 	const [profile, setProfile] = useState({
 		street: userData.address?.street || "",
 		housenumber: userData.address?.housenumber || "",
@@ -44,10 +35,8 @@ const UserSettings = () =>
 		profileimage: userData.profileimage || beispielfotoprofil
 	});
 
-	useEffect(() =>
-	{
-		if (isLoggedIn && userData)
-		{
+	useEffect(() => {
+		if (isLoggedIn && userData) {
 			setProfile((prevProfile) => ({
 				...prevProfile,
 				street: userData.address?.street || "",
@@ -68,8 +57,7 @@ const UserSettings = () =>
 		}
 	}, [isLoggedIn, userData]);
 
-	const handleInputChange = (e) =>
-	{
+	const handleInputChange = (e) => {
 		const { name, value } = e.target;
 		setProfile((prevProfile) => ({
 			...prevProfile,
@@ -77,8 +65,7 @@ const UserSettings = () =>
 		}));
 	};
 
-	const handleImageChange = (e) =>
-	{
+	const handleImageChange = (e) => {
 		const file = e.target.files[0]
 		if (file)
 		{
@@ -92,14 +79,12 @@ const UserSettings = () =>
 		}
 	};
 
-	const openPasswordChange = (e) =>
-	{
+	const openPasswordChange = (e) => {
 		e.preventDefault();
 		setShowPWChange(true);
 	};
 
-	const handleSave = async (e) =>
-	{
+	const handleSave = async (e) => {
 		e.preventDefault();
 		setIsEditing(false);
 		setEditableField(null);
@@ -134,48 +119,7 @@ const UserSettings = () =>
 		}
 	};
 
-	//const handlePasswordChange = async (e) =>
-	// {
-	// 	e.preventDefault();
-	// 	setPasswordError("");
-	// 	setPasswordSuccess("");
-	//
-	// 	if (newPassword !== confirmPassword)
-	// 	{
-	// 		setPasswordError("New password and confirm password do not match.");
-	// 		return;
-	// 	}
-	//
-	// 	try
-	// 	{
-	// 		const response = await axios.put(
-	// 			"http://localhost:8000/users/change-password",
-	// 			{
-	// 				oldPassword,
-	// 				newPassword,
-	// 				confirmPassword,
-	// 			},
-	// 			{
-	// 				withCredentials: true,
-	// 			}
-	// 		);
-	// 		setPasswordSuccess("Password changed successfully.");
-	// 		setOldPassword("");
-	// 		setNewPassword("");
-	// 		setConfirmPassword("");
-	// 		setShowPWChange(false);
-	// 	} catch (error)
-	// 	{
-	// 		console.error("Password change error:", error);
-	// 		setPasswordError(
-	// 			error.response?.data?.message || "Error changing password."
-	// 		);
-	// 	}
-	// };
-
-
-	if (!isLoggedIn)
-	{
+	if (!isLoggedIn) {
 		return <div>Please log in to access your profile.</div>;
 	}
 
@@ -222,20 +166,20 @@ const UserSettings = () =>
 							<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 								Bitte wähle mindestens 3 Kategorien
 							</p>
-							{profile.preferredcats && <TagSelect suggestions={suggestions_cats} type="cats" preferred={profile.preferredcats} />}
+							<TagSelect suggestions={suggestions_cats} type="cats" preferred={userData.preferredcats} />
 
 						</div>
 						<div className="w-full text-left">
 							<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 								Wähle mindestens 3 Sub-Kategorien
 							</p>
-							{profile.preferredSubcats && <TagSelect suggestions={suggestions_subcats} type="subcats" preferred={profile.preferredSubcats} />}
+							<TagSelect suggestions={suggestions_subcats} type="subcats" preferred={userData.preferredSubcats} />
 						</div>
 						<div className="w-full text-left">
 							<p className="text-2xl text-green-200 mb-4 mt-8 text-center">
 								Wähle mindestens 3 Tags
 							</p>
-							{profile.preferredtags && <TagSelect suggestions={suggestions_tags} type="tags" preferred={profile.preferredtags} />}
+							<TagSelect suggestions={suggestions_tags} type="tags" preferred={userData.preferredtags} />
 						</div>
 					</div>
 

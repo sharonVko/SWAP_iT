@@ -13,15 +13,16 @@ function TagSelect({ suggestions, type, preferred }) {
 		setSelectedTags
 	} = UseContextStore();
 
-	const preferredArr = () => {
-		let arr = preferred.split(',').map(item => {
+
+	let arr = [];
+	if (preferred.length > 0) {
+		arr = preferred.split(',').map(item => {
 			let id= parseInt(item);
 			return suggestions.filter(i => i.value === id)[0];
 		});
-		return (arr.length !== 0) ? arr : [];
-	};
+	}
 
-	const [selected, setSelected] = useState(preferredArr);
+	const [selected, setSelected] = useState(arr);
 
 	// save selected items in context store
 	useEffect(() => {
@@ -29,7 +30,6 @@ function TagSelect({ suggestions, type, preferred }) {
 		if (type === "subcats") setSelectedSubCats(selected.map(i => i.value).join(','));
 		if (type === "tags") setSelectedTags(selected.map(i => i.value).join(','));
 	}, [selected])
-
 
 	const onAdd = useCallback((newTag) => {
 		setSelected((prevSelected) => [...prevSelected, newTag]);
@@ -41,12 +41,15 @@ function TagSelect({ suggestions, type, preferred }) {
 
 	const isInvalid = selected.length < MIN_SELECTED_LENGTH;
 
+
+	//console.log(selected);
+
 	return (
 		<ReactTags
 			ariaDescribedBy="custom-validity-description"
 			ariaErrorMessage="error"
 			isInvalid={isInvalid}
-			id="cats"
+			id={type}
 			onDelete={onDelete}
 			onAdd={onAdd}
 			selected={selected}
