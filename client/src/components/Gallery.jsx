@@ -74,7 +74,7 @@ function Gallery({ adid, setOpenDropzone }) {
 					<img src={fileUrl} alt="#" className="absolute top-0 left-0 w-full h-full object-cover" />
 
 					<button
-						className="absolute top-1 right-1 text-white bg-teal-600 hover:bg-white hover:text-gray-900 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
+						className="absolute top-1 right-1 text-gray-900 hover:text-white bg-white hover:bg-teal-600 rounded-lg text-sm w-6 h-6 inline-flex justify-center items-center"
 						onClick={() => removeImage(index)}
 					>
 						<svg

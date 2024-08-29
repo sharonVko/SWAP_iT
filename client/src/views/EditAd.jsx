@@ -145,7 +145,7 @@ const EditAd = () => {
 	};
 
 	return (
-		<div className="container mx-auto py-4">
+		<>
 			{(isLoggedIn && !loading) ? (
 				<>
 					{openDropzone ?
@@ -167,7 +167,7 @@ const EditAd = () => {
 			) : (
 				<LoginForm/>
 			)}
-		</div>
+		</>
 	);
 };
 
