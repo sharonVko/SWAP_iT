@@ -29,7 +29,7 @@ function ChatRowContent({chat}) {
 
 			<div className="relative w-24 aspect-[3/2] rounded overflow-hidden flex items-center justify-center">
 				{!loading ? (
-					<img src={ad.media[0][0]} alt="#" className="absolute top-0 left-0 h-full w-full object-cover"/>
+					<img src={ad.media[0]} alt="#" className="absolute top-0 left-0 h-full w-full object-cover"/>
 				) : (
 					<Oval
 						visible={true}

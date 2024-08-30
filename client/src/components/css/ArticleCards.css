@@ -10,7 +10,7 @@
 }
 
 .article-card {
-  @apply bg-white/60 rounded-xl py-4 px-2 pb-2 cursor-pointer shadow-md w-full max-w-[320px] mx-auto relative;
+  @apply bg-white/60 rounded-xl py-4 px-2 pb-2 cursor-pointer shadow-md w-full mx-auto relative;
 }
 
 .article-card-inner {

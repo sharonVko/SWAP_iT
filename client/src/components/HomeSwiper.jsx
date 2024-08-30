@@ -17,7 +17,7 @@ function HomeSwiper({ swiperId, articles }) {
       slidesPerView: 1,
       spaceBetween: 0,
       breakpoints: {
-        768: {
+        640: {
           slidesPerView: 2,
           slidesPerGroup: 2,
         },

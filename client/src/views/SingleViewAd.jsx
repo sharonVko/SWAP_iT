@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 const SingleViewAd = () => {
   const [article, setArticle] = useState(null);
   const [username, setUsername] = useState(null); // State to store the username
+	const [userImg, setUserImg] = useState(null); // State to store the username
+
   const [chatData, setChatData] = useState([]);
   const [error, setError] = useState("");
   const { isLoggedIn, userData } = useAuth();
@@ -37,6 +39,7 @@ const SingleViewAd = () => {
         );
         // console.log(userResponse.data); // Log the user data
         setUsername(userResponse.data.username); // Set the username state
+				setUserImg(userResponse.data.profileimage); // Set the username state
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -150,13 +153,16 @@ const SingleViewAd = () => {
                       {username}
                     </span>
                   </p>
-                  <div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-700">
-                    <Avatar
-                      img="https://randomuser.me/api/portraits/men/42.jpg"
-                      size="sm"
-                      title={`Profil von ${username}`}
-                    />
-                  </div>
+                  {/*<div className="p-1 rounded-md bg-gradient-to-r from-teal-200 to-teal-700">*/}
+                  {/*  <Avatar*/}
+                  {/*    img="https://randomuser.me/api/portraits/men/42.jpg"*/}
+                  {/*    size="sm"*/}
+                  {/*    title={`Profil von ${username}`}*/}
+                  {/*  />*/}
+                  {/*</div>*/}
+									<div className="w-12 h-12 rounded-full overflow-hidden relative ring-2 ring-teal-500">
+										<img src={userImg} alt={username} className="absolute top-0 left-0 w-full h-full object-cover" />
+									</div>
                 </>
               ) : null}
             </div>
