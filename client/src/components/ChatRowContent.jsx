@@ -12,7 +12,7 @@ function ChatRowContent({chat}) {
 			try {
 				// Fetch the article details
 				const response = await axios.get(
-					`http://localhost:8000/ads/${chat.ad_id}`
+					`${import.meta.env.VITE_API_URL}/ads/${chat.ad_id}/`
 				);
 				setAd(response.data);
 				isLoading(false);

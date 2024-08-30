@@ -26,7 +26,7 @@ const ChatRoom = ({ chat, userData }) => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/message/${chat._id}`,
+          `${import.meta.env.VITE_API_URL}/message/${chat._id}`,
           {
             withCredentials: true,
           }
@@ -64,7 +64,7 @@ const ChatRoom = ({ chat, userData }) => {
         ad_id: chat.ad_id,
       };
       const response = await axios.post(
-        'http://localhost:8000/message/',
+        `${import.meta.env.VITE_API_URL}/message/`,
         newMessageData,
         {
           withCredentials: true,

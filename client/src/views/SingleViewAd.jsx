@@ -26,14 +26,14 @@ const SingleViewAd = () => {
       try {
         // Fetch the article details
         const articleResponse = await axios.get(
-          `http://localhost:8000/ads/${articleId}`
+          `${import.meta.env.VITE_API_URL}/ads/${articleId}`
         );
         console.log(articleResponse.data); // Log the article data
         setArticle(articleResponse.data);
 
         // Fetch user details based on the user_id from the article data
         const userResponse = await axios.get(
-          `http://localhost:8000/users/${articleResponse.data.user_id}`
+          `${import.meta.env.VITE_API_URL}/users/${articleResponse.data.user_id}`
         );
         // console.log(userResponse.data); // Log the user data
         setUsername(userResponse.data.username); // Set the username state
@@ -50,7 +50,7 @@ const SingleViewAd = () => {
     const receiver_user_id = article.user_id; // Ad Creator
     try {
       const response = await axios.post(
-        "http://localhost:8000/chats/",
+        `${import.meta.env.VITE_API_URL}/chats/`,
         {
           participants: [sender_user_id, receiver_user_id],
           messages: [],

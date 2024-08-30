@@ -42,7 +42,7 @@ const UploadPhoto = ({ adId, onSuccess }) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/media",
+				`${import.meta.env.VITE_API_URL}/media/`,
         formData,
         {
           headers: {

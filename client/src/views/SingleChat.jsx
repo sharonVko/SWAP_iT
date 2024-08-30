@@ -36,7 +36,7 @@ const SingleChat = () => {
     const fetchMessages = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/message/${chatId}`,
+          `${import.meta.env.VITE_API_URL}/message/${chatId}`,
           {
             withCredentials: true,
           }
@@ -61,7 +61,7 @@ const SingleChat = () => {
 		const fetchReceiver = async () => {
 			try {
 				const response = await axios.get(
-					`http://localhost:8000/users/${receiverId}`, {
+					`${import.meta.env.VITE_API_URL}/users/${receiverId}`, {
 						withCredentials: true,
 					}
 				);
@@ -84,7 +84,7 @@ const SingleChat = () => {
         ad_id: adId,
       };
       const response = await axios.post(
-        'http://localhost:8000/message/',
+        `${import.meta.env.VITE_API_URL}/message/`,
         newMessageData,
 				{ withCredentials: true }
       );
@@ -99,7 +99,7 @@ const SingleChat = () => {
 
   const handleDeleteMessage = async (messageId) => {
     try {
-      await axios.delete(`http://localhost:8000/message/${messageId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/message/${messageId}`, {
         withCredentials: true,
       });
       setMessages((prevMessages) =>

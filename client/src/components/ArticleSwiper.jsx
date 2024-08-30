@@ -14,7 +14,7 @@ function ArticleSwiper({ slidesPerView }) {
 	useEffect(() => {
 		const fetchArticleData = async () => {
 			try {
-				const response = await axios.get(`http://localhost:8000/ads/`);
+				const response = await axios.get(`${import.meta.env.VITE_API_URL}/ads/`);
 				setAds(response.data);
 				//console.log("Fetched articles:", response.data); // Log the fetched articles
 			} catch (error) {

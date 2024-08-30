@@ -63,7 +63,7 @@ const EditAd = () => {
 	useEffect(() => {
 		const fetchAdData = async () => {
 			try {
-				const response = await axios.get(`http://localhost:8000/ads/${adid}`);
+				const response = await axios.get(`${import.meta.env.VITE_API_URL}/ads/${adid}`);
 				const data = response.data;
 				setAdData({
 					title: data.title || "",
@@ -222,7 +222,7 @@ const EditAd = () => {
 		// make the request
 		try {
 			const response = await axios.put(
-				`http://localhost:8000/ads/${adid}`,
+				`${import.meta.env.VITE_API_URL}/ads/${adid}`,
 				formDataToSend,
 				{
 					headers: {"Content-Type": "multipart/form-data"},

@@ -107,10 +107,13 @@ const UserSettings = () => {
 
 		try
 		{
-			const response = await axios.put(`http://localhost:8000/users/${userData._id}`, formData, {
-				headers: { "Content-Type": "multipart/form-data" },
-				withCredentials: true,
-			});
+			const response = await axios.put(
+				`${import.meta.env.VITE_API_URL}/users/${userData._id}`,
+				formData,
+				{
+					headers: { "Content-Type": "multipart/form-data" },
+					withCredentials: true,
+				});
 			console.log("User updated successfully:", response.data);
 		} catch (error)
 		{

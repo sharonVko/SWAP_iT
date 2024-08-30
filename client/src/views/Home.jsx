@@ -17,7 +17,7 @@ const Home = () => {
 	useEffect(() => {
 		const fetchAdData = async () => {
 			try {
-				const response = await axios.get(`http://localhost:8000/ads/`);
+				const response = await axios.get(`${import.meta.env.VITE_API_URL}/ads/`);
 				setAds(response.data);
 			} catch (error) {
 				console.error("Error fetching ad data:", error);

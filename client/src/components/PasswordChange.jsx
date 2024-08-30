@@ -22,7 +22,7 @@ function PasswordChange({ setShowPWChange }) {
 
 		try {
 			const response = await axios.put(
-				"http://localhost:8000/users/change-password",
+				`${import.meta.env.VITE_API_URL}/users/change-password/`,
 				{
 					oldPassword,
 					newPassword,

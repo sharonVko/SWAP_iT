@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) =>
     const token = Cookies.get('token');
     if (!token) return;
 
-    const newSocket = io('http://localhost:8000', {
+    const newSocket = io(`${import.meta.env.VITE_API_URL}`, {
       transports: ['websocket'],
       query: { token },
     });

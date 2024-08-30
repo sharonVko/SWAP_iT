@@ -133,11 +133,9 @@ const CreateAd = () => {
 			console.log(item[0]+ ', ' + item[1]);
 		}
 
-
-
     try {
       const response = await axios.post(
-        "http://localhost:8000/ads/createAd",
+        `${import.meta.env.VITE_API_URL}/ads/createAd`,
         formDataToSend,
         {
           headers: {"Content-Type": "multipart/form-data"},

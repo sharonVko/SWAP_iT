@@ -29,7 +29,7 @@ export const ChatContext = ({ children }) => {
       try {
         console.log('Fetching user for ID:', userId); // Debugging line
         const response = await axios.get(
-          `http://localhost:8000/users/${userId}`
+          `${import.meta.env.VITE_API_URL}/users/${userId}`
         );
         setUserMap((prevUserMap) => ({
           ...prevUserMap,

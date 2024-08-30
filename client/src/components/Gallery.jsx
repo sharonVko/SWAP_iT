@@ -13,7 +13,7 @@ function Gallery({ adid, setOpenDropzone }) {
 	useEffect(() => {
 		const fetchImages = async () => {
 			try {
-				const response = await axios.get(`http://localhost:8000/ads/${adid}`);
+				const response = await axios.get(`${import.meta.env.VITE_API_URL}/ads/${adid}/`);
 				const data = response.data;
 				setImages(data.media || []);
 				setLoading(false);

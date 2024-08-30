@@ -26,7 +26,7 @@ const UserProfile = () => {
           const adDetailsPromises = userData.ads.map(async (adId) => {
             try {
               const response = await axios.get(
-                `http://localhost:8000/ads/${adId}`
+                `${import.meta.env.VITE_API_URL}/ads/${adId}`
               );
               return response.data;
             } catch (error) {
@@ -48,7 +48,7 @@ const UserProfile = () => {
 
   const deleteAd = async (adId) => {
     try {
-      await axios.delete(`http://localhost:8000/ads/${adId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/ads/${adId}`, {
 				withCredentials: true
 			});
 

@@ -15,7 +15,7 @@ const Chats = () => {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/chats/', {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/chats/`, {
           withCredentials: true,
         });
         setChatData(response.data);
@@ -33,7 +33,7 @@ const Chats = () => {
   const handleDeleteChat = async (chatId) => {
     console.log(chatId);
     try {
-      await axios.delete(`http://localhost:8000/chats/${chatId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/chats/${chatId}`, {
         withCredentials: true,
       });
       alert('Chat was deleted');
