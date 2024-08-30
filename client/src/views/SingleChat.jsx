@@ -17,7 +17,7 @@ const SingleChat = () => {
   useEffect(() => {
     if (!socket.current) {
       // Initialize socket connection only once
-      socket.current = io('http://localhost:9000', {
+      socket.current = io(`${import.meta.env.VITE_API_SOCKET_URL}`, {
         query: {
           token: document.cookie.replace(
             /(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/,

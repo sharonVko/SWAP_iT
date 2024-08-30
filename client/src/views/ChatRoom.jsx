@@ -9,7 +9,7 @@ const ChatRoom = ({ chat, userData }) => {
 
   useEffect(() => {
     if (!socket.current) {
-      socket.current = io('http://localhost:9000', {
+      socket.current = io(`${import.meta.env.VITE_API_SOCKET_URL}`, {
         query: {
           token: document.cookie.replace(
             /(?:(?:^|.*;\s*)token\s*=\s*([^;]*).*$)|^.*$/,
