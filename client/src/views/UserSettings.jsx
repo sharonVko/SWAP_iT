@@ -131,8 +131,8 @@ const UserSettings = () =>
 
 	if (!isLoggedIn)
 	{
-		// return <div>Please log in to access your profile.</div>;
-		toast.error("Please log in to access your profile.")
+		return <div>Please log in to access your profile.</div>;
+		// toast.error("Please log in to access your profile.")
 	}
 
 	return (
