@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, NavLink } from "react-router-dom";
 import { UseContextStore } from "../context/ContextProvider.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
@@ -9,6 +9,10 @@ import axios from 'axios';
 import Switch from "react-switch";
 import { categories } from "../utils/categories.js";
 import { tags } from "../utils/tags";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const EditAd = () => {
 	const { isLoggedIn, userData } = useAuth();
@@ -230,10 +234,12 @@ const EditAd = () => {
 				}
 			);
 			console.log("Ad updated successfully:", response.data);
+			toast.success("Ad updated successfully");
 			//navigate(`/ads/${adid}`); // Redirect to the ad detail page
 		}
 		catch (error) {
 			console.error("Error updating ad:", error);
+			toast.success("Error updating ad");
 		}
 		setOpenDropzone(false);
 	};
@@ -241,6 +247,7 @@ const EditAd = () => {
 	// render HTML
 	return (
 		<>
+			<ToastContainer />
 			<h1>Anzeige bearbeiten</h1>
 			{(isLoggedIn && !loading) ? (
 				<>
