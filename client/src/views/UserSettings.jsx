@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { UseContextStore } from "../context/ContextProvider.jsx";
 import TagSelect from "../components/TagSelect.jsx";
@@ -8,8 +8,11 @@ import beispielfotoprofil from "../assets/userlogo.png";
 import axios from 'axios';
 import { suggestions_cats, suggestions_subcats } from "../utils/categories.js"
 import { suggestions_tags } from "../utils/tags.js"
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-const UserSettings = () => {
+const UserSettings = () =>
+{
 
 	const { isLoggedIn, userData } = useAuth();
 	const { selectedCats, selectedSubCats, selectedTags } = UseContextStore();
@@ -35,8 +38,10 @@ const UserSettings = () => {
 		profileimage: userData.profileimage || beispielfotoprofil
 	});
 
-	useEffect(() => {
-		if (isLoggedIn && userData) {
+	useEffect(() =>
+	{
+		if (isLoggedIn && userData)
+		{
 			setProfile((prevProfile) => ({
 				...prevProfile,
 				street: userData.address?.street || "",
@@ -57,7 +62,8 @@ const UserSettings = () => {
 		}
 	}, [isLoggedIn, userData]);
 
-	const handleInputChange = (e) => {
+	const handleInputChange = (e) =>
+	{
 		const { name, value } = e.target;
 		setProfile((prevProfile) => ({
 			...prevProfile,
@@ -65,7 +71,8 @@ const UserSettings = () => {
 		}));
 	};
 
-	const handleImageChange = (e) => {
+	const handleImageChange = (e) =>
+	{
 		const file = e.target.files[0]
 		if (file)
 		{
@@ -79,12 +86,14 @@ const UserSettings = () => {
 		}
 	};
 
-	const openPasswordChange = (e) => {
+	const openPasswordChange = (e) =>
+	{
 		e.preventDefault();
 		setShowPWChange(true);
 	};
 
-	const handleSave = async (e) => {
+	const handleSave = async (e) =>
+	{
 		e.preventDefault();
 		setIsEditing(false);
 		setEditableField(null);
@@ -115,19 +124,23 @@ const UserSettings = () => {
 					withCredentials: true,
 				});
 			console.log("User updated successfully:", response.data);
+			toast.success("User updated successfully");
 		} catch (error)
 		{
 			console.error("Error updating user:", error);
-			alert("Error updating user. Check console for details.");
+			toast.error("Error updating user. Check console for details.");
 		}
 	};
 
-	if (!isLoggedIn) {
+	if (!isLoggedIn)
+	{
 		return <div>Please log in to access your profile.</div>;
+		// toast.error("Please log in to access your profile.")
 	}
 
 	return (
 		<>
+			<ToastContainer />
 			<form onSubmit={handleSave} id="formSettings">
 				<h1 className="mb-6 text-center">Kontoeinstellungen</h1>
 				<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 bg-teal-500 rounded-xl p-4 sm:p-8 md:p-12 mb-12 gap-8 md:gap-16">
@@ -244,7 +257,7 @@ const UserSettings = () => {
 
 			{showPWChange && (
 				<Modal setShowModal={setShowPWChange}>
-					<PasswordChange setShowPWChange={setShowPWChange}/>
+					<PasswordChange setShowPWChange={setShowPWChange} />
 				</Modal>
 			)}
 
