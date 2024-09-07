@@ -8,10 +8,11 @@ export const AuthProvider = ({ children }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
-
   const checkUser = async () => {
+
     const token = Cookies.get("token");
-    if (!token) {
+
+		if (!token) {
       setIsLoggedIn(false);
       setUserData({});
       return;
@@ -19,20 +20,20 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/users/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
 
       if (response.data && response.data._id) {
         setIsLoggedIn(true);
         setUserData(response.data);
-      } else {
+      }
+			else {
         setIsLoggedIn(false);
         setUserData({});
       }
-    } catch (error) {
+    }
+		catch (error) {
       setIsLoggedIn(false);
       setUserData({});
       console.error(error);
@@ -42,9 +43,12 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
 		const token = Cookies.get("token");
     if (token) {
-      checkUser();
+      checkUser().then();
     }
   }, []);
+
+
+
 
   const values = {
     isLoggedIn,
