@@ -239,7 +239,7 @@ const EditAd = () => {
 		}
 		catch (error) {
 			console.error("Error updating ad:", error);
-			toast.success("Error updating ad");
+			toast.error("Error updating ad");
 		}
 		setOpenDropzone(false);
 	};
