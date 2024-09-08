@@ -13,6 +13,7 @@ function LoginForm({ target }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/users/login/`,
@@ -21,12 +22,16 @@ function LoginForm({ target }) {
       );
 
       if (response.data.status === "success") {
-        const token = response.data.token;
-        if (token) {
-          Cookies.set("token", token, { expires: 1, path: "/" });
-          console.log("Token set in cookie:", Cookies.get("token")); // Debugging log
-        }
-        await checkUser(); // Update auth context
+
+				// const token = response.data.token;
+				//
+        // if (token) {
+        //   Cookies.set("token", token, { expires: 1, path: "/" });
+        //   console.log("Token set in cookie:", Cookies.get("token")); // Debugging log
+        // }
+
+
+				checkUser(); // Update auth context
         console.log("Du hast dich erfolgreich eingeloggt");
         navigate(target); // Navigate to the dashboard or desired page after login
       }
@@ -38,6 +43,7 @@ function LoginForm({ target }) {
       );
     }
   };
+
 
   return (
     <div className="max-w-sm mx-auto mt-10">

@@ -37,6 +37,9 @@ const Home = () => {
     navigate(target);
   };
 
+
+	console.log("login status: ", isLoggedIn);
+
   return (
     <>
       {!isLoggedIn ? (
