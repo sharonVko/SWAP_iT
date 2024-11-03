@@ -47,11 +47,17 @@ export const login = asyncHandler(async (req, res, next) =>
   if (!match) throw new ErrorResponse("Password is incorrect", 401);
 
   const token = jwt.sign({ uid: existingUser._id }, process.env.JWT_SECRET, {
-    expiresIn: "30min",
+    expiresIn: "30m",
   });
 
   // res.json({ token });
-  res.cookie("token", token, { maxAge: 1800000 }); // 30min
+  res.cookie("token", token, {
+		httpOnly: true,
+		maxAge: 1800000, // 30min
+		secure: true,
+		sameSite: 'none'
+	});
+
   res.send({ status: "success" });
 });
 

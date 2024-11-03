@@ -53,7 +53,10 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use(cors({ origin: `${process.env.FRONTEND_URL}`, credentials: true }));
+app.use(cors({
+	origin: `${process.env.FRONTEND_URL}`,
+	credentials: true
+}));
 app.use(cookieParser()); // Add cookie-parser middleware
 app.use(errorHandler);
 
