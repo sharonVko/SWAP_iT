@@ -158,7 +158,7 @@ const UserSettings = () =>
 
 							<label
 								htmlFor="profile-image-upload"
-								className="w-[200px] btn-sm btn-red py-2 block mb-3 mx-auto cursor-pointer"
+								className="w-[200px] btn-sm btn-red py-2 block mb-3 mx-auto cursor-pointer hover:bg-red-500"
 							>
 								Profilbild ändern
 							</label>
@@ -172,7 +172,7 @@ const UserSettings = () =>
 								className="hidden"
 							/>
 
-							<button className="w-[200px] btn-sm btn-red py-2 block mx-auto" onClick={openPasswordChange}>
+							<button className="w-[200px] btn-sm btn-red py-2 block mx-auto hover:bg-red-500" onClick={openPasswordChange}>
 								Passwort ändern
 							</button>
 						</div>
@@ -245,7 +245,7 @@ const UserSettings = () =>
 					<div className="md:col-span-2">
 						<button
 							type="submit"
-							className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6"
+							className="btn-md btn-red text-lemon-500 block mt-4 py-4 px-6 hover:bg-red-500"
 							form="formSettings"
 						>
 							Einstellungen speichern

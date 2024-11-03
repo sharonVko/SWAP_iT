@@ -1,18 +1,18 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import ArticleList from "../components/ArticleList.jsx";
 import { useAuth } from "../context/AuthProvider.jsx";
 import HomeSwiper from "../components/HomeSwiper.jsx";
 import SwapSchema from "../components/SwapSchema.jsx";
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { isLoggedIn, userData } = useAuth();
-  const [ads, setAds] = useState([]);
-  const [interestAds, setInterestAds] = useState([]); // Update to interestAds state updater
-  const [swapAds, setSwapAds] = useState([]); // Declare swapAds state updater
-  const [newestAds, setNewestAds] = useState([]); // State for newest ads
+	const navigate = useNavigate();
+	const { isLoggedIn, userData } = useAuth();
+	const [ads, setAds] = useState([]);
+	const [interestAds, setInterestAds] = useState([]); // Update to interestAds state updater
+	const [swapAds, setSwapAds] = useState([]); // Declare swapAds state updater
+	const [newestAds, setNewestAds] = useState([]); // State for newest ads
 
   useEffect(() => {
     const fetchAdData = async () => {
@@ -26,12 +26,12 @@ const Home = () => {
     fetchAdData();
   }, []);
 
-  useEffect(() => {
-    if (userData && ads.length > 0) {
-      ads.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      setNewestAds(ads.slice(0, 20));
-    }
-  }, [userData, ads]);
+	useEffect(() => {
+		if (userData && ads.length > 0) {
+			ads.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+			setNewestAds(ads.slice(0, 20))
+		}
+	}, [userData, ads]);
 
   const goTo = (target) => {
     navigate(target);
