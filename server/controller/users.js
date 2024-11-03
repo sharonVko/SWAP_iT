@@ -6,8 +6,7 @@ import jwt from "jsonwebtoken";
 import Ads from "../models/adsSchema.js";
 
 // Register according to frontend address zip field
-export const register = asyncHandler(async (req, res, next) =>
-{
+export const register = asyncHandler(async (req, res, next) => {
   const { firstname, lastname, username, email, password, address } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -35,8 +34,7 @@ export const register = asyncHandler(async (req, res, next) =>
 });
 
 // LOGIN
-export const login = asyncHandler(async (req, res, next) =>
-{
+export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   const existingUser = await User.findOne({ email }).select("+password");
@@ -52,39 +50,35 @@ export const login = asyncHandler(async (req, res, next) =>
 
   // res.json({ token });
   res.cookie("token", token, {
-		httpOnly: true,
-		maxAge: 1800000, // 30min
-		secure: true,
-		sameSite: 'none'
-	});
+    //httpOnly: true,
+    maxAge: 1800000, // 30min
+    secure: true,
+    sameSite: "none",
+  });
 
   res.send({ status: "success" });
 });
 
 // Verify User
-export const getUser = asyncHandler(async (req, res, next) =>
-{
+export const getUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.uid);
   res.json(user);
 });
 
 // Logout....
-export const logout = asyncHandler(async (req, res, next) =>
-{
+export const logout = asyncHandler(async (req, res, next) => {
   res.clearCookie("token");
   res.send({ status: "success" });
 });
 
 //getAllUsers
-export const getAllUsers = asyncHandler(async (req, res, next) =>
-{
+export const getAllUsers = asyncHandler(async (req, res, next) => {
   const users = await User.find();
   res.json(users);
 });
 
 //get user by id
-export const getSingleUser = asyncHandler(async (req, res, next) =>
-{
+export const getSingleUser = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
@@ -92,20 +86,18 @@ export const getSingleUser = asyncHandler(async (req, res, next) =>
 });
 
 // update user
-export const updateUser = asyncHandler(async (req, res, next) =>
-{
+export const updateUser = asyncHandler(async (req, res, next) => {
   const {
     body,
     params: { id },
-    uid
+    uid,
   } = req;
 
   console.log("Update request body:", body);
   console.log("User ID ---:", id);
   console.log("User token ID ---:", uid);
 
-  if (req.file !== undefined)
-  {
+  if (req.file !== undefined) {
     body.profileimage = req.file.path;
   }
 
@@ -123,11 +115,8 @@ export const updateUser = asyncHandler(async (req, res, next) =>
   res.json(updatedUser);
 });
 
-
-
 //update password not for forgate pass
-export const changePassword = asyncHandler(async (req, res, next) =>
-{
+export const changePassword = asyncHandler(async (req, res, next) => {
   const userId = req.uid;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
@@ -147,14 +136,10 @@ export const changePassword = asyncHandler(async (req, res, next) =>
   await user.save();
 
   res.send({ status: "Password updated successfully" });
-
-
 });
 
-
 //get all ads by user
-export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
-{
+export const getAllAdsByUser = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(id);
   if (!user) throw new ErrorResponse(`User ${id} does not exist`, 404);
@@ -163,18 +148,15 @@ export const getAllAdsByUser = asyncHandler(async (req, res, next) =>
 });
 
 // Toggle favorite
-export const toggleFavorite = asyncHandler(async (req, res, next) =>
-{
+export const toggleFavorite = asyncHandler(async (req, res, next) => {
   const { userId, adId } = req.body;
   const user = await User.findById(userId);
   if (!user) throw new ErrorResponse(`User ${userId} does not exist`, 404);
 
   const index = user.favorites.indexOf(adId);
-  if (index > -1)
-  {
+  if (index > -1) {
     user.favorites.splice(index, 1); // Remove adId from favorites
-  } else
-  {
+  } else {
     user.favorites.push(adId); // Add adId to favorites
   }
 
