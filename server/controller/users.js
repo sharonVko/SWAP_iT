@@ -56,7 +56,8 @@ export const login = asyncHandler(async (req, res, next) =>
 		maxAge: 1800000, // 30min
 		secure: true,
 		sameSite: 'None',
-		partitioned: true
+		partitioned: true,
+		domain: `${process.env.FRONTEND_URL}`
 	});
 
   res.send({ status: "success" });
