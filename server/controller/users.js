@@ -55,8 +55,7 @@ export const login = asyncHandler(async (req, res, next) =>
 		httpOnly: true,
 		maxAge: 120 * 60 * 1000,
 		sameSite: 'None',
-		secure: true,
-		domain: 'swapit-preview.netlify.app'
+		secure: true
 	});
 
   res.send({ status: "success" });
