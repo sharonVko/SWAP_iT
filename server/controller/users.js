@@ -53,11 +53,10 @@ export const login = asyncHandler(async (req, res, next) =>
   // res.json({ token });
   res.cookie("token", token, {
 		httpOnly: true,
-		maxAge: 1800000, // 30min
-		secure: true,
+		maxAge: 120 * 60 * 1000,
 		sameSite: 'None',
-		partitioned: true,
-		domain: `${process.env.FRONTEND_URL}`
+		secure: true,
+		domain: 'swapit-preview.netlify.app'
 	});
 
   res.send({ status: "success" });
