@@ -48,10 +48,5 @@ Technology Stack
 
     Figma: Used to design the app from scratch
 
-Getting Started
-
-    Clone the repository:
-    sh
-
 Personal Note
 Working on Swap has been an incredibly rewarding experience. We hope you find as much joy in using this platform as we did in creating it!
