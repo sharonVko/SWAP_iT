@@ -20,33 +20,33 @@ SWAP iT! is a platform designed to promote sustainability by allowing users to s
 
 ## Features
 
-1.  User Registration and Login: Register and log in to your account.
+- User Registration and Login: Register and log in to your account.
 
-2.  Item Listings: Offer unwanted items to your neighbors.
+- Item Listings: Offer unwanted items to your neighbors.
 
-3.  Top Swaps: Find matches based on your interests and available items in your neighborhood.
+- Top Swaps: Find matches based on your interests and available items in your neighborhood.
 
-4.  Filter and Search: Use filters to search for specific items and save your favorite listings.
+- Filter and Search: Use filters to search for specific items and save your favorite listings.
 
-5.  Chat Function: Communicate with other users to arrange swaps.
+- Chat Function: Communicate with other users to arrange swaps.
 
-6.  Profile Management: Edit your profile and manage your uploaded ads.
+- Profile Management: Edit your profile and manage your uploaded ads.
 
-7.  Swap Options: Choose to swap items or give them away for free.
+- Swap Options: Choose to swap items or give them away for free.
 
-8.  Money-Free Platform: No monetary transactions involved, making swapping purely based on mutual benefits.
+- Money-Free Platform: No monetary transactions involved, making swapping purely based on mutual benefits.
 
 ## Technology Stack
 
-1.  MERN Stack: MongoDB, Express, React, and Node.js
+- MERN Stack: MongoDB, Express, React, and Node.js
 
-2.  Next.js: For server-side rendering and static site generation
+- Next.js: For server-side rendering and static site generation
 
-3.  Tailwind CSS: For styling the application
+- Tailwind CSS: For styling the application
 
-4.  Flowbite: Utilized components from this and other open-source libraries
+- Flowbite: Utilized components from this and other open-source libraries
 
-5.  Figma: Used to design the app from scratch
+- Figma: Used to design the app from scratch
 
 ## Personal Note
 
