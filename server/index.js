@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { errorHandler } from "./middleware/ErrorHandler.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 import usersRouter from "./routes/usersRouter.js";
 import adsRouter from "./routes/adsRouter.js";
 import mediaRouter from "./routes/mediaRouter.js";

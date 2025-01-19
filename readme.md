@@ -4,15 +4,15 @@ Welcome to SWAP iT!, your local swapping platform for reducing waste and discove
 
 ## Team Members
 
-    HannoBielz
+    [HannoBielz](https://github.com/HannoBielz)
 
-    sidhdhali
+    [sidhdhali](https://github.com/sidhdhali)
 
-    sharonVko
+    [sharonVko](https://github.com/sharonVko)
 
-    SGitHub2023
+    [SGitHub2023](https://github.com/SGitHub2023)
 
-    tdolpz
+    [tdolpz](https://github.com/tdolpz)
 
 ## Overview
 
